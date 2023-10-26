@@ -3,8 +3,8 @@ package airdrop
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/FURYA/furya-chain/x/airdrop/keeper"
-	"github.com/FURYA/furya-chain/x/airdrop/types"
+	"github.com/furysport/fury-chain/x/airdrop/keeper"
+	"github.com/furysport/fury-chain/x/airdrop/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

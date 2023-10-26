@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
-	furya "github.com/FURYA/furya-chain/app"
+	furya "github.com/furysport/fury-chain/app"
 
-	"github.com/FURYA/furya-chain/app/helpers"
+	"github.com/furysport/fury-chain/app/helpers"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	"github.com/tendermint/tendermint/libs/rand"

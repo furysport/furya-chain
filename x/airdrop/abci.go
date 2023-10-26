@@ -1,7 +1,7 @@
 package airdrop
 
 import (
-	"github.com/FURYA/furya-chain/x/airdrop/keeper"
+	"github.com/furysport/fury-chain/x/airdrop/keeper"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

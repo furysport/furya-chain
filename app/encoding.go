@@ -1,7 +1,7 @@
 package furya
 
 import (
-	"github.com/FURYA/furya-chain/app/params"
+	"github.com/furysport/fury-chain/app/params"
 
 	"github.com/cosmos/cosmos-sdk/std"
 )

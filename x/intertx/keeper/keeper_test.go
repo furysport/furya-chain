@@ -14,7 +14,7 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
 	ibctesting "github.com/cosmos/ibc-go/v3/testing"
 
-	icaapp "github.com/FURYA/furya-chain/app"
+	icaapp "github.com/furysport/fury-chain/app"
 	"github.com/cosmos/cosmos-sdk/simapp"
 )
 

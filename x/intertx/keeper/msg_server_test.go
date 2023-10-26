@@ -6,8 +6,8 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
 	ibctesting "github.com/cosmos/ibc-go/v3/testing"
 
-	"github.com/FURYA/furya-chain/x/intertx/keeper"
-	"github.com/FURYA/furya-chain/x/intertx/types"
+	"github.com/furysport/fury-chain/x/intertx/keeper"
+	"github.com/furysport/fury-chain/x/intertx/types"
 )
 
 func (suite *KeeperTestSuite) TestRegisterInterchainAccount() {

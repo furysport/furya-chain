@@ -9,7 +9,7 @@ import (
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/FURYA/furya-chain/x/intertx/types"
+	"github.com/furysport/fury-chain/x/intertx/types"
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/keeper"
 	host "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 )

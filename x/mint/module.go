@@ -26,10 +26,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/FURYA/furya-chain/x/mint/client/cli"
-	"github.com/FURYA/furya-chain/x/mint/keeper"
-	"github.com/FURYA/furya-chain/x/mint/simulation"
-	"github.com/FURYA/furya-chain/x/mint/types"
+	"github.com/furysport/fury-chain/x/mint/client/cli"
+	"github.com/furysport/fury-chain/x/mint/keeper"
+	"github.com/furysport/fury-chain/x/mint/simulation"
+	"github.com/furysport/fury-chain/x/mint/types"
 )
 
 var (

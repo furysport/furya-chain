@@ -29,5 +29,5 @@ Mgoogle/protobuf/any.proto=github.com/cosmos/cosmos-sdk/codec/types:. \
   $(find "${dir}" -maxdepth 1 -name '*.proto')
 done
 
-cp -r ./github.com/FURYA/furya-chain/x/* x/
+cp -r ./github.com/furysport/fury-chain/x/* x/
 rm -rf ./github.com

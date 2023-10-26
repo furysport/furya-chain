@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/FURYA/furya-chain/x/airdrop/client/cli"
-	"github.com/FURYA/furya-chain/x/airdrop/keeper"
-	"github.com/FURYA/furya-chain/x/airdrop/types"
+	"github.com/furysport/fury-chain/x/airdrop/client/cli"
+	"github.com/furysport/fury-chain/x/airdrop/keeper"
+	"github.com/furysport/fury-chain/x/airdrop/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"

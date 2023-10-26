@@ -4,8 +4,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 
-	appparams "github.com/FURYA/furya-chain/app/params"
-	"github.com/FURYA/furya-chain/x/airdrop/types"
+	appparams "github.com/furysport/fury-chain/app/params"
+	"github.com/furysport/fury-chain/x/airdrop/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"

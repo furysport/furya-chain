@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/FURYA/furya-chain/x/airdrop/types"
+	"github.com/furysport/fury-chain/x/airdrop/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

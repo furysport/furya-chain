@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	simapp "github.com/FURYA/furya-chain/app"
+	simapp "github.com/furysport/fury-chain/app"
 )
 
 const (

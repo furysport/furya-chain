@@ -1,7 +1,7 @@
 package upgrades
 
 import (
-	"github.com/FURYA/furya-chain/app/keepers"
+	"github.com/furysport/fury-chain/app/keepers"
 	store "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"

@@ -3,7 +3,7 @@ package furya
 import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	airdropkeeper "github.com/FURYA/furya-chain/x/airdrop/keeper"
+	airdropkeeper "github.com/furysport/fury-chain/x/airdrop/keeper"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"

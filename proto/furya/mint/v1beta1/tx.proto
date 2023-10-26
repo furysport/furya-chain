@@ -4,7 +4,7 @@ package furya.mint.v1beta1;
 import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 
-option go_package = "github.com/FURYA/furya-chain/x/mint/types";
+option go_package = "github.com/furysport/fury-chain/x/mint/types";
 
 // Msg defines the mint Msg service.
 service Msg {

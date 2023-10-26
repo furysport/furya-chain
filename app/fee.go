@@ -3,8 +3,8 @@ package furya
 import (
 	"fmt"
 
-	airdropkeeper "github.com/FURYA/furya-chain/x/airdrop/keeper"
-	airdroptypes "github.com/FURYA/furya-chain/x/airdrop/types"
+	airdropkeeper "github.com/furysport/fury-chain/x/airdrop/keeper"
+	airdroptypes "github.com/furysport/fury-chain/x/airdrop/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	ante "github.com/cosmos/cosmos-sdk/x/auth/ante"

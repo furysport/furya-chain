@@ -1,4 +1,4 @@
-module github.com/FURYA/furya-chain
+module github.com/furysport/fury-chain
 
 go 1.17
 

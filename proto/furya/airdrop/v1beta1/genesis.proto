@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 import "furya/airdrop/v1beta1/allocation.proto";
 import "furya/airdrop/v1beta1/params.proto";
 
-option go_package = "github.com/FURYA/furya-chain/x/airdrop/types";
+option go_package = "github.com/furysport/fury-chain/x/airdrop/types";
 
 // GenesisState defines the module's genesis state.
 message GenesisState {

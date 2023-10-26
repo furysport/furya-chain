@@ -31,8 +31,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 
-	furya "github.com/FURYA/furya-chain/app"
-	"github.com/FURYA/furya-chain/app/params"
+	furya "github.com/furysport/fury-chain/app"
+	"github.com/furysport/fury-chain/app/params"
 )
 
 // NewRootCmd creates a new root command for simd. It is called once in the
