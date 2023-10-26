@@ -201,7 +201,7 @@ func PrepareGenesis(clientCtx client.Context, appState map[string]json.RawMessag
 	// airdrop module genesis
 	airdropGenState := airdroptypes.DefaultGenesis()
 	airdropGenState.Params = airdroptypes.DefaultParams()
-	airdropGenState.Params.Owner = "furya19ftk3lkfupgtnh38d7enc8c6jp7aljj3l66vae" // POP's address
+	airdropGenState.Params.Owner = "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7" // POP's address
 	cosmosAllocations, totalCosmosAirdropAllocation := parseCosmosAirdropAmount(cosmosAirdropPath)
 	crew3Allocations, totalCrew3AirdropAllocation := parseCosmosAirdropAmount(crew3AirdropPath)
 	cosmosAllocations = combineAirdropAllocations(cosmosAllocations, crew3Allocations)
@@ -260,65 +260,14 @@ func PrepareGenesis(clientCtx client.Context, appState map[string]json.RawMessag
 
 	genAccounts := []authtypes.GenesisAccount{}
 
-	addrStrategicReserve, err := sdk.AccAddressFromBech32("furya1kcuty7d5mc0rasw6mpmn4nhk99me55ch57puyn")
+	addrStrategicReserve, err := sdk.AccAddressFromBech32("furya16w6chfrrg930cqcfewdzse6szgjk657764dll7")
 	if err != nil {
 		return nil, nil, err
 	}
 	genAccounts = append(genAccounts, authtypes.NewBaseAccount(addrStrategicReserve, nil, 0, 0))
 
 	// send 10 FURY to genesis validators
-	genesisValidators := []string{
-		"furya1uechzauku6mhj2je8jmyrkq6d0ydm3g4d5jsdd", // metahuahua
-		"furya1t7cyvydpp4lklprksnrjy2y3xzv3q2l075vlz3", // activenodes
-		"furya1utr8j9685hfxyza3wnu8pa9lpu8360knf6rnu6", // alxvoy
-		"furya17vx59a9897ltpyw6dwr7jvcjk8wyxhc023q5vs", // aurie
-		"furya19pg5t5adjese84q5azjuv46rtz7jt2yqwz9rh2", // berty
-		"furya16czx9ukfcelsxmjpyt90fprjx5qjw5an6q0pz5", // chillvalidation
-		"furya1c22uwrtvadcp2a8rjn2l00kmuuqdcu2tup859x", // crosnest
-		"furya1jfw63tylcc4gscayv68prsu275q6te4wkqzy0u", // dibugnodes
-		"furya1a7taydvzhkd5vrndlykqtj7nsk2erdp24wkquq", // ericet
-		"furya138664l4407d7hfwe8a82q25fk4vht53jdhs392", // forbole
-		"furya15fh88a6kx6n6cgx35cxf2edzyjwq3rwyd85ya8", // freemint
-		"furya1dyduggaqthztgm8tnk59flkeu3l3qvpzlyz6tu", // gatadao
-		"furya15n624eajd04jjhnlvza2fvft3lmf69aeqltmrm", // interblockchainservices
-		"furya1gspqsgxm8s4e9uza78met67x2eted2cd4gvx82", // goldenratiostaking
-		"furya1534tslwra4hrvt8k8tdwh5aghmc74hvtjl2ka6", // gopher
-		"furya1ttgzvn4lwkqe33drcvjxrefu8j9u5x9qpgx4z6", // hashquark
-		"furya16dzaxgnq9zlac7yl3ar3zp4y2zgr9fm0aamdv2", // highstakes
-		"furya1lgy98shrs4uyrqnmgh38su3gm08uh3sr63hqvt", // ibrahimarslan
-		"furya1xpyql3vw67h8l99n3sswy5ev94ntwt9c5x9ju8", // icosmosdao
-		"furya1shtyw4f5pdhvx7gsrsknwrryy9ulqvvylgnnys", // kalianetwork
-		"furya184ln03hkpt75uhrrr26f66kvcqvf4yn4mt9xw5", // kjnodes
-		"furya1rly8ah6hffkt28hy3ka8ue2h32mqknyxmuc5x5", // landeros
-		"furya140l6y2gp3gxvay6qtn70re7z2s0gn57zrvgjnn", // lavenderfive
-		"furya1kunzrdg6u8gql4faj33lstghhqdtp59e848g5t", // lesnik_utsa
-		"furya1e6ajryqxefpxuhjg2y9wk4y2dzq48uz49dsmmz", // maethstro
-		"furya18wjuryzyuwpg5f0wukgjey3za28s4fm9ka7md4", // munris
-		"furya1p5z27dj7zrxue8pe5t0m39q8mmgavdclrc0lwv", // n0ok
-		"furya18t2j2kc08su2l2dafcanq43yxj9akpwpjmkmlq", // nodejumper
-		"furya1nrgahzmlr4nrnumlu0ud99qslsdvay8a6469k9", // noderunners
-		"furya1phzay7cf4ayk9dsvt0q5nlc8qehlwlpxasd66u", // nodesblocks
-		"furya1w3wse8cx2al5947ke0hnd2tgphjt43dydmpnnx", // nodesguru
-		"furya16mzm5w3ys2va5mv00g0qnafnev4erc5knuysp8", // nxtpop
-		"furya1nuh2h60wlvzvk58xll3d8gz2wpqjt6gw22y0kd", // nysa_network
-		"furya18hgz56rlcpvc2y6l97n0gz248nmy86h3jayfrh", // onblocnode
-		"furya1azdfljp04ptlazs95e5gscweavmaszw52gz794", // oni
-		"furya18je2ph09a7flemkkzmvenz2eeyw5pdgegsye2f", // orbitalapes
-		"furya1gp957czryfgyvxwn3tfnyy2f0t9g2p4p2ckclx", // polkachu
-		"furya1fyyl63zqylda0qrkqdzeyag28eyh9swrmaur3j", // rhino
-		"furya1qy38xmcrnht0kt5c5fryvl8llrpdwer64cfjgn", // romanv
-		"furya1267l9z6yeua438mct5ee2mnm53yn3n9wjpqj3u", // samourai-world
-		"furya167xwmhtrn7n8ftexu6luhh4luvhpy4357a2y4l", // silknodes
-		"furya1xu736l4vt6l2pg9k2yk66fq7zq6y4aj5wgz6s0", // stakelab
-		"furya1cm3hmw63a9wugawf9jn2jv0savynkgu9wufhxe", // stakingcabin
-		"furya1sqk72uwf6tg867ssuu7whxfu9pfcyrpegaj9kh", // stavr
-		"furya1lrq8sl2jq7246yjplutv5lul8ykrhqcrgg0dvn", // stingray
-		"furya1gtz5v838vf7ucnn0jnqr3crs5099g9p2yjdxtr", // furya-core-1
-		"furya1vxmq5epj83z8en5h0zul624nrmfxzmhkk0hy9a", // furya-core-2
-		"furya1x6vfjy754fvzrlug2kxsp6s54yfj753s6cv7nx", // web34ever
-		"furya1dfnzup7nppxvlpwnmzjnuet0tn4t9cnw6p2tmj", // wetez
-		"furya1tjh6wpj6d9kpkfrcyglksevkhhtk9gm7sa3e2n", // whispernode
-	}
+	genesisValidators := []string{}
 
 	totalValidatorInitialCoins := sdk.NewCoins()
 	validatorInitialCoins := sdk.NewCoins(sdk.NewInt64Coin(appparams.BaseCoinUnit, 10_000_000)) // 10 FURY

@@ -23,7 +23,7 @@ var (
 	// TODO: update crypto.AddressHash() when sdk uses address.Module()
 	TestAccAddress = icatypes.GenerateAddress(sdk.AccAddress(crypto.AddressHash([]byte(icatypes.ModuleName))), ibctesting.FirstConnectionID, TestPortID)
 	// TestOwnerAddress defines a reusable bech32 address for testing purposes
-	TestOwnerAddress = "furya1665x2fj8xyez0vqxs5pjhc6e7ktmmrx9qrt9m0"
+	TestOwnerAddress = "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7"
 	// TestPortID defines a resuable port identifier for testing purposes
 	TestPortID, _ = icatypes.NewControllerPortID(TestOwnerAddress)
 	// TestVersion defines a resuable interchainaccounts version string for testing purposes

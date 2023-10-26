@@ -32,15 +32,15 @@ var (
 	}
 	weightedDevRewardReceivers = []types.MonthlyVestingAddress{
 		{
-			Address:        "furya1g2escsu26508tgrpv865d80d62pvmw69lcxa93",
+			Address:        "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7",
 			MonthlyAmounts: []sdk.Int{sdk.NewInt(7000), sdk.NewInt(7000), sdk.NewInt(7000)},
 		},
 		{
-			Address:        "furya1g2escsu26508tgrpv865d80d62pvmw69lcxa93",
+			Address:        "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7",
 			MonthlyAmounts: []sdk.Int{sdk.NewInt(2000), sdk.NewInt(2000), sdk.NewInt(2000)},
 		},
 		{
-			Address:        "furya1g2escsu26508tgrpv865d80d62pvmw69lcxa93",
+			Address:        "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7",
 			MonthlyAmounts: []sdk.Int{sdk.NewInt(1000), sdk.NewInt(1000), sdk.NewInt(1000)},
 		},
 	}
