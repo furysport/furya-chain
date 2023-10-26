@@ -1,0 +1,39 @@
+syntax = "proto3";
+package furya.airdrop.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "furya/airdrop/v1beta1/allocation.proto";
+import "furya/airdrop/v1beta1/params.proto";
+
+option go_package = "github.com/FURYA/furya-chain/x/airdrop/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  rpc Allocation(QueryAllocationRequest) returns (QueryAllocationResponse) {
+    option (google.api.http).get =
+        "/furya/airdrop/v1beta1/allocation/{address}";
+  }
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/furya/airdrop/v1beta1/params";
+  }
+}
+
+message QueryAllocationRequest {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // address is the address to query allocation for.
+  string address = 1;
+}
+
+message QueryAllocationResponse {
+  AirdropAllocation allocation = 1;
+}
+
+message QueryParamsRequest {}
+
+message QueryParamsResponse {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}

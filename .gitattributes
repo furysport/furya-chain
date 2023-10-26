@@ -1,0 +1,2 @@
+testnet/furya-testnet-v3/genesis.json filter=lfs diff=lfs merge=lfs -text
+mainnet/furya-1/genesis.json filter=lfs diff=lfs merge=lfs -text
