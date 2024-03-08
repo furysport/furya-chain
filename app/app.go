@@ -156,8 +156,8 @@ import (
 	// unnamed import of statik for swagger UI support
 	"github.com/rakyll/statik/fs"
 
-	v3_0_2 "github.com/furysport/furya-chain/v2/app/upgrades/v3_0_2"
-	v4 "github.com/furysport/furya-chain/v2/app/upgrades/v4_1_2"
+	v1_0_1 "github.com/furysport/furya-chain/v2/app/upgrades/v1_0_1"
+	v2 "github.com/furysport/furya-chain/v2/app/upgrades/v2_0_0"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/furysport/furya-chain/v2/client/docs/statik"
@@ -1132,17 +1132,17 @@ func RegisterSwaggerAPI(rtr *mux.Router) {
 // Setup Upgrade Handler
 func (app *FuryaApp) setupUpgradeHandlers() {
 	app.UpgradeKeeper.SetUpgradeHandler(
-		v3_0_2.UpgradeName,
-		v3_0_2.CreateUpgradeHandler(app.mm, app.configurator),
+		v1_0_1.UpgradeName,
+		v1_0_1.CreateUpgradeHandler(app.mm, app.configurator),
 	)
 
 	// !! ATTENTION !!
-	// v4 upgrade handler
+	// v2 upgrade handler
 	// !! WHEN UPGRADING TO SDK v0.47 MAKE SURE TO INCLUDE THIS
 	// source: https://github.com/cosmos/cosmos-sdk/blob/release/v0.47.x/UPGRADING.md#xconsensus
 	app.UpgradeKeeper.SetUpgradeHandler(
-		v4.UpgradeName,
-		v4.CreateUpgradeHandler(
+		v2.UpgradeName,
+		v2.CreateUpgradeHandler(
 			app.mm,
 			app.configurator,
 			app.IBCKeeper.ClientKeeper,
@@ -1165,7 +1165,7 @@ func (app *FuryaApp) setupUpgradeHandlers() {
 		return
 	}
 
-	if upgradeInfo.Name == v4.UpgradeName {
+	if upgradeInfo.Name == v2.UpgradeName {
 		// !! ATTENTION !!
 		// !! WHEN UPGRADING TO SDK v0.47 MAKE SURE TO INCLUDE THIS
 		// source: https://github.com/cosmos/cosmos-sdk/blob/release/v0.47.x/UPGRADING.md

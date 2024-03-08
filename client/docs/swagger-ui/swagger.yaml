@@ -37511,6 +37511,8 @@ paths:
                                 type: string
                               index:
                                 type: string
+                              alliance:
+                                type: string
                         last_reward_claim_height:
                           type: string
                           format: uint64
@@ -37686,6 +37688,8 @@ paths:
                               denom:
                                 type: string
                               index:
+                                type: string
+                              alliance:
                                 type: string
                         last_reward_claim_height:
                           type: string
@@ -37868,6 +37872,8 @@ paths:
                               denom:
                                 type: string
                               index:
+                                type: string
+                              alliance:
                                 type: string
                         last_reward_claim_height:
                           type: string
@@ -38058,6 +38064,8 @@ paths:
                               type: string
                             index:
                               type: string
+                            alliance:
+                              type: string
                       last_reward_claim_height:
                         type: string
                         format: uint64
@@ -38217,6 +38225,8 @@ paths:
                             denom:
                               type: string
                             index:
+                              type: string
+                            alliance:
                               type: string
                       last_reward_claim_height:
                         type: string
@@ -65533,6 +65543,8 @@ definitions:
               type: string
             index:
               type: string
+            alliance:
+              type: string
       last_reward_claim_height:
         type: string
         format: uint64
@@ -65562,6 +65574,8 @@ definitions:
                 denom:
                   type: string
                 index:
+                  type: string
+                alliance:
                   type: string
           last_reward_claim_height:
             type: string
@@ -65626,6 +65640,8 @@ definitions:
                     denom:
                       type: string
                     index:
+                      type: string
+                    alliance:
                       type: string
               last_reward_claim_height:
                 type: string
@@ -66062,6 +66078,8 @@ definitions:
                         type: string
                       index:
                         type: string
+                      alliance:
+                        type: string
                 last_reward_claim_height:
                   type: string
                   format: uint64
@@ -66248,6 +66266,8 @@ definitions:
       denom:
         type: string
       index:
+        type: string
+      alliance:
         type: string
   alliance.alliance.RewardWeightRange:
     type: object
