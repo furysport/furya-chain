@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package furya.feeburn;
+
+import "gogoproto/gogo.proto";
+import "furya/feeburn/params.proto";
+
+option go_package = "github.com/furysport/furya-chain/v2/x/feeburn/types";
+
+// GenesisState defines the feeburn module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

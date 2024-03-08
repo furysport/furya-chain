@@ -1,0 +1,14 @@
+syntax = "proto3";
+package furya.feeburn;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/furysport/furya-chain/v2/x/feeburn/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  string tx_fee_burn_percent = 1
+      [ (gogoproto.moretags) = "yaml:\"tx_fee_burn_percent\"" ];
+}
