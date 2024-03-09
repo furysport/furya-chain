@@ -1,6 +1,6 @@
 # Furya
 
-![](https://user-images.githubusercontent.com/94062656/215557558-6d0c39f1-9405-439a-aeb5-9baccdbd9df8.png)
+![](https://res.cloudinary.com/dtip9bivj/image/upload/v1709963360/jgvixf4jurrkpmiuw7gp.png)
 
 [![Go Report Card](https://goreportcard.com/badge/furysport/furya-chain)](https://goreportcard.com/report/furysport/furya-chain)
 
