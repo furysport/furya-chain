@@ -813,7 +813,10 @@ func (app *FuryaApp) ModuleAccountAddrs() map[string]bool {
 	for acc := range maccPerms {
 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
 	}
-
+	
+	// Allow the following addresses to receive funds
+	delete(modAccAddrs, authtypes.NewModuleAddress(authtypes.FeeCollectorName).String()) 
+	
 	return modAccAddrs
 }
 
