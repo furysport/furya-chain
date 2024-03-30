@@ -1,0 +1,83 @@
+package keeper
+
+import (
+	"fmt"
+
+	"github.com/cometbft/cometbft/libs/log"
+
+	"github.com/furysport/furya-chain/x/mint/types"
+
+	"github.com/cosmos/cosmos-sdk/codec"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+)
+
+// Keeper of the mint store.
+type Keeper struct {
+	cdc                 codec.BinaryCodec
+	storeKey            storetypes.StoreKey
+	paramSpace          paramtypes.Subspace
+	accountKeeper       types.AccountKeeper
+	bankKeeper          types.BankKeeper
+	stakingKeeper       types.StakingKeeper
+	communityPoolKeeper types.CommunityPoolKeeper
+	hooks               types.MintHooks
+	feeCollectorName    string
+}
+
+type invalidRatioError struct {
+	ActualRatio sdk.Dec
+}
+
+func (e invalidRatioError) Error() string {
+	return fmt.Sprintf("mint allocation ratio (%s) is greater than 1", e.ActualRatio)
+}
+
+const emptyAddressReceiver = ""
+
+// NewKeeper creates a new mint Keeper instance.
+func NewKeeper(
+	cdc codec.BinaryCodec, key storetypes.StoreKey, paramSpace paramtypes.Subspace,
+	ak types.AccountKeeper, bk types.BankKeeper, sk types.StakingKeeper,
+	ck types.CommunityPoolKeeper, feeCollectorName string,
+) Keeper {
+	// ensure mint module account is set
+	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
+		panic("the mint module account has not been set")
+	}
+
+	// set KeyTable if it has not already been set
+	if !paramSpace.HasKeyTable() {
+		paramSpace = paramSpace.WithKeyTable(types.ParamKeyTable())
+	}
+
+	return Keeper{
+		cdc:                 cdc,
+		storeKey:            key,
+		paramSpace:          paramSpace,
+		accountKeeper:       ak,
+		bankKeeper:          bk,
+		stakingKeeper:       sk,
+		communityPoolKeeper: ck,
+		feeCollectorName:    feeCollectorName,
+	}
+}
+
+// _____________________________________________________________________
+
+// Logger returns a module-specific logger.
+func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+	return ctx.Logger().With("module", "x/"+types.ModuleName)
+}
+
+// Set the mint hooks.
+func (k *Keeper) SetHooks(h types.MintHooks) *Keeper {
+	if k.hooks != nil {
+		panic("cannot set mint hooks twice")
+	}
+
+	k.hooks = h
+
+	return k
+}

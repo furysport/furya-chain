@@ -1,0 +1,9 @@
+*.csv
+*.zip
+testnetv2
+data
+*.txt
+.idea
+
+/furya-dapp/
+/build/
