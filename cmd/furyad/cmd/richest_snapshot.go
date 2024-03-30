@@ -4,10 +4,11 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"sort"
 
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/server"
@@ -45,9 +46,9 @@ type AppState struct {
 // SnapshotAccount provide fields of snapshot per account
 type SnapshotAccount struct {
 	Address       string
-	Balance       sdk.Int
-	StakedBalance sdk.Int
-	TotalBalance  sdk.Int
+	Balance       math.Int
+	StakedBalance math.Int
+	TotalBalance  math.Int
 }
 
 // ExportRichestSnapshotCmd generates a snapshot.csv from a provided chain genesis export.
@@ -84,6 +85,7 @@ Example:
 			excludeAddrs["furya1fl48vsnmsdzcv85q5d2q4z5ajdha8yu36wjev9"] = true
 			excludeAddrs["furya10d07y265gmmuvt4z0w9aw880jnsr700j4hgnrp"] = true
 
+
 			decimal := sdk.NewDec(1000_000)
 
 			// Read genesis file
@@ -93,7 +95,7 @@ Example:
 			}
 			defer genesisJson.Close()
 
-			byteValue, _ := ioutil.ReadAll(genesisJson)
+			byteValue, _ := io.ReadAll(genesisJson)
 
 			var genState GenesisState
 
@@ -140,7 +142,7 @@ Example:
 
 			for _, delegation := range stakingGen.Delegations {
 				address := delegation.DelegatorAddress
-				if excludeAddrs[address] == true {
+				if excludeAddrs[address] {
 					continue
 				}
 
@@ -185,9 +187,9 @@ Example:
 			for _, acc := range sortedArr {
 				csvRecords = append(csvRecords, []string{
 					acc.Address,
-					acc.Balance.ToDec().Quo(decimal).String(),
-					acc.StakedBalance.ToDec().Quo(decimal).String(),
-					acc.TotalBalance.ToDec().Quo(decimal).String(),
+					sdk.NewDecFromInt(acc.Balance).Quo(decimal).String(),
+					sdk.NewDecFromInt(acc.StakedBalance).Quo(decimal).String(),
+					sdk.NewDecFromInt(acc.TotalBalance).Quo(decimal).String(),
 				})
 			}
 

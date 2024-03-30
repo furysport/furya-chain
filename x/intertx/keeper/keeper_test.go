@@ -4,26 +4,20 @@ import (
 	"encoding/json"
 	"testing"
 
+	dbm "github.com/cometbft/cometbft-db"
+	"github.com/cometbft/cometbft/libs/log"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
+	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
+	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/stretchr/testify/suite"
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/libs/log"
-	dbm "github.com/tendermint/tm-db"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	icatypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/types"
-	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
-	ibctesting "github.com/cosmos/ibc-go/v3/testing"
-
-	icaapp "github.com/furysport/fury-chain/app"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	icaapp "github.com/furysport/furya-chain/app"
 )
 
 var (
-	// TestAccAddress defines a resuable bech32 address for testing purposes
-	// TODO: update crypto.AddressHash() when sdk uses address.Module()
-	TestAccAddress = icatypes.GenerateAddress(sdk.AccAddress(crypto.AddressHash([]byte(icatypes.ModuleName))), ibctesting.FirstConnectionID, TestPortID)
 	// TestOwnerAddress defines a reusable bech32 address for testing purposes
-	TestOwnerAddress = "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7"
+	TestOwnerAddress = "furya1f9eh8dh7j4nqe8nfq0lhpnr2elh5jr2w4nngt2"
 	// TestPortID defines a resuable port identifier for testing purposes
 	TestPortID, _ = icatypes.NewControllerPortID(TestOwnerAddress)
 	// TestVersion defines a resuable interchainaccounts version string for testing purposes
@@ -41,7 +35,9 @@ func init() {
 func SetupICATestingApp() (ibctesting.TestingApp, map[string]json.RawMessage) {
 	db := dbm.NewMemDB()
 	encCdc := icaapp.MakeEncodingConfig()
-	app := icaapp.NewFuryaApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, icaapp.DefaultNodeHome, 5, encCdc, simapp.EmptyAppOptions{})
+
+	appOptions := make(simtestutil.AppOptionsMap, 0)
+	app := icaapp.NewFuryaApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, icaapp.DefaultNodeHome, encCdc, appOptions)
 	return app, icaapp.NewDefaultGenesisState()
 }
 
@@ -79,8 +75,8 @@ func (suite *KeeperTestSuite) SetupTest() {
 
 func NewICAPath(chainA, chainB *ibctesting.TestChain) *ibctesting.Path {
 	path := ibctesting.NewPath(chainA, chainB)
-	path.EndpointA.ChannelConfig.PortID = icatypes.PortID
-	path.EndpointB.ChannelConfig.PortID = icatypes.PortID
+	path.EndpointA.ChannelConfig.PortID = icatypes.HostPortID
+	path.EndpointB.ChannelConfig.PortID = icatypes.HostPortID
 	path.EndpointA.ChannelConfig.Order = channeltypes.ORDERED
 	path.EndpointB.ChannelConfig.Order = channeltypes.ORDERED
 	path.EndpointA.ChannelConfig.Version = TestVersion

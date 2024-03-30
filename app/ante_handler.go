@@ -1,10 +1,13 @@
 package furya
 
 import (
+	"cosmossdk.io/errors"
+	"cosmossdk.io/math"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	airdropkeeper "github.com/furysport/fury-chain/x/airdrop/keeper"
+	airdropkeeper "github.com/furysport/furya-chain/x/airdrop/keeper"
 	"github.com/cosmos/cosmos-sdk/codec"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
@@ -13,8 +16,8 @@ import (
 	disttypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibcante "github.com/cosmos/ibc-go/v3/modules/core/ante"
-	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
+	ibcante "github.com/cosmos/ibc-go/v7/modules/core/ante"
+	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 )
 
 var minCommissionRate = sdk.NewDecWithPrec(5, 2) // 5%
@@ -26,21 +29,21 @@ type HandlerOptions struct {
 	ante.HandlerOptions
 
 	BankKeeper        bankkeeper.Keeper
-	StakingKeeper     stakingkeeper.Keeper
+	StakingKeeper     *stakingkeeper.Keeper
 	AirdropKeeper     *airdropkeeper.Keeper
 	IBCKeeper         *ibckeeper.Keeper
-	TxCounterStoreKey sdk.StoreKey
+	TxCounterStoreKey storetypes.StoreKey
 	WasmConfig        wasmTypes.WasmConfig
 	Cdc               codec.BinaryCodec
 }
 
 type MinCommissionDecorator struct {
 	cdc codec.BinaryCodec
-	sk  stakingkeeper.Keeper
+	sk  *stakingkeeper.Keeper
 	bk  bankkeeper.Keeper
 }
 
-func NewMinCommissionDecorator(cdc codec.BinaryCodec, sk stakingkeeper.Keeper, bk bankkeeper.Keeper) MinCommissionDecorator {
+func NewMinCommissionDecorator(cdc codec.BinaryCodec, sk *stakingkeeper.Keeper, bk bankkeeper.Keeper) MinCommissionDecorator {
 	return MinCommissionDecorator{
 		cdc: cdc,
 		sk:  sk,
@@ -60,7 +63,7 @@ func (min MinCommissionDecorator) AnteHandle(
 			// commission set below 5%
 			c := msg.Commission
 			if c.Rate.LT(minCommissionRate) {
-				return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "commission can't be lower than 5%")
+				return errors.Wrap(sdkerrors.ErrUnauthorized, "commission can't be lower than 5%")
 			}
 		case *stakingtypes.MsgEditValidator:
 			// if commission rate is nil, it means only
@@ -69,7 +72,7 @@ func (min MinCommissionDecorator) AnteHandle(
 				break
 			}
 			if msg.CommissionRate.LT(minCommissionRate) {
-				return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "commission can't be lower than 5%")
+				return errors.Wrap(sdkerrors.ErrUnauthorized, "commission can't be lower than 5%")
 			}
 		case *stakingtypes.MsgDelegate:
 			val, err := min.getValidator(ctx, msg.ValidatorAddress)
@@ -79,7 +82,7 @@ func (min MinCommissionDecorator) AnteHandle(
 
 			projectedVotingPower := min.CalculateDelegateProjectedVotingPower(ctx, val, sdk.NewDecFromInt(msg.Amount.Amount))
 			if projectedVotingPower.GTE(maxVotingPower) {
-				return sdkerrors.Wrapf(
+				return errors.Wrapf(
 					sdkerrors.ErrInvalidRequest,
 					"This validator has a voting power of %s%%. Delegations not allowed to a validator whose post-delegation voting power is more than %s%%. Please delegate to a validator with less bonded tokens", projectedVotingPower, maxVotingPower)
 			}
@@ -100,7 +103,7 @@ func (min MinCommissionDecorator) AnteHandle(
 
 			projectedVotingPower := min.CalculateRedelegateProjectedVotingPower(ctx, dstVal, delegateAmount)
 			if projectedVotingPower.GTE(maxVotingPower) {
-				return sdkerrors.Wrapf(
+				return errors.Wrapf(
 					sdkerrors.ErrInvalidRequest,
 					"This validator has a voting power of %s%%. Delegations not allowed to a validator whose post-delegation voting power is more than %s%%. Please redelegate to a validator with less bonded tokens", projectedVotingPower, maxVotingPower)
 			}
@@ -114,7 +117,7 @@ func (min MinCommissionDecorator) AnteHandle(
 			var innerMsg sdk.Msg
 			err := min.cdc.UnpackAny(v, &innerMsg)
 			if err != nil {
-				return sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "cannot unmarshal authz exec msgs")
+				return errors.Wrapf(sdkerrors.ErrUnauthorized, "cannot unmarshal authz exec msgs")
 			}
 
 			err = validMsg(innerMsg)
@@ -148,7 +151,7 @@ func (min MinCommissionDecorator) AnteHandle(
 func (min MinCommissionDecorator) getValidator(ctx sdk.Context, bech32ValAddr string) (stakingtypes.Validator, error) {
 	valAddr, err := sdk.ValAddressFromBech32(bech32ValAddr)
 	if err != nil {
-		return stakingtypes.Validator{}, sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, bech32ValAddr)
+		return stakingtypes.Validator{}, errors.Wrap(sdkerrors.ErrInvalidAddress, bech32ValAddr)
 	}
 
 	val, found := min.sk.GetValidator(ctx, valAddr)
@@ -159,7 +162,7 @@ func (min MinCommissionDecorator) getValidator(ctx sdk.Context, bech32ValAddr st
 	return val, nil
 }
 
-func (min MinCommissionDecorator) getTotalDelegatedTokens(ctx sdk.Context) sdk.Int {
+func (min MinCommissionDecorator) getTotalDelegatedTokens(ctx sdk.Context) math.Int {
 	bondDenom := min.sk.BondDenom(ctx)
 	bondedPool := min.sk.GetBondedPool(ctx)
 	notBondedPool := min.sk.GetNotBondedPool(ctx)
@@ -196,15 +199,15 @@ func (min MinCommissionDecorator) CalculateRedelegateProjectedVotingPower(ctx sd
 // signer.
 func NewAnteHandler(options HandlerOptions) (sdk.AnteHandler, error) {
 	if options.AccountKeeper == nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrLogic, "account keeper is required for ante builder")
+		return nil, errors.Wrap(sdkerrors.ErrLogic, "account keeper is required for ante builder")
 	}
 
 	if options.BankKeeper == nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrLogic, "bank keeper is required for ante builder")
+		return nil, errors.Wrap(sdkerrors.ErrLogic, "bank keeper is required for ante builder")
 	}
 
 	if options.SignModeHandler == nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrLogic, "sign mode handler is required for ante builder")
+		return nil, errors.Wrap(sdkerrors.ErrLogic, "sign mode handler is required for ante builder")
 	}
 
 	var sigGasConsumer = options.SigGasConsumer
@@ -217,8 +220,7 @@ func NewAnteHandler(options HandlerOptions) (sdk.AnteHandler, error) {
 		NewMinCommissionDecorator(options.Cdc, options.StakingKeeper, options.BankKeeper),
 		wasmkeeper.NewLimitSimulationGasDecorator(options.WasmConfig.SimulationGasLimit),
 		wasmkeeper.NewCountTXDecorator(options.TxCounterStoreKey),
-		ante.NewRejectExtensionOptionsDecorator(),
-		ante.NewMempoolFeeDecorator(),
+		ante.NewExtensionOptionsDecorator(options.ExtensionOptionChecker),
 		ante.NewValidateBasicDecorator(),
 		ante.NewTxTimeoutHeightDecorator(),
 		ante.NewValidateMemoDecorator(options.AccountKeeper),
@@ -230,7 +232,7 @@ func NewAnteHandler(options HandlerOptions) (sdk.AnteHandler, error) {
 		ante.NewSigGasConsumeDecorator(options.AccountKeeper, sigGasConsumer),
 		ante.NewSigVerificationDecorator(options.AccountKeeper, options.SignModeHandler),
 		ante.NewIncrementSequenceDecorator(options.AccountKeeper),
-		ibcante.NewAnteDecorator(options.IBCKeeper),
+		ibcante.NewRedundantRelayDecorator(options.IBCKeeper),
 	}
 
 	return sdk.ChainAnteDecorators(anteDecorators...), nil

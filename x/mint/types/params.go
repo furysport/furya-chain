@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"cosmossdk.io/math"
 	yaml "gopkg.in/yaml.v2"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -24,6 +25,8 @@ var (
 	KeyUsageIncentiveAddress                = []byte("UsageIncentiveAddress")
 	KeyGrantsProgramAddress                 = []byte("GrantsProgramAddress")
 	KeyTeamReserveAddress                   = []byte("TeamReserveAddress")
+	KeyBlocksPerYear                        = []byte("BlocksPerYear")
+	KeyTotalBurntAmount                     = []byte("TotalBurntAmount")
 )
 
 // ParamTable for minting module.
@@ -36,6 +39,7 @@ func NewParams(
 	mintDenom string, genesisBlockProvisions sdk.Dec,
 	ReductionFactor sdk.Dec, reductionPeriodInBlocks int64, distrProportions DistributionProportions,
 	weightedDevRewardsReceivers []MonthlyVestingAddress, MintingRewardsDistributionStartBlock int64,
+	blocksPerYear uint64, totalBurntAmount sdk.Coins,
 ) Params {
 	return Params{
 		MintDenom:                            mintDenom,
@@ -45,39 +49,19 @@ func NewParams(
 		DistributionProportions:              distrProportions,
 		WeightedDeveloperRewardsReceivers:    weightedDevRewardsReceivers,
 		MintingRewardsDistributionStartBlock: MintingRewardsDistributionStartBlock,
+		BlocksPerYear:                        blocksPerYear,
+		TotalBurntAmount:                     totalBurntAmount,
 	}
 }
 
 func addressTable() map[string]string {
-	addressJSON := `{
-		"adress1": "furya1g5dgnawwefpfkjmkyv7f6ga56wzp2w7l9vzpec",
-		"adress2": "furya1e23suxkwrv5zfxt99js43lzmspsy9jfaa2ahfg",
-		"adress3": "furya1yf98k5mv8g846d3m9j6t6rygfs6q7zwlp9awek",
-		"adress4": "furya173wpa4cpv45klhjv7fjczytcv95eyuttamh0ma",
-		"adress5": "furya1628wh06darjv9qutw7c2xlx4drr2nv9an03dk7",
-		"adress6": "furya1z03prz76yeg4eyk5gnuwyfhd0dgmeafywv5h0x",
-		"adress7": "furya1rwq208ld9wfrw389gjjh7vhmj8d8wpwexklcn0",
-		"adress8": "furya1a9jqsecfyxuflrm0d4yl06hhn7p6du0al8rq7f",
-		"adress9": "furya18crcv989365qxea04s4q70nl2cz30gewntj287",
-		"adress10": "furya1twt8vxqayzgwx2fdfv49gzqfnuly9l6jzfx0ff",
-		"adress11": "furya1hfetdttle00juc2wlvhgj2vsyvt7n85q5yc759",
-		"adress12": "furya1gr2l7xyeuc33ztqlvyvkcsfysxez8vmcjmlatu",
-		"adress13": "furya12y0elhp2hkxgyy5hrarrl8g7qpuyay22tdxsak",
-		"adress14": "furya1aztlnw7fr246ya5p069pyl3udr033xc0l4kc0d",
-		"adress15": "furya1s34lwjlxssjqw3zu3nyfzc5xk3zks7w0qvre4n",
-		"adress16": "furya137relphljq46zqqkys3dlsrl5jtqjyu5lg62ec",
-		"adress17": "furya1skyuxjps7gl3zc55r4e9juk7vn7zgcwz2y9sm2",
-		"adress18": "furya19fwzytx3uuzyxelknkmwuktspk6p65l45sswe4",
-		"adress19": "furya1dxq5usy2r9u9vsu8h55sx88ka70zua4p0gw2yt",
-		"adress20": "furya1shegth9agcakr8q9jp2ckkejuyllhs0jdlhv0x",
-		"adress21": "furya1np62mw4zuaej94s0y3vx0uyncwj039rtz5lxah",
-		"adress22": "furya16j8l86vjkgthd0xake65vr3z6zg6grmnrqt0wc",
-		"adress23": "furya17a3r0wdsgyl6kvl4wgj5ry4lqaqea2vefwvnnf",
-		"adress24": "furya1aft7w2rc47kw0alcamwmth2ry9p7mw4gqs5n8z",
-	}`
+	addressJSON := `{}`
 
 	var addressMap map[string]string
-	json.Unmarshal([]byte(addressJSON), &addressMap)
+	err := json.Unmarshal([]byte(addressJSON), &addressMap)
+	if err != nil {
+		panic(err)
+	}
 	return addressMap
 }
 
@@ -93,7 +77,7 @@ func parseMonthlyVesting() []MonthlyVestingAddress {
 	for _, addr := range records[0] {
 		vAddrs = append(vAddrs, MonthlyVestingAddress{
 			Address:        addressMap[addr],
-			MonthlyAmounts: []sdk.Int{},
+			MonthlyAmounts: []math.Int{},
 		})
 	}
 
@@ -112,7 +96,7 @@ func parseMonthlyVesting() []MonthlyVestingAddress {
 func DefaultParams() Params {
 	return Params{
 		MintDenom:               sdk.DefaultBondDenom,
-		GenesisBlockProvisions:  sdk.NewDec(47000000),        //  300 million /  6307200 * 10 ^ 6
+		GenesisBlockProvisions:  sdk.NewDec(10000),        //  300 million /  6307200 * 10 ^ 6
 		ReductionPeriodInBlocks: 6307200,                     // 1 year - 86400 x 365 / 5
 		ReductionFactor:         sdk.NewDecWithPrec(6666, 4), // 0.6666
 		DistributionProportions: DistributionProportions{
@@ -123,10 +107,12 @@ func DefaultParams() Params {
 			DeveloperRewards: sdk.NewDecWithPrec(15, 2), // 15%
 		},
 		WeightedDeveloperRewardsReceivers:    parseMonthlyVesting(),
-		UsageIncentiveAddress:                "furya1sf0vruy94hpdvcagcx99myhjp8xujevsgrpprg",
-		GrantsProgramAddress:                 "furya1r0sxwusya7hkj6mlgspyurpvdzucjvclxgv3dw",
-		TeamReserveAddress:                   "furya1eztq5wejayp84r9vegmm5p2jf4cc2e59dvha8c",
+		UsageIncentiveAddress:                "furya1wngr6vhk9dv20c7jxt6jhrg0f47a4frwf6hcvv",
+		GrantsProgramAddress:                 "furya1u5eve8nuzgu4x7dy7943q780dttzz33vuhws6k",
+		TeamReserveAddress:                   "furya13fxzw5eeuqqvpjxycqvecgz27ducenenmdqtk7",
 		MintingRewardsDistributionStartBlock: 0,
+		BlocksPerYear:                        5733818,
+		TotalBurntAmount:                     sdk.Coins{},
 	}
 }
 
@@ -168,6 +154,13 @@ func (p Params) Validate() error {
 		return err
 	}
 
+	if err := validateBlocksPerYear(p.BlocksPerYear); err != nil {
+		return err
+	}
+
+	if err := validateTotalBurntAmount(p.TotalBurntAmount); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -191,6 +184,8 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyGrantsProgramAddress, &p.GrantsProgramAddress, validateAddress),
 		paramtypes.NewParamSetPair(KeyTeamReserveAddress, &p.TeamReserveAddress, validateAddress),
 		paramtypes.NewParamSetPair(KeyMintingRewardsDistributionStartBlock, &p.MintingRewardsDistributionStartBlock, validateMintingRewardsDistributionStartBlock),
+		paramtypes.NewParamSetPair(KeyBlocksPerYear, &p.BlocksPerYear, validateBlocksPerYear),
+		paramtypes.NewParamSetPair(KeyTotalBurntAmount, &p.TotalBurntAmount, validateTotalBurntAmount),
 	}
 }
 
@@ -324,4 +319,26 @@ func validateAddress(i interface{}) error {
 	_, err := sdk.AccAddressFromBech32(v)
 
 	return err
+}
+
+func validateBlocksPerYear(i interface{}) error {
+	v, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v <= 0 {
+		return fmt.Errorf("number of blocks per year should be positive")
+	}
+
+	return nil
+}
+
+func validateTotalBurntAmount(i interface{}) error {
+	_, ok := i.([]sdk.Coin)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	return nil
 }

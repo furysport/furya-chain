@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/furysport/fury-chain/x/mint/types"
+	"github.com/furysport/furya-chain/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
@@ -32,6 +32,10 @@ func (k msgServer) BurnTokens(goCtx context.Context, msg *types.MsgBurnTokens) (
 	if err != nil {
 		return nil, err
 	}
+
+	params := k.GetParams(ctx)
+	params.TotalBurntAmount = sdk.Coins(params.TotalBurntAmount).Add(msg.Amount...)
+	k.SetParams(ctx, params)
 
 	return &types.MsgBurnTokensResponse{}, nil
 }

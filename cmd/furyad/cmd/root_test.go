@@ -5,8 +5,8 @@ import (
 
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
-	app "github.com/furysport/fury-chain/app"
-	"github.com/furysport/fury-chain/cmd/furyad/cmd"
+	app "github.com/furysport/furya-chain/app"
+	"github.com/furysport/furya-chain/cmd/furyad/cmd"
 	"github.com/stretchr/testify/require"
 )
 
@@ -19,5 +19,5 @@ func TestRootCmdConfig(t *testing.T) {
 		"test",            // value
 	})
 
-	require.NoError(t, svrcmd.Execute(rootCmd, app.DefaultNodeHome))
+	require.NoError(t, svrcmd.Execute(rootCmd, "", app.DefaultNodeHome))
 }

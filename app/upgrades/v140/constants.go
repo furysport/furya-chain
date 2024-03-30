@@ -1,11 +1,11 @@
-package v130
+package v140
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 
-	"github.com/furysport/fury-chain/app/upgrades"
-	intertxtypes "github.com/furysport/fury-chain/x/intertx/types"
-	icacontrollertypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/types"
+	"github.com/furysport/furya-chain/app/upgrades"
+	intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
+	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 )
 
 const (

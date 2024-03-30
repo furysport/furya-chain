@@ -5,7 +5,8 @@ package simulation
 import (
 	"math/rand"
 
-	"github.com/furysport/fury-chain/x/mint/types"
+	"cosmossdk.io/math"
+	"github.com/furysport/furya-chain/x/mint/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -32,16 +33,16 @@ var (
 	}
 	weightedDevRewardReceivers = []types.MonthlyVestingAddress{
 		{
-			Address:        "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7",
-			MonthlyAmounts: []sdk.Int{sdk.NewInt(7000), sdk.NewInt(7000), sdk.NewInt(7000)},
+			Address:        "furya1f9eh8dh7j4nqe8nfq0lhpnr2elh5jr2w4nngt2",
+			MonthlyAmounts: []math.Int{sdk.NewInt(7000), sdk.NewInt(7000), sdk.NewInt(7000)},
 		},
 		{
-			Address:        "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7",
-			MonthlyAmounts: []sdk.Int{sdk.NewInt(2000), sdk.NewInt(2000), sdk.NewInt(2000)},
+			Address:        "furya1f9eh8dh7j4nqe8nfq0lhpnr2elh5jr2w4nngt2",
+			MonthlyAmounts: []math.Int{sdk.NewInt(2000), sdk.NewInt(2000), sdk.NewInt(2000)},
 		},
 		{
-			Address:        "furya16w6chfrrg930cqcfewdzse6szgjk657764dll7",
-			MonthlyAmounts: []sdk.Int{sdk.NewInt(1000), sdk.NewInt(1000), sdk.NewInt(1000)},
+			Address:        "furya1f9eh8dh7j4nqe8nfq0lhpnr2elh5jr2w4nngt2",
+			MonthlyAmounts: []math.Int{sdk.NewInt(1000), sdk.NewInt(1000), sdk.NewInt(1000)},
 		},
 	}
 )
@@ -66,10 +67,10 @@ func RandomizedGenState(simState *module.SimulationState) {
 		func(r *rand.Rand) { reductionPeriodInBlocks = genReductionPeriodInBlocks(r) },
 	)
 
-	var mintintRewardsDistributionStartBlock int64
+	var mintingRewardsDistributionStartBlock int64
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, MintingRewardsDistributionStartBlockKey, &mintintRewardsDistributionStartBlock, simState.Rand,
-		func(r *rand.Rand) { mintintRewardsDistributionStartBlock = genMintintRewardsDistributionStartBlock(r) },
+		simState.Cdc, MintingRewardsDistributionStartBlockKey, &mintingRewardsDistributionStartBlock, simState.Rand,
+		func(r *rand.Rand) { mintingRewardsDistributionStartBlock = genMintingRewardsDistributionStartBlock(r) },
 	)
 
 	reductionStartedBlock := genReductionStartedBlock(simState.Rand)
@@ -82,7 +83,10 @@ func RandomizedGenState(simState *module.SimulationState) {
 		reductionPeriodInBlocks,
 		distributionProportions,
 		weightedDevRewardReceivers,
-		mintintRewardsDistributionStartBlock)
+		mintingRewardsDistributionStartBlock,
+		5733818,
+		[]sdk.Coin{},
+	)
 
 	minter := types.NewMinter(blockProvisions)
 
@@ -103,7 +107,7 @@ func genReductionPeriodInBlocks(r *rand.Rand) int64 {
 	return int64(r.Intn(maxInt64))
 }
 
-func genMintintRewardsDistributionStartBlock(r *rand.Rand) int64 {
+func genMintingRewardsDistributionStartBlock(r *rand.Rand) int64 {
 	return int64(r.Intn(maxInt64))
 }
 

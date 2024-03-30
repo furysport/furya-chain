@@ -7,8 +7,8 @@ import (
 	"os"
 	"strconv"
 
-	appparams "github.com/furysport/fury-chain/app/params"
-	airdroptypes "github.com/furysport/fury-chain/x/airdrop/types"
+	appparams "github.com/furysport/furya-chain/app/params"
+	airdroptypes "github.com/furysport/furya-chain/x/airdrop/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -37,11 +37,16 @@ func saveAllocation(path string, allocations []airdroptypes.AirdropAllocation) {
 	for _, allocation := range allocations {
 		decimal := sdk.NewDec(1000_000)
 		records = append(records, []string{
-			allocation.Address, allocation.Amount.Amount.ToDec().Quo(decimal).String(), allocation.ClaimedAmount.Amount.ToDec().Quo(decimal).String(),
+			allocation.Address,
+			sdk.NewDecFromInt(allocation.Amount.Amount).Quo(decimal).String(),
+			sdk.NewDecFromInt(allocation.ClaimedAmount.Amount).Quo(decimal).String(),
 		})
 	}
 
 	f, err := os.Create(path)
+	if err != nil {
+		panic(err)
+	}
 	defer f.Close()
 
 	if err != nil {

@@ -4,12 +4,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 
-	appparams "github.com/furysport/fury-chain/app/params"
-	"github.com/furysport/fury-chain/x/airdrop/types"
+	appparams "github.com/furysport/furya-chain/app/params"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
-	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -32,11 +29,11 @@ func VerifySignature(chain string, address string, pubKey string, rewardAddr str
 	if err != nil {
 		return false
 	}
-	keplrSignBytes := legacytx.StdSignBytes(
-		"", 0, 0, 0,
-		legacytx.StdFee{Amount: sdk.Coins{}, Gas: 0},
-		[]sdk.Msg{types.NewMsgSignData(address, signBytes)}, "",
-	)
+	// keplrSignBytes := legacytx.StdSignBytes(
+	// 	"", 0, 0, 0,
+	// 	legacytx.StdFee{Amount: sdk.Coins{}, Gas: 0},
+	// 	[]sdk.Msg{types.NewMsgSignData(address, signBytes)}, "",
+	// )
 
 	switch chain {
 	case "solana":
@@ -84,25 +81,25 @@ func VerifySignature(chain string, address string, pubKey string, rewardAddr str
 			return false
 		}
 		return secp256k1PubKey.VerifySignature(signBytes, signatureData)
-	case "secret":
-		pubKeyBytes, err := hexutil.Decode(pubKey)
-		if err != nil {
-			return false
-		}
-		secp256k1PubKey := secp256k1.PubKey{Key: pubKeyBytes}
-		secretAddr, err := bech32.ConvertAndEncode("secret", secp256k1PubKey.Address())
-		if err != nil {
-			return false
-		}
-		if secretAddr != address {
-			return false
-		}
+	// case "secret":
+	// 	pubKeyBytes, err := hexutil.Decode(pubKey)
+	// 	if err != nil {
+	// 		return false
+	// 	}
+	// 	secp256k1PubKey := secp256k1.PubKey{Key: pubKeyBytes}
+	// 	secretAddr, err := bech32.ConvertAndEncode("secret", secp256k1PubKey.Address())
+	// 	if err != nil {
+	// 		return false
+	// 	}
+	// 	if secretAddr != address {
+	// 		return false
+	// 	}
 
-		signatureData, err := hexutil.Decode(signatureBytes)
-		if err != nil {
-			return false
-		}
-		return secp256k1PubKey.VerifySignature(keplrSignBytes, signatureData)
+	// 	signatureData, err := hexutil.Decode(signatureBytes)
+	// 	if err != nil {
+	// 		return false
+	// 	}
+	// 	return secp256k1PubKey.VerifySignature(keplrSignBytes, signatureData)
 	case "stargaze":
 		_, bz, err := bech32.DecodeAndConvert(address)
 		if err != nil {

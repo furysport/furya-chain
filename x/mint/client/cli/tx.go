@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/furysport/fury-chain/x/mint/types"
+	"github.com/furysport/furya-chain/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -36,6 +36,9 @@ func GetTxBurnTokensCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
 
 			amount, err := sdk.ParseCoinsNormalized(args[0])
 			if err != nil {
