@@ -27,4 +27,4 @@ jobs:
           context: .
           push: false
           platforms: linux/amd64
-          tags: rg.nl-ams.scw.cloud/teritori/teritorid:${{ steps.info.outputs.tags }}
+          tags: rg.nl-ams.scw.cloud/furya/furyad:${{ steps.info.outputs.tags }}

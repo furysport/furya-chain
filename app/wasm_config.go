@@ -1,4 +1,4 @@
-package teritori
+package furya
 
 import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"

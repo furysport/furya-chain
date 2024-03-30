@@ -4,8 +4,8 @@ import (
 	"reflect"
 
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/TERITORI/teritori-chain/app/keepers"
-	minttypes "github.com/TERITORI/teritori-chain/x/mint/types"
+	"github.com/furysport/furya-chain/app/keepers"
+	minttypes "github.com/furysport/furya-chain/x/mint/types"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -64,7 +64,7 @@ func CreateUpgradeHandler(
 		// Mint module params update
 		params := minttypes.Params{}
 		params.BlocksPerYear = 5733818
-		params.TotalBurntAmount = []sdk.Coin{sdk.NewInt64Coin("utori", 118_547_020000)}
+		params.TotalBurntAmount = []sdk.Coin{sdk.NewInt64Coin("ufury", 118_547_020000)}
 		subspace, ok := keepers.ParamsKeeper.GetSubspace(minttypes.ModuleName)
 		if !ok {
 			panic("invalid mint module subspace")

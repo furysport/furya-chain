@@ -9,7 +9,7 @@ import (
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgBurnTokens{}, "teritori/mint/MsgBurnTokens", nil)
+	cdc.RegisterConcrete(&MsgBurnTokens{}, "furya/mint/MsgBurnTokens", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {

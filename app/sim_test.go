@@ -1,4 +1,4 @@
-package teritori_test
+package furya_test
 
 import (
 	"encoding/json"
@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/CosmWasm/wasmd/app"
-	teritori "github.com/TERITORI/teritori-chain/app"
-	"github.com/TERITORI/teritori-chain/app/helpers"
+	furya "github.com/furysport/furya-chain/app"
+	"github.com/furysport/furya-chain/app/helpers"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cometbft/cometbft/libs/rand"
@@ -29,7 +29,7 @@ func init() {
 }
 
 // Profile with:
-// /usr/local/go/bin/go test -benchmem -run=^$ github.com/cosmos/cosmos-sdk/TeritoriApp -bench ^BenchmarkFullAppSimulation$ -Commit=true -cpuprofile cpu.out
+// /usr/local/go/bin/go test -benchmem -run=^$ github.com/cosmos/cosmos-sdk/FuryaApp -bench ^BenchmarkFullAppSimulation$ -Commit=true -cpuprofile cpu.out
 func BenchmarkFullAppSimulation(b *testing.B) {
 	config := simcli.NewConfigFromFlags()
 	config.ChainID = "mars-simapp"
@@ -56,10 +56,10 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 	appOptions[flags.FlagHome] = app.DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	bApp := teritori.NewTeritoriApp(
+	bApp := furya.NewFuryaApp(
 		logger, db, nil, true, map[int64]bool{},
-		teritori.DefaultNodeHome,
-		teritori.MakeEncodingConfig(),
+		furya.DefaultNodeHome,
+		furya.MakeEncodingConfig(),
 		appOptions,
 		interBlockCacheOpt(),
 	)
@@ -136,7 +136,7 @@ func TestAppStateDeterminism(t *testing.T) {
 			}
 
 			db := dbm.NewMemDB()
-			app := teritori.NewTeritoriApp(logger, db, nil, true, map[int64]bool{}, teritori.DefaultNodeHome, teritori.MakeEncodingConfig(), appOptions, interBlockCacheOpt())
+			app := furya.NewFuryaApp(logger, db, nil, true, map[int64]bool{}, furya.DefaultNodeHome, furya.MakeEncodingConfig(), appOptions, interBlockCacheOpt())
 
 			fmt.Printf(
 				"running non-determinism simulation; seed %d: %d/%d, attempt: %d/%d\n",
@@ -150,7 +150,7 @@ func TestAppStateDeterminism(t *testing.T) {
 				simtestutil.AppStateFn(
 					app.AppCodec(),
 					app.SimulationManager(),
-					teritori.NewDefaultGenesisState(),
+					furya.NewDefaultGenesisState(),
 				),
 				simulation2.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
 				simtestutil.SimulationOperations(app, app.AppCodec(), config),

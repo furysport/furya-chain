@@ -9,13 +9,13 @@ LEDGER_ENABLED ?= true
 SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
 BINDIR ?= $(GOPATH)/bin
 SIMAPP = ./app
-IMAGE_TAG=rg.nl-ams.scw.cloud/teritori/teritorid:${shell git describe --tags 2>/dev/null || echo dev-$(git rev-parse HEAD)}
+IMAGE_TAG=rg.nl-ams.scw.cloud/furya/furyad:${shell git describe --tags 2>/dev/null || echo dev-$(git rev-parse HEAD)}
 
 # for dockerized protobuf tools
 DOCKER := $(shell which docker)
 BUF_IMAGE=bufbuild/buf@sha256:3cb1f8a4b48bd5ad8f09168f10f607ddc318af202f5c057d52a45216793d85e5 #v1.4.0
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(BUF_IMAGE)
-HTTPS_GIT := https://github.com/TERITORI/teritorid.git
+HTTPS_GIT := https://github.com/furysport/furyad.git
 
 export GO111MODULE = on
 
@@ -58,11 +58,11 @@ build_tags_comma_sep := $(subst $(empty),$(comma),$(build_tags))
 
 # process linker flags
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=teritori \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=teritorid \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=furya \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=furyad \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-		  -X github.com/TERITORI/teritorid/app.Bech32Prefix=tori \
+		  -X github.com/furysport/furyad/app.Bech32Prefix=furya \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
 		  -X github.com/cometbft/cometbft/version.TMCoreSemVer=$(TM_VERSION)
 
@@ -84,14 +84,14 @@ all: install lint test
 
 build: go.sum
 ifeq ($(OS),Windows_NT)
-	$(error teritorid server not supported. Use "make build-windows-client" for client)
+	$(error furyad server not supported. Use "make build-windows-client" for client)
 	exit 1
 else
-	go build -mod=readonly $(BUILD_FLAGS) -o build/teritorid ./cmd/teritorid
+	go build -mod=readonly $(BUILD_FLAGS) -o build/furyad ./cmd/furyad
 endif
 
 build-windows-client: go.sum
-	GOOS=windows GOARCH=amd64 go build -mod=readonly $(BUILD_FLAGS) -o build/teritorid.exe ./cmd/teritorid
+	GOOS=windows GOARCH=amd64 go build -mod=readonly $(BUILD_FLAGS) -o build/furyad.exe ./cmd/furyad
 
 build-contract-tests-hooks:
 ifeq ($(OS),Windows_NT)
@@ -101,7 +101,7 @@ else
 endif
 
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/teritorid
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/furyad
 
 ########################################
 ### Tools & dependencies
@@ -117,7 +117,7 @@ go.sum: go.mod
 draw-deps:
 	@# requires brew install graphviz or apt-get install graphviz
 	go install github.com/RobotsAndPencils/goviz@latest
-	@goviz -i ./cmd/teritorid -d 2 | dot -Tpng -o dependency-graph.png
+	@goviz -i ./cmd/furyad -d 2 | dot -Tpng -o dependency-graph.png
 
 clean:
 	rm -rf snapcraft-local.yaml build/
@@ -174,7 +174,7 @@ lint: format-tools
 format: format-tools
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gofumpt -w
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs misspell -w
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gci write --skip-generated -s standard -s default -s "prefix(cosmossdk.io)" -s "prefix(github.com/cosmos/cosmos-sdk)" -s "prefix(github.com/TERITORI/teritorid)" --custom-order
+	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gci write --skip-generated -s standard -s default -s "prefix(cosmossdk.io)" -s "prefix(github.com/cosmos/cosmos-sdk)" -s "prefix(github.com/furysport/furyad)" --custom-order
 
 
 ###############################################################################

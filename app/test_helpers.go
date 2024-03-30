@@ -1,4 +1,4 @@
-package teritori
+package furya
 
 import (
 	"encoding/json"
@@ -24,8 +24,8 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
-// InitNewApp initiate a new TeritoriApp object
-func InitNewApp() *TeritoriApp {
+// InitNewApp initiate a new FuryaApp object
+func InitNewApp() *FuryaApp {
 	db := dbm.NewMemDB()
 	appOptions := make(simtestutil.AppOptionsMap, 0)
 	appOptions[flags.FlagHome] = DefaultNodeHome
@@ -34,7 +34,7 @@ func InitNewApp() *TeritoriApp {
 	appOptions[flags.FlagHome] = nodeHome // ensure unique folder
 	appOptions[server.FlagInvCheckPeriod] = 1
 	encCdc := MakeEncodingConfig()
-	app := NewTeritoriApp(
+	app := NewFuryaApp(
 		log.NewNopLogger(),
 		db,
 		nil,
@@ -48,8 +48,8 @@ func InitNewApp() *TeritoriApp {
 	return app
 }
 
-// Initializes a new TeritoriApp without IBC functionality
-func Setup(initChain bool) *TeritoriApp {
+// Initializes a new FuryaApp without IBC functionality
+func Setup(initChain bool) *FuryaApp {
 	app := InitNewApp()
 	if initChain {
 		genesisState, valSet, _, _ := GenesisStateWithValSet(app)
@@ -79,8 +79,8 @@ func Setup(initChain bool) *TeritoriApp {
 	return app
 }
 
-// Initializes a new TeritoriApp without IBC functionality and returns genesis account (delegator)
-func InitTeritoriTestAppWithGenAccount() (*TeritoriApp, sdk.AccAddress, sdk.ValAddress) {
+// Initializes a new FuryaApp without IBC functionality and returns genesis account (delegator)
+func InitFuryaTestAppWithGenAccount() (*FuryaApp, sdk.AccAddress, sdk.ValAddress) {
 	app := InitNewApp()
 
 	genesisState, valSet, genAcount, valAddress := GenesisStateWithValSet(app)
@@ -109,7 +109,7 @@ func InitTeritoriTestAppWithGenAccount() (*TeritoriApp, sdk.AccAddress, sdk.ValA
 	return app, genAcount, valAddress
 }
 
-func GenesisStateWithValSet(app *TeritoriApp) (GenesisState, *tmtypes.ValidatorSet, sdk.AccAddress, sdk.ValAddress) {
+func GenesisStateWithValSet(app *FuryaApp) (GenesisState, *tmtypes.ValidatorSet, sdk.AccAddress, sdk.ValAddress) {
 	privVal := mock.NewPV()
 	pubKey, _ := privVal.GetPubKey()
 	validator := tmtypes.NewValidator(pubKey, 1)

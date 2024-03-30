@@ -1,0 +1,16 @@
+syntax = "proto3";
+package furya.airdrop.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "furya/airdrop/v1beta1/allocation.proto";
+import "furya/airdrop/v1beta1/params.proto";
+
+option go_package = "github.com/furysport/furya-chain/x/airdrop/types";
+
+// GenesisState defines the module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated AirdropAllocation allocations = 2 [ (gogoproto.nullable) = false ];
+}

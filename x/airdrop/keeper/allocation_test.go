@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/TERITORI/teritori-chain/x/airdrop/types"
+	"github.com/furysport/furya-chain/x/airdrop/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -17,8 +17,8 @@ func (suite *KeeperTestSuite) TestAllocationGetSet() {
 	evmAllocation := types.AirdropAllocation{
 		Chain:         "evm",
 		Address:       "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
-		Amount:        sdk.NewInt64Coin("utori", 1000000),
-		ClaimedAmount: sdk.NewInt64Coin("utori", 0),
+		Amount:        sdk.NewInt64Coin("ufury", 1000000),
+		ClaimedAmount: sdk.NewInt64Coin("ufury", 0),
 	}
 	suite.app.AirdropKeeper.SetAllocation(suite.ctx, evmAllocation)
 

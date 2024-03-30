@@ -7,8 +7,8 @@ import (
 	"os"
 	"strconv"
 
-	appparams "github.com/TERITORI/teritori-chain/app/params"
-	airdroptypes "github.com/TERITORI/teritori-chain/x/airdrop/types"
+	appparams "github.com/furysport/furya-chain/app/params"
+	airdroptypes "github.com/furysport/furya-chain/x/airdrop/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -39,7 +39,7 @@ func AllocateFurtherAirdropCmd() *cobra.Command {
 		Short: "Allocate further airdrop",
 		Long: `Allocate further airdrop.
 Example:
-	teritorid tx airdrop allocate-further-airdrop further_airdrop.csv 0 500 --from=validator --keyring-backend=test --chain-id=testing --home=$HOME/.teritorid/ --yes --broadcast-mode=block --gas=10000000
+	furyad tx airdrop allocate-further-airdrop further_airdrop.csv 0 500 --from=validator --keyring-backend=test --chain-id=testing --home=$HOME/.furyad/ --yes --broadcast-mode=block --gas=10000000
 `,
 		Args: cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {

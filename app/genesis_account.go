@@ -1,4 +1,4 @@
-package teritori
+package furya
 
 import (
 	"errors"

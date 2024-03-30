@@ -7,8 +7,8 @@ import (
 	"os"
 	"strconv"
 
-	appparams "github.com/TERITORI/teritori-chain/app/params"
-	airdroptypes "github.com/TERITORI/teritori-chain/x/airdrop/types"
+	appparams "github.com/furysport/furya-chain/app/params"
+	airdroptypes "github.com/furysport/furya-chain/x/airdrop/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -70,7 +70,7 @@ func FetchAndRemoveAirdropCmd() *cobra.Command {
 		Short: "Fetch and remove airdrop allocation",
 		Long: `Fetch and remove airdrop allocation.
 Example:
-	teritorid tx airdrop fetch-and-remove-airdrop evmos_orbital_ape.csv stored_result.csv 0 500 --from=validator --keyring-backend=test --chain-id=teritori-1 --home=$HOME/.teritorid/ --yes --broadcast-mode=block --gas=10000000
+	furyad tx airdrop fetch-and-remove-airdrop evmos_orbital_ape.csv stored_result.csv 0 500 --from=validator --keyring-backend=test --chain-id=furya-1 --home=$HOME/.furyad/ --yes --broadcast-mode=block --gas=10000000
 `,
 		Args: cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {

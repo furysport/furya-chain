@@ -3,8 +3,8 @@ package v200
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 
-	"github.com/TERITORI/teritori-chain/app/upgrades"
-	// intertxtypes "github.com/TERITORI/teritori-chain/x/intertx/types"
+	"github.com/furysport/furya-chain/app/upgrades"
+	// intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
 	// icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 	// packetforwardtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"

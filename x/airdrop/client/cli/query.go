@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/TERITORI/teritori-chain/x/airdrop/types"
+	"github.com/furysport/furya-chain/x/airdrop/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"

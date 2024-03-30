@@ -3,7 +3,7 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/TERITORI/teritori-chain/x/mint/types"
+	"github.com/furysport/furya-chain/x/mint/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

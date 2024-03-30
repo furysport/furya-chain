@@ -2,9 +2,9 @@ package keepers
 
 import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	airdropkeeper "github.com/TERITORI/teritori-chain/x/airdrop/keeper"
-	intertxkeeper "github.com/TERITORI/teritori-chain/x/intertx/keeper"
-	mintkeeper "github.com/TERITORI/teritori-chain/x/mint/keeper"
+	airdropkeeper "github.com/furysport/furya-chain/x/airdrop/keeper"
+	intertxkeeper "github.com/furysport/furya-chain/x/intertx/keeper"
+	mintkeeper "github.com/furysport/furya-chain/x/mint/keeper"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"

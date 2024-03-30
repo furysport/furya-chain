@@ -3,7 +3,7 @@ package v130
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 
-	"github.com/TERITORI/teritori-chain/app/upgrades"
+	"github.com/furysport/furya-chain/app/upgrades"
 )
 
 const (

@@ -1,11 +1,11 @@
-package teritori
+package furya
 
 import (
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	airdropkeeper "github.com/TERITORI/teritori-chain/x/airdrop/keeper"
+	airdropkeeper "github.com/furysport/furya-chain/x/airdrop/keeper"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"

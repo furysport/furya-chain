@@ -4,7 +4,7 @@ The minting module contains the following parameters:
 
 | Key                                        | Type         | Example                                |
 | ------------------------------------------ | ------------ | -------------------------------------- |
-| mint_denom                                 | string       | "utori"                                |
+| mint_denom                                 | string       | "ufury"                                |
 | genesis_block_provisions                   | string (dec) | "500000000"                            |
 | reduction_period_in_blocks                 | int64        | 156                                    |
 | reduction_factor                           | string (dec) | "0.6666666666666"                      |
@@ -13,10 +13,10 @@ The minting module contains the following parameters:
 | distribution_proportions.usage_incentive   | string (dec) | "0.2"                                  |
 | distribution_proportions.staking           | string (dec) | "0.1"                                  |
 | distribution_proportions.developer_rewards | string (dec) | "0.1"                                  |
-| weighted_developer_rewards_receivers       | array        | [{"address": "torixx", "weight": "1"}] |
-| usage_incentive_address                    | string       | "torixx"                               |
-| grants_program_address                     | string       | "torixx"                               |
-| team_reserve_address                       | string       | "torixx"                               |
+| weighted_developer_rewards_receivers       | array        | [{"address": "furyaxx", "weight": "1"}] |
+| usage_incentive_address                    | string       | "furyaxx"                               |
+| grants_program_address                     | string       | "furyaxx"                               |
+| team_reserve_address                       | string       | "furyaxx"                               |
 | minting_rewards_distribution_start_block   | int64        | 10                                     |
 
 Below are all the network parameters for the `mint` module:
@@ -39,7 +39,7 @@ Below are all the network parameters for the `mint` module:
 
 **Notes**
 
-1. `mint_denom` defines denom for minting token - utori
+1. `mint_denom` defines denom for minting token - ufury
 2. `genesis_block_provisions` provides minting tokens per block at genesis.
 3. `reduction_period_in_blocks` defines the number of blocks to pass to reduce the mint amount
 4. `reduction_factor` defines the reduction factor of tokens at every `reduction_period_in_blocks`

@@ -2,7 +2,7 @@ package keeper_test
 
 import (
 	"cosmossdk.io/math"
-	"github.com/TERITORI/teritori-chain/x/mint/types"
+	"github.com/furysport/furya-chain/x/mint/types"
 	"github.com/cometbft/cometbft/crypto/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -12,7 +12,7 @@ func (suite *KeeperTestSuite) TestParamsGetSet() {
 
 	addr := sdk.AccAddress(ed25519.GenPrivKey().PubKey().Address().Bytes())
 	params = types.Params{
-		MintDenom:               "utori",
+		MintDenom:               "ufury",
 		GenesisBlockProvisions:  sdk.NewDec(1000),
 		ReductionPeriodInBlocks: 86400,
 		ReductionFactor:         sdk.NewDecWithPrec(5, 1),

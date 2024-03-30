@@ -12,12 +12,12 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/stretchr/testify/suite"
 
-	icaapp "github.com/TERITORI/teritori-chain/app"
+	icaapp "github.com/furysport/furya-chain/app"
 )
 
 var (
 	// TestOwnerAddress defines a reusable bech32 address for testing purposes
-	TestOwnerAddress = "tori1665x2fj8xyez0vqxs5pjhc6e7ktmmrx9dz864d"
+	TestOwnerAddress = "furya1665x2fj8xyez0vqxs5pjhc6e7ktmmrx9dz864d"
 	// TestPortID defines a resuable port identifier for testing purposes
 	TestPortID, _ = icatypes.NewControllerPortID(TestOwnerAddress)
 	// TestVersion defines a resuable interchainaccounts version string for testing purposes
@@ -37,7 +37,7 @@ func SetupICATestingApp() (ibctesting.TestingApp, map[string]json.RawMessage) {
 	encCdc := icaapp.MakeEncodingConfig()
 
 	appOptions := make(simtestutil.AppOptionsMap, 0)
-	app := icaapp.NewTeritoriApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, icaapp.DefaultNodeHome, encCdc, appOptions)
+	app := icaapp.NewFuryaApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, icaapp.DefaultNodeHome, encCdc, appOptions)
 	return app, icaapp.NewDefaultGenesisState()
 }
 
@@ -52,10 +52,10 @@ type KeeperTestSuite struct {
 	chainB *ibctesting.TestChain
 }
 
-func (suite *KeeperTestSuite) GetICAApp(chain *ibctesting.TestChain) *icaapp.TeritoriApp {
-	app, ok := chain.App.(*icaapp.TeritoriApp)
+func (suite *KeeperTestSuite) GetICAApp(chain *ibctesting.TestChain) *icaapp.FuryaApp {
+	app, ok := chain.App.(*icaapp.FuryaApp)
 	if !ok {
-		panic("not teritori app")
+		panic("not furya app")
 	}
 
 	return app

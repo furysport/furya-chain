@@ -9,7 +9,7 @@ import (
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgClaimAllocation{}, "teritori/airdrop/ClaimAllocation", nil)
+	cdc.RegisterConcrete(&MsgClaimAllocation{}, "furya/airdrop/ClaimAllocation", nil)
 	cdc.RegisterConcrete(&MsgSignData{}, "sign/MsgSignData", nil)
 }
 

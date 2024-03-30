@@ -1,7 +1,7 @@
-package teritori
+package furya
 
 import (
-	"github.com/TERITORI/teritori-chain/app/params"
+	"github.com/furysport/furya-chain/app/params"
 
 	"github.com/cosmos/cosmos-sdk/std"
 )

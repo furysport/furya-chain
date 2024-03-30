@@ -45,7 +45,7 @@ type MsgSetAllocation struct {
 ### MsgClaimAllocation
 
 `MsgClaimAllocation` describes the message to claim airdrop allocation allocated to different network address.
-RewardAddress is the teritori chain address that receives allocation.
+RewardAddress is the furya chain address that receives allocation.
 
 ```go
 type MsgClaimAllocation struct {

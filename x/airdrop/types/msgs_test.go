@@ -22,7 +22,7 @@ func TestMsgClaimAllocation(t *testing.T) {
 func TestMsgSignData(t *testing.T) {
 	msg := MsgSignData{
 		Signer: "secret1kap5kvfahhvwufvsj5x6dvyqxztyjhsv8y3da7",
-		Data:   []byte(`{"address":"secret1kap5kvfahhvwufvsj5x6dvyqxztyjhsv8y3da7","chain":"secret","rewardAddr":"tori1hwf62gw7h39xmd69st3p487r8x3sphm2hx79ae"}`),
+		Data:   []byte(`{"address":"secret1kap5kvfahhvwufvsj5x6dvyqxztyjhsv8y3da7","chain":"secret","rewardAddr":"furya1hwf62gw7h39xmd69st3p487r8x3sphm2hx79ae"}`),
 	}
 
 	fmt.Println("sign_bytes", string(msg.GetSignBytes()))

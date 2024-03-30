@@ -18,5 +18,5 @@ done
 
 cd ..
 
-cp -r ./github.com/TERITORI/teritori-chain/x/* x/
+cp -r ./github.com/furysport/furya-chain/x/* x/
 rm -rf ./github.com

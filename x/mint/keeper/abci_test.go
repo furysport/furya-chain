@@ -2,7 +2,7 @@ package keeper_test
 
 import (
 	"cosmossdk.io/math"
-	"github.com/TERITORI/teritori-chain/x/mint/types"
+	"github.com/furysport/furya-chain/x/mint/types"
 	"github.com/cometbft/cometbft/crypto/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -16,7 +16,7 @@ func (suite *KeeperTestSuite) TestEndBlocker() {
 
 	defaultParams := suite.app.MintKeeper.GetParams(suite.ctx)
 	params := types.Params{
-		MintDenom:               "utori",
+		MintDenom:               "ufury",
 		GenesisBlockProvisions:  defaultParams.GenesisBlockProvisions,
 		ReductionPeriodInBlocks: 4000,
 		ReductionFactor:         sdk.NewDecWithPrec(5, 1),

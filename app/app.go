@@ -1,4 +1,4 @@
-package teritori
+package furya
 
 import (
 	"fmt"
@@ -10,18 +10,18 @@ import (
 	"strings"
 
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/TERITORI/teritori-chain/app/keepers"
-	"github.com/TERITORI/teritori-chain/app/upgrades"
-	v130 "github.com/TERITORI/teritori-chain/app/upgrades/v130"
-	v131 "github.com/TERITORI/teritori-chain/app/upgrades/v131"
-	v140 "github.com/TERITORI/teritori-chain/app/upgrades/v140"
-	v200 "github.com/TERITORI/teritori-chain/app/upgrades/v200"
-	airdrop "github.com/TERITORI/teritori-chain/x/airdrop"
-	airdropkeeper "github.com/TERITORI/teritori-chain/x/airdrop/keeper"
-	airdroptypes "github.com/TERITORI/teritori-chain/x/airdrop/types"
-	"github.com/TERITORI/teritori-chain/x/mint"
-	mintkeeper "github.com/TERITORI/teritori-chain/x/mint/keeper"
-	minttypes "github.com/TERITORI/teritori-chain/x/mint/types"
+	"github.com/furysport/furya-chain/app/keepers"
+	"github.com/furysport/furya-chain/app/upgrades"
+	v130 "github.com/furysport/furya-chain/app/upgrades/v130"
+	v131 "github.com/furysport/furya-chain/app/upgrades/v131"
+	v140 "github.com/furysport/furya-chain/app/upgrades/v140"
+	v200 "github.com/furysport/furya-chain/app/upgrades/v200"
+	airdrop "github.com/furysport/furya-chain/x/airdrop"
+	airdropkeeper "github.com/furysport/furya-chain/x/airdrop/keeper"
+	airdroptypes "github.com/furysport/furya-chain/x/airdrop/types"
+	"github.com/furysport/furya-chain/x/mint"
+	mintkeeper "github.com/furysport/furya-chain/x/mint/keeper"
+	minttypes "github.com/furysport/furya-chain/x/mint/types"
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
@@ -127,11 +127,11 @@ import (
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
 
-	intertx "github.com/TERITORI/teritori-chain/x/intertx"
-	intertxkeeper "github.com/TERITORI/teritori-chain/x/intertx/keeper"
-	intertxtypes "github.com/TERITORI/teritori-chain/x/intertx/types"
+	intertx "github.com/furysport/furya-chain/x/intertx"
+	intertxkeeper "github.com/furysport/furya-chain/x/intertx/keeper"
+	intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
 
-	teritoriappparams "github.com/TERITORI/teritori-chain/app/params"
+	furyaappparams "github.com/furysport/furya-chain/app/params"
 	"github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
 	packetforwardkeeper "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/keeper"
 	packetforwardtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
@@ -144,7 +144,7 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
 
-const appName = "TeritoriApp"
+const appName = "FuryaApp"
 
 var (
 	// If EnabledSpecificProposals is "", and this is "true", then enable all x/wasm proposals.
@@ -254,14 +254,14 @@ var (
 )
 
 var (
-	_ runtime.AppI            = (*TeritoriApp)(nil)
-	_ servertypes.Application = (*TeritoriApp)(nil)
+	_ runtime.AppI            = (*FuryaApp)(nil)
+	_ servertypes.Application = (*FuryaApp)(nil)
 )
 
-// TeritoriApp extends an ABCI application, but with most of its parameters exported.
+// FuryaApp extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type TeritoriApp struct { // nolint: golint
+type FuryaApp struct { // nolint: golint
 	*baseapp.BaseApp
 	keepers.AppKeepers
 
@@ -288,20 +288,20 @@ func init() {
 		stdlog.Println("Failed to get home dir %2", err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, ".teritorid")
+	DefaultNodeHome = filepath.Join(userHomeDir, ".furyad")
 }
 
-// NewTeritoriApp returns a reference to an initialized NxtPop.
-func NewTeritoriApp(
+// NewFuryaApp returns a reference to an initialized NxtPop.
+func NewFuryaApp(
 	logger log.Logger,
 	db dbm.DB, traceStore io.Writer,
 	loadLatest bool,
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
-	encodingConfig teritoriappparams.EncodingConfig,
+	encodingConfig furyaappparams.EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *TeritoriApp {
+) *FuryaApp {
 
 	appCodec := encodingConfig.Marshaler
 	legacyAmino := encodingConfig.Amino
@@ -330,7 +330,7 @@ func NewTeritoriApp(
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 
-	app := &TeritoriApp{
+	app := &FuryaApp{
 		BaseApp:           bApp,
 		legacyAmino:       legacyAmino,
 		appCodec:          appCodec,
@@ -836,20 +836,20 @@ func NewTeritoriApp(
 }
 
 // Name returns the name of the App
-func (app *TeritoriApp) Name() string { return app.BaseApp.Name() }
+func (app *FuryaApp) Name() string { return app.BaseApp.Name() }
 
 // BeginBlocker application updates every begin block
-func (app *TeritoriApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *FuryaApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *TeritoriApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *FuryaApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
 // InitChainer application update at chain initialization
-func (app *TeritoriApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *FuryaApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -861,12 +861,12 @@ func (app *TeritoriApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) 
 }
 
 // LoadHeight loads a particular height
-func (app *TeritoriApp) LoadHeight(height int64) error {
+func (app *FuryaApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *TeritoriApp) ModuleAccountAddrs() map[string]bool {
+func (app *FuryaApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	for acc := range maccPerms {
 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
@@ -877,18 +877,18 @@ func (app *TeritoriApp) ModuleAccountAddrs() map[string]bool {
 
 // BlockedModuleAccountAddrs returns all the app's blocked module account
 // addresses.
-func (app *TeritoriApp) BlockedModuleAccountAddrs() map[string]bool {
+func (app *FuryaApp) BlockedModuleAccountAddrs() map[string]bool {
 	modAccAddrs := app.ModuleAccountAddrs()
 	delete(modAccAddrs, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 
 	return modAccAddrs
 }
 
-// LegacyAmino returns TeritoriApp's amino codec.
+// LegacyAmino returns FuryaApp's amino codec.
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *TeritoriApp) LegacyAmino() *codec.LegacyAmino {
+func (app *FuryaApp) LegacyAmino() *codec.LegacyAmino {
 	return app.legacyAmino
 }
 
@@ -896,52 +896,52 @@ func (app *TeritoriApp) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *TeritoriApp) AppCodec() codec.Codec {
+func (app *FuryaApp) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
 // InterfaceRegistry returns NxtPop's InterfaceRegistry
-func (app *TeritoriApp) InterfaceRegistry() types.InterfaceRegistry {
+func (app *FuryaApp) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *TeritoriApp) GetKey(storeKey string) *storetypes.KVStoreKey {
+func (app *FuryaApp) GetKey(storeKey string) *storetypes.KVStoreKey {
 	return app.keys[storeKey]
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *TeritoriApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
+func (app *FuryaApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
 	return app.tkeys[storeKey]
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
-func (app *TeritoriApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
+func (app *FuryaApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 	return app.memKeys[storeKey]
 }
 
 // GetSubspace returns a param subspace for a given module name.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *TeritoriApp) GetSubspace(moduleName string) paramstypes.Subspace {
+func (app *FuryaApp) GetSubspace(moduleName string) paramstypes.Subspace {
 	subspace, _ := app.ParamsKeeper.GetSubspace(moduleName)
 	return subspace
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *TeritoriApp) SimulationManager() *module.SimulationManager {
+func (app *FuryaApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *TeritoriApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (app *FuryaApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -955,12 +955,12 @@ func (app *TeritoriApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.A
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *TeritoriApp) RegisterTxService(clientCtx client.Context) {
+func (app *FuryaApp) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *TeritoriApp) RegisterTendermintService(clientCtx client.Context) {
+func (app *FuryaApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(
 		clientCtx,
 		app.BaseApp.GRPCQueryRouter(),
@@ -969,32 +969,32 @@ func (app *TeritoriApp) RegisterTendermintService(clientCtx client.Context) {
 	)
 }
 
-func (app *TeritoriApp) RegisterNodeService(clientCtx client.Context) {
+func (app *FuryaApp) RegisterNodeService(clientCtx client.Context) {
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
 
 // GetBaseApp implements the BaseApp
-func (app *TeritoriApp) GetBaseApp() *baseapp.BaseApp {
+func (app *FuryaApp) GetBaseApp() *baseapp.BaseApp {
 	return app.BaseApp
 }
 
 // GetBaseApp implements the StakingKeeper
-func (app *TeritoriApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+func (app *FuryaApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return app.StakingKeeper
 }
 
 // GetBaseApp implements the StakingKeeper
-func (app *TeritoriApp) GetIBCKeeper() *ibckeeper.Keeper {
+func (app *FuryaApp) GetIBCKeeper() *ibckeeper.Keeper {
 	return app.IBCKeeper
 }
 
 // GetBaseApp implements the StakingKeeper
-func (app *TeritoriApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+func (app *FuryaApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 	return app.ScopedIBCKeeper
 }
 
 // GetBaseApp implements the StakingKeeper
-func (app *TeritoriApp) GetTxConfig() client.TxConfig {
+func (app *FuryaApp) GetTxConfig() client.TxConfig {
 	return MakeEncodingConfig().TxConfig
 }
 
@@ -1042,7 +1042,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 }
 
 // configure store loader that checks if version == upgradeHeight and applies store upgrades
-func (app *TeritoriApp) setupUpgradeStoreLoaders() {
+func (app *FuryaApp) setupUpgradeStoreLoaders() {
 	upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()
 	if err != nil {
 		panic(fmt.Sprintf("failed to read upgrade info from disk %s", err))
@@ -1059,7 +1059,7 @@ func (app *TeritoriApp) setupUpgradeStoreLoaders() {
 	}
 }
 
-func (app *TeritoriApp) setupUpgradeHandlers() {
+func (app *FuryaApp) setupUpgradeHandlers() {
 	for _, upgrade := range Upgrades {
 		app.UpgradeKeeper.SetUpgradeHandler(
 			upgrade.UpgradeName,

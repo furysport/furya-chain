@@ -1,4 +1,4 @@
-package teritori
+package furya
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ import (
 
 // ExportAppStateAndValidators exports the state of the application for a genesis
 // file.
-func (app *TeritoriApp) ExportAppStateAndValidators(
+func (app *FuryaApp) ExportAppStateAndValidators(
 	forZeroHeight bool,
 	jailAllowedAddrs []string,
 	modulesToExport []string,
@@ -50,7 +50,7 @@ func (app *TeritoriApp) ExportAppStateAndValidators(
 // NOTE zero height genesis is a temporary feature which will be deprecated
 //
 //	in favour of export at a block height
-func (app *TeritoriApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) {
+func (app *FuryaApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) {
 	applyAllowedAddrs := false
 
 	// check if there is a allowed address list

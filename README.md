@@ -1,33 +1,33 @@
-# Teritori
+# Furya
 
 ![Banner!](assets/banner.png)
 
-[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/teritori)
-[![Go Report Card](https://goreportcard.com/badge/github.com/TERITORI/teritori-chain?style=flat-square)](https://goreportcard.com/report/github.com/TERITORI/teritori-chain)
-[![Version](https://img.shields.io/github/tag/TERITORI/teritori-chain.svg?style=flat-square)](https://github.com/TERITORI/teritori-chain/releases/latest)
-[![Lines Of Code](https://img.shields.io/tokei/lines/github/TERITORI/teritori-chain?style=flat-square)](https://github.com/TERITORI/teritori-chain)
+[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/furya)
+[![Go Report Card](https://goreportcard.com/badge/github.com/furysport/furya-chain?style=flat-square)](https://goreportcard.com/report/github.com/furysport/furya-chain)
+[![Version](https://img.shields.io/github/tag/furysport/furya-chain.svg?style=flat-square)](https://github.com/furysport/furya-chain/releases/latest)
+[![Lines Of Code](https://img.shields.io/tokei/lines/github/furysport/furya-chain?style=flat-square)](https://github.com/furysport/furya-chain)
 
-Teritori is a Cosmos SDK based blockchain here to enhance Web3 individuals, communities & builders experience through an all-in-one hub of dApps.
+Furya is a Cosmos SDK based blockchain here to enhance Web3 individuals, communities & builders experience through an all-in-one hub of dApps.
 
 # Testnet
 
 ## All the testnet chains:
-[*DEPRECATED*] - [teritori-testnet-v1](https://github.com/TERITORI/teritori-chain/tree/main/testnet/teritori-testnet-v1)    
-[*DEPRECATED*] - [teritori-testnet-v2](https://github.com/TERITORI/teritori-chain/tree/main/testnet/teritori-testnet-v2)    
-[*DEPRECATED*] - [teritori-testnet-v3](https://github.com/TERITORI/teritori-chain/tree/main/testnet/teritori-testnet-v3)    
-[*DEPRECATED*] - [teritori-test-4](https://github.com/TERITORI/teritori-chain/tree/main/testnet/teritori-test-4)    
-[*DEPRECATED*] - [teritori-test-5](https://github.com/TERITORI/teritori-chain/tree/main/testnet/teritori-test-5)    
-[__ACTIVE__] - [teritori-test-6](https://github.com/TERITORI/teritori-chain/tree/main/testnet/teritori-test-6)    
+[*DEPRECATED*] - [furya-testnet-v1](https://github.com/furysport/furya-chain/tree/main/testnet/furya-testnet-v1)    
+[*DEPRECATED*] - [furya-testnet-v2](https://github.com/furysport/furya-chain/tree/main/testnet/furya-testnet-v2)    
+[*DEPRECATED*] - [furya-testnet-v3](https://github.com/furysport/furya-chain/tree/main/testnet/furya-testnet-v3)    
+[*DEPRECATED*] - [furya-test-4](https://github.com/furysport/furya-chain/tree/main/testnet/furya-test-4)    
+[*DEPRECATED*] - [furya-test-5](https://github.com/furysport/furya-chain/tree/main/testnet/furya-test-5)    
+[__ACTIVE__] - [furya-test-6](https://github.com/furysport/furya-chain/tree/main/testnet/furya-test-6)    
 
 # Mainnet
 
 ## All the mainnet chains:
-[__ACTIVE__] - [teritori-1](https://github.com/TERITORI/teritori-chain/tree/main/mainnet/teritori-1)    
+[__ACTIVE__] - [furya-1](https://github.com/furysport/furya-chain/tree/main/mainnet/furya-1)    
 
 # Dev
 
 ## Run custom integration test
 
 ```shell
-TERITORI_DAPP_REPO=/path/to/teritori-dapp ./integration-test/run.sh
+FURYA_DAPP_REPO=/path/to/furya-dapp ./integration-test/run.sh
 ```

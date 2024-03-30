@@ -8,16 +8,16 @@ on:
 
 jobs:
   test:
-    # teritorid hangs on ubuntu runner
+    # furyad hangs on ubuntu runner
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout teritori-dapp repo
+      - name: Checkout furya-dapp repo
         uses: actions/checkout@v4
         with:
-          repository: TERITORI/teritori-dapp
-          path: teritori-dapp
+          repository: furysport/furya-dapp
+          path: furya-dapp
           ref: 7e968801a0a03f47f59dd7683f1653935222ea88
 
       - uses: actions/setup-go@v3
@@ -28,9 +28,9 @@ jobs:
         with:
           node-version: 18
           cache: "yarn"
-          cache-dependency-path: "teritori-dapp/yarn.lock"
+          cache-dependency-path: "furya-dapp/yarn.lock"
 
       - name: Run integration tests
         run: make integration-tests
         env:
-          TERITORI_DAPP_REPO: teritori-dapp
+          FURYA_DAPP_REPO: furya-dapp

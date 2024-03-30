@@ -10,9 +10,9 @@ import (
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
-	"github.com/TERITORI/teritori-chain/x/intertx/client/cli"
-	"github.com/TERITORI/teritori-chain/x/intertx/keeper"
-	"github.com/TERITORI/teritori-chain/x/intertx/types"
+	"github.com/furysport/furya-chain/x/intertx/client/cli"
+	"github.com/furysport/furya-chain/x/intertx/keeper"
+	"github.com/furysport/furya-chain/x/intertx/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"

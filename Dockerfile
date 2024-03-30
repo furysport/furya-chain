@@ -1,5 +1,5 @@
-# docker build . -t rg.nl-ams.scw.cloud/teritori/teritorid:latest
-# docker run --rm -it rg.nl-ams.scw.cloud/teritori/teritorid:latest /bin/sh
+# docker build . -t rg.nl-ams.scw.cloud/furya/furyad:latest
+# docker run --rm -it rg.nl-ams.scw.cloud/furya/furyad:latest /bin/sh
 FROM golang:1.21-alpine3.17 AS go-builder
 ARG arch=x86_64
 
@@ -26,12 +26,12 @@ RUN cp /lib/libwasmvm_muslc.${arch}.a /lib/libwasmvm_muslc.a
 # force it to use static lib (from above) not standard libgo_cosmwasm.so file
 RUN LEDGER_ENABLED=false BUILD_TAGS=muslc LINK_STATICALLY=true make build
 RUN echo "Ensuring binary is statically linked ..." \
-    && (file /code/build/teritorid | grep "statically linked")
+    && (file /code/build/furyad | grep "statically linked")
 
 # --------------------------------------------------------
 FROM alpine:3.17
 
-COPY --from=go-builder /code/build/teritorid /usr/bin/teritorid
+COPY --from=go-builder /code/build/furyad /usr/bin/furyad
 
 #COPY docker/* /opt/
 #RUN chmod +x /opt/*.sh
@@ -45,4 +45,4 @@ EXPOSE 26656
 # tendermint rpc
 EXPOSE 26657
 
-CMD ["/usr/bin/teritorid", "version"]
+CMD ["/usr/bin/furyad", "version"]
