@@ -31,6 +31,7 @@ require (
 	google.golang.org/grpc v1.58.3
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v2 v2.4.0
+	github.com/terra-money/alliance v0.1.0
 )
 
 require (

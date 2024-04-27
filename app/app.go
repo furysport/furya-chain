@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
@@ -53,8 +54,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
-	"github.com/cosmos/cosmos-sdk/x/bank"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
@@ -126,7 +125,14 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
-
+	
+	bank "github.com/terra-money/alliance/custom/bank"
+	custombankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
+	alliancemodule "github.com/terra-money/alliance/x/alliance"
+	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
+	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
+	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
+	
 	intertx "github.com/furysport/furya-chain/x/intertx"
 	intertxkeeper "github.com/furysport/furya-chain/x/intertx/keeper"
 	intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
@@ -193,6 +199,9 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		upgradeclient.LegacyCancelProposalHandler,
 		ibcclientclient.UpdateClientProposalHandler,
 		ibcclientclient.UpgradeProposalHandler,
+		alliancemoduleclient.CreateAllianceProposalHandler,
+		alliancemoduleclient.UpdateAllianceProposalHandler,
+		alliancemoduleclient.DeleteAllianceProposalHandler,
 	)
 
 	return govProposalHandlers
@@ -210,8 +219,9 @@ var (
 	ModuleBasics = module.NewBasicManager(
 		airdrop.AppModuleBasic{},
 		auth.AppModuleBasic{},
+		alliancemodule.AppModuleBasic{},
 		genutil.NewAppModuleBasic(genutiltypes.DefaultMessageValidator),
-		bank.AppModuleBasic{},
+		bank.AppModule{},
 		capability.AppModuleBasic{},
 		staking.AppModuleBasic{},
 		mint.AppModuleBasic{},
@@ -239,17 +249,19 @@ var (
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:     nil,
-		distrtypes.ModuleName:          nil,
-		icatypes.ModuleName:            nil,
-		minttypes.ModuleName:           {authtypes.Minter},
-		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:            {authtypes.Burner},
-		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		airdroptypes.ModuleName:        nil,
-		ibcfeetypes.ModuleName:         nil,
-		wasmtypes.ModuleName:           {authtypes.Burner},
+		authtypes.FeeCollectorName:					nil,
+		distrtypes.ModuleName:							nil,
+		icatypes.ModuleName:            				nil,
+		minttypes.ModuleName:           				{authtypes.Minter},
+		stakingtypes.BondedPoolName:   			{authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName: 			{authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:            				{authtypes.Burner},
+		ibctransfertypes.ModuleName:    				{authtypes.Minter, authtypes.Burner},
+		airdroptypes.ModuleName:        				nil,
+		ibcfeetypes.ModuleName:         				nil,
+		wasmtypes.ModuleName:           			{authtypes.Burner},
+		alliancemoduletypes.ModuleName: 			{authtypes.Minter, authtypes.Burner},
+		alliancemoduletypes.RewardsPoolName: 	nil,
 	}
 )
 
@@ -326,6 +338,7 @@ func NewFuryaApp(
 		consensusparamtypes.StoreKey,
 		intertxtypes.StoreKey,
 		crisistypes.StoreKey,
+		alliancemoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -373,12 +386,12 @@ func NewFuryaApp(
 		sdk.Bech32PrefixAccAddr,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
-	app.BankKeeper = bankkeeper.NewBaseKeeper(
+	app.BankKeeper = custombankkeeper.NewBaseKeeper(
 		appCodec,
 		keys[banktypes.StoreKey],
 		app.AccountKeeper,
+		app.GetSubspace(banktypes.ModuleName),
 		app.BlockedModuleAccountAddrs(),
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.AuthzKeeper = authzkeeper.NewKeeper(
 		keys[authz.ModuleName],
@@ -446,15 +459,27 @@ func NewFuryaApp(
 		app.BaseApp,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
-
+	
+	app.AllianceKeeper = alliancemodulekeeper.NewKeeper(
+		appCodec,
+		keys[alliancemoduletypes.StoreKey],
+		app.GetSubspace(alliancemoduletypes.ModuleName),
+		app.AccountKeeper,
+		app.BankKeeper,
+		&app.StakingKeeper,
+		app.DistrKeeper,
+	)
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
 	stakingKeeper.SetHooks(
-		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks()),
+		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(),
+			app.SlashingKeeper.Hooks(), app.AllianceKeeper.StakingHooks()),
 	)
 	app.StakingKeeper = stakingKeeper
 
 	app.AirdropKeeper = *airdropkeeper.NewKeeper(appCodec, keys[airdroptypes.StoreKey], app.GetSubspace(airdroptypes.ModuleName), app.BankKeeper, app.StakingKeeper, app.AccountKeeper)
+	
+	app.BankKeeper.RegisterKeepers(app.AllianceKeeper, &stakingKeeper)
 
 	app.IBCKeeper = ibckeeper.NewKeeper(
 		appCodec,
@@ -492,7 +517,8 @@ func NewFuryaApp(
 		AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
-		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper))
+		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
+		AddRoute(alliancemoduletypes.RouterKey, alliancemodule.NewAllianceProposalHandler(app.AllianceKeeper))
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,
@@ -651,6 +677,7 @@ func NewFuryaApp(
 		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		transferModule,
 		icaModule,
+		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		packetforwardModule,
@@ -687,6 +714,7 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
+		alliancemoduletypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		distrtypes.ModuleName,
@@ -714,6 +742,7 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
+		alliancemoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -747,6 +776,7 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
+		alliancemoduletypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(app.CrisisKeeper)
@@ -878,6 +908,21 @@ func (app *FuryaApp) ModuleAccountAddrs() map[string]bool {
 	return modAccAddrs
 }
 
+// BlockedModuleAccountAddrs returns all the app's blocked module account
+// addresses.
+func (app *FuryaApp) BlockedModuleAccountAddrs() map[string]bool {
+	modAccAddrs := make(map[string]bool)
+	// DO NOT REMOVE: stringMapKeys fixes non-deterministic map iteration
+	for _, acc := range stringMapKeys(maccPerms) {
+		// don't blacklist alliance module account, so that it can ibc transfer tokens
+		if acc == alliancemoduletypes.ModuleName {
+			continue
+		}
+		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
+	}
+
+	return modAccAddrs
+}
 
 // LegacyAmino returns FuryaApp's amino codec.
 //
@@ -1013,6 +1058,15 @@ func GetMaccPerms() map[string][]string {
 	return dupMaccPerms
 }
 
+func stringMapKeys(m map[string][]string) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
 // initParamsKeeper init params keeper and its subspaces
 func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey storetypes.StoreKey) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
@@ -1032,6 +1086,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(airdroptypes.ModuleName)
+	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
 
 	return paramsKeeper
 }
