@@ -1,5 +1,6 @@
-# Furya
 ![Banner!](assets/banner.png)
+
+# Furya
 
 Furya is a Cosmos SDK based blockchain here to enhance Web3 individuals, communities & builders experience through an all-in-one hub of dApps.
 
