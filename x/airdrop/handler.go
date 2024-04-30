@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"cosmossdk.io/errors"
-	"github.com/furysport/furya-chain/x/airdrop/keeper"
-	"github.com/furysport/furya-chain/x/airdrop/types"
+	"github.com/furysport/furya-upgrade/x/airdrop/keeper"
+	"github.com/furysport/furya-upgrade/x/airdrop/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )

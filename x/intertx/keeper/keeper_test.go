@@ -12,7 +12,7 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/stretchr/testify/suite"
 
-	icaapp "github.com/furysport/furya-chain/app"
+	icaapp "github.com/furysport/furya-upgrade/app"
 )
 
 var (

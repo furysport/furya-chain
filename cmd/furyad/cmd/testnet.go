@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	furya "github.com/furysport/furya-chain/app"
+	furya "github.com/furysport/furya-upgrade/app"
 	tmconfig "github.com/cometbft/cometbft/config"
 	tmos "github.com/cometbft/cometbft/libs/os"
 	tmrand "github.com/cometbft/cometbft/libs/rand"

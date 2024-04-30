@@ -9,7 +9,7 @@ import (
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 
-	"github.com/furysport/furya-chain/x/intertx/types"
+	"github.com/furysport/furya-upgrade/x/intertx/types"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/keeper"
 )

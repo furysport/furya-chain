@@ -4,8 +4,8 @@ import (
 	"reflect"
 
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/furysport/furya-chain/app/keepers"
-	minttypes "github.com/furysport/furya-chain/x/mint/types"
+	"github.com/furysport/furya-upgrade/app/keepers"
+	minttypes "github.com/furysport/furya-upgrade/x/mint/types"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -20,6 +20,7 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 )
 
 //nolint:all
@@ -54,6 +55,9 @@ func CreateUpgradeHandler(
 				keyTable = wasmtypes.ParamKeyTable()
 			case minttypes.ModuleName:
 				keyTable = minttypes.ParamKeyTable()
+				
+			case alliancemoduletypes.ModuleName:
+				keyTable = alliancemoduletypes.ParamKeyTable() //nolint:staticcheck
 			}
 
 			if !subspace.HasKeyTable() {

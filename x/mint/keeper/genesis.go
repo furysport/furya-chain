@@ -3,7 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/x/mint/types"
+	"github.com/furysport/furya-upgrade/x/mint/types"
 )
 
 // InitGenesis new mint genesis.

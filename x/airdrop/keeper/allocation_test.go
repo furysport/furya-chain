@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/furysport/furya-chain/x/airdrop/types"
+	"github.com/furysport/furya-upgrade/x/airdrop/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

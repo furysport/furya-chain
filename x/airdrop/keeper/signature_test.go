@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/furysport/furya-chain/x/airdrop/keeper"
+	"github.com/furysport/furya-upgrade/x/airdrop/keeper"
 )
 
 func (suite *KeeperTestSuite) TestVerifySignature() {

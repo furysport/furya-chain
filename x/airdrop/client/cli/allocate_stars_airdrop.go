@@ -7,8 +7,8 @@ import (
 	"os"
 	"strconv"
 
-	appparams "github.com/furysport/furya-chain/app/params"
-	airdroptypes "github.com/furysport/furya-chain/x/airdrop/types"
+	appparams "github.com/furysport/furya-upgrade/app/params"
+	airdroptypes "github.com/furysport/furya-upgrade/x/airdrop/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"

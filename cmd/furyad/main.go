@@ -6,9 +6,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
-	app "github.com/furysport/furya-chain/app"
-	appparams "github.com/furysport/furya-chain/app/params"
-	"github.com/furysport/furya-chain/cmd/furyad/cmd"
+	app "github.com/furysport/furya-upgrade/app"
+	appparams "github.com/furysport/furya-upgrade/app/params"
+	"github.com/furysport/furya-upgrade/cmd/furyad/cmd"
 )
 
 func main() {

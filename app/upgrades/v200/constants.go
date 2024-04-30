@@ -3,14 +3,15 @@ package v200
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 
-	"github.com/furysport/furya-chain/app/upgrades"
-	// intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
+	"github.com/furysport/furya-upgrade/app/upgrades"
+	// intertxtypes "github.com/furysport/furya-upgrade/x/intertx/types"
 	// icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 	// packetforwardtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	"github.com/cosmos/cosmos-sdk/x/group"
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
+	alliancetypes "github.com/terra-money/alliance/x/alliance/types"
 )
 
 const (
@@ -30,6 +31,7 @@ var Upgrade = upgrades.Upgrade{
 			consensusparamtypes.StoreKey,
 			ibcfeetypes.StoreKey,
 			group.StoreKey,
+			alliancetypes.StoreKey,
 		},
 	},
 }

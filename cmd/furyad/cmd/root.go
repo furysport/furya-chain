@@ -30,8 +30,8 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
-	furya "github.com/furysport/furya-chain/app"
-	"github.com/furysport/furya-chain/app/params"
+	furya "github.com/furysport/furya-upgrade/app"
+	"github.com/furysport/furya-upgrade/app/params"
 )
 
 // NewRootCmd creates a new root command for simd. It is called once in the

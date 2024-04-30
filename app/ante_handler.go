@@ -5,7 +5,7 @@ import (
 	"cosmossdk.io/math"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	airdropkeeper "github.com/furysport/furya-chain/x/airdrop/keeper"
+	airdropkeeper "github.com/furysport/furya-upgrade/x/airdrop/keeper"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"

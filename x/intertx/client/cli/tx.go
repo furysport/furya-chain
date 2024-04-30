@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/furysport/furya-chain/x/intertx/types"
+	"github.com/furysport/furya-upgrade/x/intertx/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"

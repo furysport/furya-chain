@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"cosmossdk.io/math"
-	"github.com/furysport/furya-chain/x/mint/types"
+	"github.com/furysport/furya-upgrade/x/mint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

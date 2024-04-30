@@ -1,7 +1,7 @@
 package v130
 
 import (
-	"github.com/furysport/furya-chain/app/keepers"
+	"github.com/furysport/furya-upgrade/app/keepers"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"

@@ -3,8 +3,8 @@ package v140
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 
-	"github.com/furysport/furya-chain/app/upgrades"
-	intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
+	"github.com/furysport/furya-upgrade/app/upgrades"
+	intertxtypes "github.com/furysport/furya-upgrade/x/intertx/types"
 	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 )
 

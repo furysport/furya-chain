@@ -3,7 +3,7 @@ package v131
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 
-	"github.com/furysport/furya-chain/app/upgrades"
+	"github.com/furysport/furya-upgrade/app/upgrades"
 )
 
 const (
