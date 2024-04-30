@@ -17,5 +17,5 @@ done
 
 cd ..
 # move proto files to the right places
-cp -r github.com/furysport/furya-upgrade/* ./
+cp -r github.com/furysport/furya-chain/* ./
 rm -rf github.com

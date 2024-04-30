@@ -4,8 +4,8 @@ import (
 	"reflect"
 
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/furysport/furya-upgrade/app/keepers"
-	minttypes "github.com/furysport/furya-upgrade/x/mint/types"
+	"github.com/furysport/furya-chain/app/keepers"
+	minttypes "github.com/furysport/furya-chain/x/mint/types"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
