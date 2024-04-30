@@ -11,6 +11,7 @@ import (
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	"github.com/cosmos/cosmos-sdk/x/group"
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
+	alliancetypes "github.com/terra-money/alliance/x/alliance/types"
 )
 
 const (
@@ -30,6 +31,7 @@ var Upgrade = upgrades.Upgrade{
 			consensusparamtypes.StoreKey,
 			ibcfeetypes.StoreKey,
 			group.StoreKey,
+			alliancetypes.StoreKey,
 		},
 	},
 }

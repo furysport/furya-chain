@@ -5,5 +5,5 @@ data
 *.txt
 .idea
 
-/furya-dapp/
+/furya-app/
 /build/

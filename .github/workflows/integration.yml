@@ -13,13 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout furya-dapp repo
+      - name: Checkout furya-app repo
         uses: actions/checkout@v4
         with:
-          repository: furysport/furya-dapp
-          path: furya-dapp
-          ref: 7e968801a0a03f47f59dd7683f1653935222ea88
-
+          repository: furysport/furya-app
       - uses: actions/setup-go@v3
         with:
           go-version: "1.20"
@@ -28,9 +25,9 @@ jobs:
         with:
           node-version: 18
           cache: "yarn"
-          cache-dependency-path: "furya-dapp/yarn.lock"
+          cache-dependency-path: "furya-app/yarn.lock"
 
       - name: Run integration tests
         run: make integration-tests
         env:
-          FURYA_DAPP_REPO: furya-dapp
+          FURYA_DAPP_REPO: furya-app
