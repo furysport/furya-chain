@@ -4,10 +4,9 @@ IFS=$'\n\t'
 set -x
 
 if [[ -z "${FURYA_DAPP_REPO:-}" ]]; then
-    commit=7e968801a0a03f47f59dd7683f1653935222ea88
-    rm -fr furya-dapp
+    rm -fr furya-app
     git clone https://github.com/furysport/furya-app.git
-    cd furya-dapp
+    cd furya-app
     git checkout $commit
 else
     cd $FURYA_DAPP_REPO
