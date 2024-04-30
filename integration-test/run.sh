@@ -6,7 +6,7 @@ set -x
 if [[ -z "${FURYA_DAPP_REPO:-}" ]]; then
     commit=7e968801a0a03f47f59dd7683f1653935222ea88
     rm -fr furya-dapp
-    git clone https://github.com/furysport/furya-dapp.git
+    git clone https://github.com/furysport/furya-app.git
     cd furya-dapp
     git checkout $commit
 else
