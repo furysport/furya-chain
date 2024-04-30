@@ -16,7 +16,7 @@ jobs:
       - name: Checkout furya-dapp repo
         uses: actions/checkout@v4
         with:
-          repository: FURYA/furya-dapp
+          repository: furysport/furya-dapp
           path: furya-dapp
           ref: 7e968801a0a03f47f59dd7683f1653935222ea88
 

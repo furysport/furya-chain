@@ -14,7 +14,7 @@ IMAGE_TAG=rg.nl-ams.scw.cloud/furya/furyad:${shell git describe --tags 2>/dev/nu
 # for dockerized protobuf tools
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
-HTTPS_GIT := https://github.com/FURYA/furyad.git
+HTTPS_GIT := https://github.com/furysport/furyad.git
 
 export GO111MODULE = on
 
@@ -61,7 +61,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=furya \
 		  -X github.com/cosmos/cosmos-sdk/version.AppName=furyad \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-		  -X github.com/FURYA/furyad/app.Bech32Prefix=furya \
+		  -X github.com/furysport/furyad/app.Bech32Prefix=furya \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
 		  -X github.com/cometbft/cometbft/version.TMCoreSemVer=$(TM_VERSION)
 
@@ -173,7 +173,7 @@ lint: format-tools
 format: format-tools
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gofumpt -w
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs misspell -w
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gci write --skip-generated -s standard -s default -s "prefix(cosmossdk.io)" -s "prefix(github.com/cosmos/cosmos-sdk)" -s "prefix(github.com/FURYA/furyad)" --custom-order
+	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gci write --skip-generated -s standard -s default -s "prefix(cosmossdk.io)" -s "prefix(github.com/cosmos/cosmos-sdk)" -s "prefix(github.com/furysport/furyad)" --custom-order
 
 
 ###############################################################################
