@@ -235,7 +235,6 @@ var (
 		ibcfee.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		intertx.AppModule{},
-		alliancemodule.AppModuleBasic{},
 	)
 
 	// module account permissions
