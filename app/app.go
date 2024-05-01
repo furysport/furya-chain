@@ -698,7 +698,7 @@ func NewFuryaApp(
 		feegrant.ModuleName,
 		ibctransfertypes.ModuleName,
 		genutiltypes.ModuleName,
-		sdkbanktypes.ModuleName
+		sdkbanktypes.ModuleName,
 		authz.ModuleName,
 		upgradetypes.ModuleName,
 		capabilitytypes.ModuleName,
@@ -726,7 +726,7 @@ func NewFuryaApp(
 		feegrant.ModuleName,
 		ibctransfertypes.ModuleName,
 		genutiltypes.ModuleName,
-		sdkbanktypes.ModuleName
+		sdkbanktypes.ModuleName,
 		authz.ModuleName,
 		upgradetypes.ModuleName,
 		capabilitytypes.ModuleName,
@@ -760,7 +760,7 @@ func NewFuryaApp(
 		feegrant.ModuleName,
 		ibctransfertypes.ModuleName,
 		genutiltypes.ModuleName,
-		sdkbanktypes.ModuleName
+		sdkbanktypes.ModuleName,
 		authz.ModuleName,
 		upgradetypes.ModuleName,
 		capabilitytypes.ModuleName,
@@ -911,6 +911,7 @@ func (app *FuryaApp) BlockedModuleAccountAddrs() map[string]bool {
 	modAccAddrs := app.ModuleAccountAddrs()
 	delete(modAccAddrs, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 	delete(modAccAddrs, authtypes.NewModuleAddress(authtypes.FeeCollectorName).String())
+	delete(modAccAddrs, authtypes.NewModuleAddress(alliancemoduletypes.ModuleName).String())
 
 	return modAccAddrs
 }
