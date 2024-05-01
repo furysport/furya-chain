@@ -55,7 +55,6 @@ import (
 	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
 	sdkbank "github.com/cosmos/cosmos-sdk/x/bank"
 	sdkbanktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/cosmos/cosmos-sdk/x/capability"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
