@@ -1,13 +1,13 @@
 #!/bin/bash
 
 furyad140 tx gov submit-proposal software-upgrade "v2.0.0" \
---upgrade-height=10 \
+--upgrade-height=150 \
 --title="Upgrade to v2.0.0" --description="Upgrade to v2.0.0" \
---from=validator --keyring-backend=test \
---chain-id=testing --home=$HOME/.furyad --yes -b block --deposit="100000000stake"
+--from=devfurya  \
+--chain-id=devfurya-1 --home=$HOME/.furyad --yes -b block --deposit="100000000ufury" --fees 10000ufury --gas auto --gas-adjustment 1.5 --yes
 
-furyad140 tx gov vote 1 yes --from validator --chain-id testing \
---home $HOME/.furyad -b block -y --keyring-backend test
+furyad140 tx gov vote 1 yes --from devfurya --chain-id devfurya-1 \
+--home $HOME/.furyad -b block -y --fees 10000ufury --gas auto --gas-adjustment 1.5
 
 furyad140 query gov proposals
 
