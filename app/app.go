@@ -470,6 +470,8 @@ func NewFuryaApp(
 		authtypes.FeeCollectorName,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
+	app.BankKeeper.RegisterKeepers(app.AllianceKeeper, app.StakingKeeper)
+	
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
 	stakingKeeper.SetHooks(
@@ -478,8 +480,6 @@ func NewFuryaApp(
 	)
 	app.StakingKeeper = stakingKeeper
 	
-	app.BankKeeper.RegisterKeepers(app.AllianceKeeper, app.StakingKeeper)
-
 	app.AirdropKeeper = *airdropkeeper.NewKeeper(appCodec, keys[airdroptypes.StoreKey], app.GetSubspace(airdroptypes.ModuleName), app.BankKeeper, app.StakingKeeper, app.AccountKeeper)
 
 	app.IBCKeeper = ibckeeper.NewKeeper(
