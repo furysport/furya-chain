@@ -35,8 +35,8 @@ import (
 type AppKeepers struct {
 	// keepers
 	AccountKeeper         					authkeeper.AccountKeeper
-	AllianceKeeper      						alliancemodulekeeper.Keeper
-	BankKeeper          						custombankkeeper.Keeper
+	AllianceKeeper        					alliancemodulekeeper.Keeper
+	BankKeeper            					custombankkeeper.Keeper
 	CapabilityKeeper      					*capabilitykeeper.Keeper
 	StakingKeeper         					*stakingkeeper.Keeper
 	SlashingKeeper        					slashingkeeper.Keeper
