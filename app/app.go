@@ -521,7 +521,7 @@ func NewFuryaApp(
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
-		AddRoute(feeburnmoduletypes.RouterKey, feeburnmodule.NewFeeBurnProposalHandler(app.FeeBurnKeeper))
+		AddRoute(alliancemoduletypes.RouterKey, alliancemodule.NewAllianceProposalHandler(app.AllianceKeeper))
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,
