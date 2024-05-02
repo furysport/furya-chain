@@ -6,8 +6,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 
-	appparams "github.com/ChihuahuaChain/chihuahua/app/params"
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/types"
+	appparams "github.com/furysport/furya-chain/app/params"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 func RandDenomCreationFeeParam(r *rand.Rand) sdk.Coins {

@@ -6,8 +6,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/exported"
-	v2 "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/migrations/v2"
+	"github.com/furysport/furya-chain/x/tokenfactory/exported"
+	v2 "github.com/furysport/furya-chain/x/tokenfactory/migrations/v2"
 )
 
 // Migrator is a struct for handling in-place state migrations.

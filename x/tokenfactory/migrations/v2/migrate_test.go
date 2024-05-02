@@ -9,10 +9,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory"
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/exported"
-	v2 "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/migrations/v2"
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/x/tokenfactory"
+	"github.com/furysport/furya-chain/x/tokenfactory/exported"
+	v2 "github.com/furysport/furya-chain/x/tokenfactory/migrations/v2"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 type mockSubspace struct {

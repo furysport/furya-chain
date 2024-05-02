@@ -4,8 +4,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/exported"
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/x/tokenfactory/exported"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 const ModuleName = "tokenfactory"

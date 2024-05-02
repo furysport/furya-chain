@@ -11,8 +11,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/testhelpers"
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/x/tokenfactory/testhelpers"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 // Test authz serialize and de-serializes for tokenfactory msg.

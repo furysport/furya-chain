@@ -10,7 +10,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	bindingstypes "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/bindings/types"
+	bindingstypes "github.com/furysport/furya-chain/x/tokenfactory/bindings/types"
 )
 
 // CustomQuerier dispatches custom CosmWasm bindings queries.

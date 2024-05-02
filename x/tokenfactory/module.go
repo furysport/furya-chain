@@ -26,11 +26,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/client/cli"
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/exported"
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/keeper"
-	simulation "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/simulation"
-	"github.com/ChihuahuaChain/chihuahua/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/x/tokenfactory/client/cli"
+	"github.com/furysport/furya-chain/x/tokenfactory/exported"
+	"github.com/furysport/furya-chain/x/tokenfactory/keeper"
+	simulation "github.com/furysport/furya-chain/x/tokenfactory/simulation"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 var (
