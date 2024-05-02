@@ -18,6 +18,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibcante "github.com/cosmos/ibc-go/v7/modules/core/ante"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 )
 
 var minCommissionRate = sdk.NewDecWithPrec(5, 2) // 5%
@@ -28,13 +29,14 @@ var maxVotingPower = sdk.NewDecWithPrec(66, 1)   // 6.6%
 type HandlerOptions struct {
 	ante.HandlerOptions
 
-	BankKeeper        bankkeeper.Keeper
-	StakingKeeper     *stakingkeeper.Keeper
-	AirdropKeeper     *airdropkeeper.Keeper
-	IBCKeeper         *ibckeeper.Keeper
-	TxCounterStoreKey storetypes.StoreKey
-	WasmConfig        wasmTypes.WasmConfig
-	Cdc               codec.BinaryCodec
+	BankKeeper        						bankkeeper.Keeper
+	StakingKeeper     						*stakingkeeper.Keeper
+	AirdropKeeper     						*airdropkeeper.Keeper
+	IBCKeeper         						*ibckeeper.Keeper
+	AllianceKeeper 							alliancemodulekeeper.Keeper
+	TxCounterStoreKey 					storetypes.StoreKey
+	WasmConfig        						wasmTypes.WasmConfig
+	Cdc               							codec.BinaryCodec
 }
 
 type MinCommissionDecorator struct {
