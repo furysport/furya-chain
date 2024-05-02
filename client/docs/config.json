@@ -162,12 +162,12 @@
       }
     },
     {
-      "url": "./tmp-swagger-gen/alliance/alliance/query.swagger.json",
+      "url": "../../tmp-swagger-gen/alliance/alliance/query.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "AllianceParams"
         }
       }
-    }
+    },
   ]
 }

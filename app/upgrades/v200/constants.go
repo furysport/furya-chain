@@ -32,6 +32,7 @@ var Upgrade = upgrades.Upgrade{
 			ibcfeetypes.StoreKey,
 			group.StoreKey,
 			alliancemoduletypes.StoreKey,
+			tokenfactorytypes.StoreKey,
 		},
 	},
 }

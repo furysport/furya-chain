@@ -20,6 +20,8 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	
+	tokenfactorytypes "github.com/CosmWasm/token-factory/x/tokenfactory/types"
 )
 
 //nolint:all
@@ -60,6 +62,12 @@ func CreateUpgradeHandler(
 				subspace.WithKeyTable(keyTable)
 			}
 		}
+		
+		newTokenFactoryParams := tokenfactorytypes.Params{
+			DenomCreationFee: sdk.NewCoins(sdk.NewCoin("ufury", sdk.NewInt(1000000))),
+			DenomCreationGasConsume: sdk.NewCoins(sdk.NewCoin("ufury", sdk.NewInt(1000000))),
+		}
+		keepers.TokenFactoryKeeper.SetParams(ctx, newTokenFactoryParams)
 
 		// Mint module params update
 		params := minttypes.Params{}
