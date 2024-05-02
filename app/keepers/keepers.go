@@ -7,7 +7,7 @@ import (
 	mintkeeper "github.com/furysport/furya-chain/x/mint/keeper"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-	custombankkeeper "github.com/terra-money/core/v2/custom/bank/keeper"
+	bankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	crisiskeeper "github.com/cosmos/cosmos-sdk/x/crisis/keeper"
@@ -35,7 +35,7 @@ import (
 type AppKeepers struct {
 	// keepers
 	AccountKeeper         					authkeeper.AccountKeeper
-	BankKeeper            					custombankkeeper.Keeper
+	BankKeeper            					bankkeeper.Keeper
 	CapabilityKeeper      					*capabilitykeeper.Keeper
 	StakingKeeper         					*stakingkeeper.Keeper
 	SlashingKeeper        					slashingkeeper.Keeper
@@ -44,7 +44,6 @@ type AppKeepers struct {
 	GovKeeper             					govkeeper.Keeper
 	CrisisKeeper          						*crisiskeeper.Keeper
 	UpgradeKeeper         					*upgradekeeper.Keeper
-	AllianceKeeper        					alliancemodulekeeper.Keeper
 	ParamsKeeper          					paramskeeper.Keeper
 	IBCKeeper             					*ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
 	IBCFeeKeeper          					ibcfeekeeper.Keeper
@@ -59,6 +58,7 @@ type AppKeepers struct {
 	AirdropKeeper         					airdropkeeper.Keeper
 	ICAControllerKeeper   				icacontrollerkeeper.Keeper
 	InterTxKeeper         					intertxkeeper.Keeper
+	AllianceKeeper        					alliancemodulekeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           			capabilitykeeper.ScopedKeeper
