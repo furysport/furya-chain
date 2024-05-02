@@ -467,7 +467,6 @@ func NewFuryaApp(
 		app.BankKeeper,
 		app.StakingKeeper,
 		app.DistrKeeper,
-		authtypes.FeeCollectorName,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.BankKeeper.RegisterKeepers(app.AllianceKeeper, app.StakingKeeper)
