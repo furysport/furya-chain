@@ -7,7 +7,7 @@ import (
 	mintkeeper "github.com/furysport/furya-chain/x/mint/keeper"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+	custombankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	crisiskeeper "github.com/cosmos/cosmos-sdk/x/crisis/keeper"
@@ -26,6 +26,7 @@ import (
 	ibcfeekeeper "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/keeper"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -34,7 +35,7 @@ import (
 type AppKeepers struct {
 	// keepers
 	AccountKeeper         					authkeeper.AccountKeeper
-	BankKeeper            					bankkeeper.Keeper
+	BankKeeper            					custombankkeeper.Keeper
 	CapabilityKeeper      					*capabilitykeeper.Keeper
 	StakingKeeper         					*stakingkeeper.Keeper
 	SlashingKeeper        					slashingkeeper.Keeper
@@ -57,6 +58,8 @@ type AppKeepers struct {
 	AirdropKeeper         					airdropkeeper.Keeper
 	ICAControllerKeeper   				icacontrollerkeeper.Keeper
 	InterTxKeeper         					intertxkeeper.Keeper
+	
+	AllianceKeeper 							alliancemodulekeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           			capabilitykeeper.ScopedKeeper
