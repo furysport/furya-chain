@@ -83,5 +83,12 @@ func CreateUpgradeHandler(
 		})
 
 		return mm.RunMigrations(ctx, configurator, vm)
+		
+		if err := app.TokenFactoryKeeper.SetParams(ctx, tokenfactorytypes.Params{
+			DenomCreationFee:        nil,
+			DenomCreationGasConsume: 50_000, // 50k gas consume for creating a token. Ref: Juno is 2m and Osmosis 2m.
+		}); err != nil {
+			return nil, err
+		}
 	}
 }
