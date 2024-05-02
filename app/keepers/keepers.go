@@ -44,6 +44,7 @@ type AppKeepers struct {
 	GovKeeper             					govkeeper.Keeper
 	CrisisKeeper          						*crisiskeeper.Keeper
 	UpgradeKeeper         					*upgradekeeper.Keeper
+	AllianceKeeper        					alliancemodulekeeper.Keeper
 	ParamsKeeper          					paramskeeper.Keeper
 	IBCKeeper             					*ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
 	IBCFeeKeeper          					ibcfeekeeper.Keeper
@@ -69,5 +70,4 @@ type AppKeepers struct {
 
 	WasmKeeper       						wasmkeeper.Keeper
 	ScopedWasmKeeper 					capabilitykeeper.ScopedKeeper
-	AllianceKeeper        					alliancemodulekeeper.Keeper
 }
