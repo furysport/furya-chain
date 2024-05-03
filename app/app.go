@@ -613,7 +613,6 @@ func NewFuryaApp(
 	)
 
 	tfOpts := tokenbindings.RegisterCustomPlugins(&app.BankKeeper, &app.TokenFactoryKeeper)
-	wasmOpts = append(wasmOpts, tfOpts...)
 
 	wasmDir := filepath.Join(homePath, "data")
 
@@ -627,7 +626,7 @@ func NewFuryaApp(
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
 	availableCapabilities := "iterator,staking,stargate,cosmwasm_1_1,cosmwasm_1_2"
-	wasmOpts := GetWasmOpts(appOpts)
+	wasmOpts := GetWasmOpts(appOpts, tfOpts...)
 	app.WasmKeeper = wasmkeeper.NewKeeper(
 		appCodec,
 		keys[wasmtypes.StoreKey],
