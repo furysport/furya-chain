@@ -81,7 +81,15 @@ func CreateUpgradeHandler(
 			Evidence:  cp.Evidence,
 			Version:   cp.Version,
 		})
-
+		
+		// TokenFactory module params update
+		tokenFactoryParams := tokenfactorytypes.Params{
+			DenomCreationFee:        nil,
+			DenomCreationGasConsume: 50_000,
+		}
+		if err := keepers.TokenFactoryKeeper.SetParams(ctx, tokenFactoryParams); err != nil {
+			return nil, err
+		}
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }

@@ -6,6 +6,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 )
 
+const (
+	BondDenom    = "ufury"
+	DisplayDenom = "FURY"
+	// DefaultGasLimit - set to the same value as cosmos-sdk flags.DefaultGasLimit
+	// this value is currently only used in tests.
+	DefaultGasLimit = 200000
+)
+
 // MakeEncodingConfig creates an EncodingConfig for an amino based test configuration.
 func MakeEncodingConfig() EncodingConfig {
 	amino := codec.NewLegacyAmino()

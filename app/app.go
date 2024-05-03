@@ -140,6 +140,11 @@ import (
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
+	
+	tokenfactory "github.com/ChihuahuaChain/chihuahua/x/tokenfactory"
+	tokenbindings "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/bindings"
+	tokenfactorykeeper "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/keeper"
+	tokenfactorytypes "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
@@ -159,6 +164,12 @@ var (
 	// of "EnableAllProposals" (takes precedence over ProposalsEnabled)
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
+	
+	tokenFactoryCapabilities = []string{
+		tokenfactorytypes.EnableBurnFrom,
+		tokenfactorytypes.EnableForceTransfer,
+		tokenfactorytypes.EnableSetMetadata,
+	}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
@@ -245,6 +256,7 @@ var (
 		ica.AppModuleBasic{},
 		intertx.AppModule{},
 		alliancemodule.AppModuleBasic{},
+		tokenfactory.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -262,6 +274,7 @@ var (
 		wasmtypes.ModuleName:           		{authtypes.Burner},
 		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.RewardsPoolName: nil,
+		tokenfactorytypes.ModuleName: 			{authtypes.Minter, authtypes.Burner},
 	}
 )
 
@@ -339,6 +352,7 @@ func NewFuryaApp(
 		intertxtypes.StoreKey,
 		crisistypes.StoreKey,
 		alliancemoduletypes.StoreKey,
+		tokenfactorytypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -587,6 +601,19 @@ func NewFuryaApp(
 	)
 
 	app.EvidenceKeeper = *evidenceKeeper
+	
+	app.TokenFactoryKeeper = tokenfactorykeeper.NewKeeper(
+		appCodec,
+		app.keys[tokenfactorytypes.StoreKey],
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.DistrKeeper,
+		tokenFactoryCapabilities,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	tfOpts := tokenbindings.RegisterCustomPlugins(&app.BankKeeper, &app.TokenFactoryKeeper)
+	wasmOpts = append(wasmOpts, tfOpts...)
 
 	wasmDir := filepath.Join(homePath, "data")
 
@@ -684,6 +711,7 @@ func NewFuryaApp(
 		packetforwardModule,
 		interTxModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry, app.GetSubspace(alliancemoduletypes.ModuleName)),
+		tokenfactory.NewAppModule(app.TokenFactoryKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(tokenfactorytypes.ModuleName)),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -717,6 +745,7 @@ func NewFuryaApp(
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
 		alliancemoduletypes.ModuleName,
+		tokenfactorytypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		distrtypes.ModuleName,
@@ -745,6 +774,7 @@ func NewFuryaApp(
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
 		alliancemoduletypes.ModuleName,
+		tokenfactorytypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -779,6 +809,7 @@ func NewFuryaApp(
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
 		alliancemoduletypes.ModuleName,
+		tokenfactorytypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(app.CrisisKeeper)
