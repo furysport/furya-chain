@@ -12,7 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/group"
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
-	tokenfactorytypes "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/types"
+	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 const (

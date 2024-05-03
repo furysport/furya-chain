@@ -141,10 +141,10 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 	
-	tokenfactory "github.com/ChihuahuaChain/chihuahua/x/tokenfactory"
-	tokenbindings "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/bindings"
-	tokenfactorykeeper "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/keeper"
-	tokenfactorytypes "github.com/ChihuahuaChain/chihuahua/x/tokenfactory/types"
+	tokenfactory "github.com/furysport/furya-chain/x/tokenfactory"
+	tokenbindings "github.com/furysport/furya-chain/x/tokenfactory/bindings"
+	tokenfactorykeeper "github.com/furysport/furya-chain/x/tokenfactory/keeper"
+	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
