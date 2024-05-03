@@ -33,7 +33,7 @@ var Upgrade = upgrades.Upgrade{
 			consensusparamtypes.StoreKey,
 			ibcfeetypes.StoreKey,
 			group.StoreKey,
-			alliancemoduletypes.StoreKey
+			alliancemoduletypes.StoreKey,
 		},
 	},
 }
