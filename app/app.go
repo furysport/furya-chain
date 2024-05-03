@@ -348,7 +348,7 @@ func NewFuryaApp(
 		consensusparamtypes.StoreKey,
 		intertxtypes.StoreKey,
 		crisistypes.StoreKey,
-		AllianceStoreKey
+		AllianceStoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
