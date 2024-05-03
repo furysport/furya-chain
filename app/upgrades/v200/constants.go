@@ -11,12 +11,15 @@ import (
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	"github.com/cosmos/cosmos-sdk/x/group"
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
+	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 )
 
 const (
 	// UpgradeName defines the on-chain upgrade name.
 	UpgradeName = "v2.0.0"
 )
+
+
 
 var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
@@ -30,6 +33,7 @@ var Upgrade = upgrades.Upgrade{
 			consensusparamtypes.StoreKey,
 			ibcfeetypes.StoreKey,
 			group.StoreKey,
+			alliancemoduletypes.StoreKey
 		},
 	},
 }

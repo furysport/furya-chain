@@ -26,6 +26,7 @@ import (
 	ibcfeekeeper "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/keeper"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -57,6 +58,7 @@ type AppKeepers struct {
 	AirdropKeeper         					airdropkeeper.Keeper
 	ICAControllerKeeper   				icacontrollerkeeper.Keeper
 	InterTxKeeper         					intertxkeeper.Keeper
+	AllianceKeeper  							alliancemodulekeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           			capabilitykeeper.ScopedKeeper
