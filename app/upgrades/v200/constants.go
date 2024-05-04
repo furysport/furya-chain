@@ -11,7 +11,7 @@ import (
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	"github.com/cosmos/cosmos-sdk/x/group"
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
-	streampaytypes "github.com/furysport/streampay/v2/x/streampay/types"
+	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 const (
@@ -31,7 +31,6 @@ var Upgrade = upgrades.Upgrade{
 			consensusparamtypes.StoreKey,
 			ibcfeetypes.StoreKey,
 			group.StoreKey,
-			streampaytypes.StoreKey
 			tokenfactorytypes.StoreKey,
 		},
 	},

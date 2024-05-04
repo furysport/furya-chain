@@ -131,10 +131,7 @@ import (
 	intertxkeeper "github.com/furysport/furya-chain/x/intertx/keeper"
 	intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
 	
-	"github.com/furysport/streampay/v2/x/streampay"
-	streampaykeeper "github.com/furysport/streampay/v2/x/streampay/keeper"
-	streampaytypes "github.com/furysport/streampay/v2/x/streampay/types"
-	
+	tokenfactory "github.com/furysport/furya-chain/x/tokenfactory"
 	tokenfactorykeeper "github.com/furysport/furya-chain/x/tokenfactory/keeper"
 	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
 
@@ -248,7 +245,6 @@ var (
 		ibcfee.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		intertx.AppModule{},
-		streampay.AppModuleBasic{},
 		tokenfactory.AppModuleBasic{},
 	)
 
@@ -265,7 +261,6 @@ var (
 		airdroptypes.ModuleName:        			nil,
 		ibcfeetypes.ModuleName:         			nil,
 		wasmtypes.ModuleName:           		{authtypes.Burner},
-		streampaytypes.ModuleName: 			nil,
 		tokenfactorytypes.ModuleName: 			{authtypes.Minter, authtypes.Burner},
 	}
 )
@@ -343,7 +338,6 @@ func NewFuryaApp(
 		consensusparamtypes.StoreKey,
 		intertxtypes.StoreKey,
 		crisistypes.StoreKey,
-		streampaytypes.StoreKey,
 		tokenfactorytypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -474,16 +468,6 @@ func NewFuryaApp(
 
 	app.AirdropKeeper = *airdropkeeper.NewKeeper(appCodec, keys[airdroptypes.StoreKey], app.GetSubspace(airdroptypes.ModuleName), app.BankKeeper, app.StakingKeeper, app.AccountKeeper)
 	
-	appKeepers.StreamPayKeeper = *streampaykeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[streampaytypes.StoreKey],
-		appKeepers.keys[streampaytypes.MemStoreKey],
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.DistrKeeper,
-		govModAddress,
-	)
-
 	app.IBCKeeper = ibckeeper.NewKeeper(
 		appCodec,
 		keys[ibcexported.StoreKey],
@@ -588,14 +572,14 @@ func NewFuryaApp(
 
 	app.EvidenceKeeper = *evidenceKeeper
 	
-	appKeepers.TokenFactoryKeeper = tokenfactorykeeper.NewKeeper(
+	app.TokenFactoryKeeper = tokenfactorykeeper.NewKeeper(
 		appCodec,
-		appKeepers.keys[tokenfactorytypes.StoreKey],
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.DistrKeeper,
+		keys[tokenfactorytypes.StoreKey],
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.DistrKeeper,
 		tokenFactoryCapabilities,
-		govModAddress,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	wasmDir := filepath.Join(homePath, "data")
@@ -693,7 +677,6 @@ func NewFuryaApp(
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		packetforwardModule,
 		interTxModule,
-		streampay.NewAppModule(appCodec, app.StreamPayKeeper),
 		tokenfactory.NewAppModule(
 			app.AppKeepers.TokenFactoryKeeper,
 			app.AppKeepers.AccountKeeper,
@@ -731,7 +714,6 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
-		streampaytypes.ModuleName,
 		tokenfactorytypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
@@ -760,7 +742,6 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
-		streampaytypes.ModuleName,
 		tokenfactorytypes.ModuleName,
 	)
 
@@ -795,7 +776,6 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
-		streampaytypes.ModuleName,
 		tokenfactorytypes.ModuleName,
 	)
 
@@ -1088,7 +1068,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(airdroptypes.ModuleName)
-	paramsKeeper.Subspace(streampaytypes.ModuleName)
 	paramsKeeper.Subspace(tokenfactorytypes.ModuleName)
 
 	return paramsKeeper

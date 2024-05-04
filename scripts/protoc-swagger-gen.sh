@@ -27,9 +27,6 @@ else
   echo "Cosmos SDK directory already exists, skipping clone"
 fi
 
-
-
-streampay=$(go list -f '{{ .Dir }}' -m github.com/furya/streampay/v2)
 ibc_dir=$(go list -f '{{ .Dir }}' -m github.com/cosmos/ibc-go/v7)
 
 cd proto
