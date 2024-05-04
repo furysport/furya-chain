@@ -30,7 +30,7 @@ func FundAccount(t *testing.T, ctx sdk.Context, customApp *app.FuryaApp, acct sd
 	t.Helper()
 
 	err := banktestutil.FundAccount(customApp.AppKeepers.BankKeeper, ctx, acct, sdk.NewCoins(
-		sdk.NewCoin("uflix", sdk.NewInt(10000000000)),
+		sdk.NewCoin("ufury", sdk.NewInt(10000000000)),
 	))
 	require.NoError(t, err)
 }
