@@ -129,6 +129,11 @@ import (
 	intertxkeeper "github.com/furysport/furya-chain/x/intertx/keeper"
 	intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
 	
+	globalfee "github.com/furysport/x/globalfee"
+	globalfeekeeper "github.com/furysport/x/globalfee/keeper"
+	globalfeetypes "github.com/furysport/x/globalfee/types"
+
+	
 	tokenfactory "github.com/furysport/furya-chain/x/tokenfactory"
 	tokenfactorykeeper "github.com/furysport/furya-chain/x/tokenfactory/keeper"
 	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
@@ -256,6 +261,7 @@ var (
 		intertx.AppModule{},
 		tokenfactory.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
+		globalfee.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -271,7 +277,8 @@ var (
 		airdroptypes.ModuleName:        			nil,
 		ibcfeetypes.ModuleName:         			nil,
 		wasmtypes.ModuleName:           		{authtypes.Burner},
-		tokenfactorytypes.ModuleName: 			{authtypes.Minter, authtypes.Burner},
+		tokenfactorytypes.ModuleName:   		{authtypes.Minter, authtypes.Burner},
+		globalfee.ModuleName:           			nil,
 		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.RewardsPoolName: nil,
 	}
@@ -350,6 +357,7 @@ func NewFuryaApp(
 		consensusparamtypes.StoreKey,
 		intertxtypes.StoreKey,
 		crisistypes.StoreKey,
+		globalfeetypes.StoreKey,
 		tokenfactorytypes.StoreKey,
 		alliancemoduletypes.StoreKey,
 	)
@@ -599,6 +607,13 @@ func NewFuryaApp(
 
 	app.EvidenceKeeper = *evidenceKeeper
 	
+	appKeepers.GlobalFeeKeeper = globalfeekeeper.NewKeeper(
+		appCodec,
+		keys[globalfeetypes.StoreKey],
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	// Create the TokenFactory Keeper
 	app.TokenFactoryKeeper = tokenfactorykeeper.NewKeeper(
 		appCodec,
 		keys[tokenfactorytypes.StoreKey],
@@ -682,7 +697,7 @@ func NewFuryaApp(
 			encodingConfig.TxConfig,
 		),
 		airdrop.NewAppModule(appCodec, app.AirdropKeeper),
-		auth.NewAppModule(appCodec, app.AccountKeeper, authsims.RandomGenesisAccounts, app.GetSubspace(authtypes.ModuleName)),
+		auth.NewAppModule(appCodec, app.AccountKeeper, nil, app.GetSubspace(authtypes.ModuleName)),
 		vesting.NewAppModule(app.AccountKeeper, app.BankKeeper),
 		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper, app.GetSubspace(banktypes.ModuleName)),
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper, false),
@@ -710,6 +725,7 @@ func NewFuryaApp(
 			app.AppKeepers.BankKeeper,
 		),
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry, app.GetSubspace(alliancemoduletypes.ModuleName)),
+		globalfee.NewAppModule(appCodec, app.GlobalFeeKeeper, bondDenom),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -744,6 +760,7 @@ func NewFuryaApp(
 		intertxtypes.ModuleName,
 		tokenfactorytypes.ModuleName,
 		alliancemoduletypes.ModuleName,
+		globalfee.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		distrtypes.ModuleName,
@@ -773,6 +790,7 @@ func NewFuryaApp(
 		intertxtypes.ModuleName,
 		tokenfactorytypes.ModuleName,
 		alliancemoduletypes.ModuleName,
+		globalfee.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -1100,7 +1118,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(airdroptypes.ModuleName)
-	paramsKeeper.Subspace(tokenfactorytypes.ModuleName).WithKeyTable(tokenfactorytypes.ParamKeyTable())
+	paramsKeeper.Subspace(globalfee.ModuleName)
+	paramsKeeper.Subspace(tokenfactorytypes.ModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName).WithKeyTable(tokenfactorytypes.ParamKeyTable()) //nolint:staticcheck
 
 	return paramsKeeper
