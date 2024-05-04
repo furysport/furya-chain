@@ -73,9 +73,9 @@ Example:
 			genesisFile := args[0]
 			snapshotOutput := args[1]
 
-			// // exclude module accounts
-// 			excludeAddrs := make(map[string]bool)
-// 			excludeAddrs["furya17xpfvakm2amg962yls6f84z3kell8c5ljd5fsd"] = true
+			// exclude module accounts
+			excludeAddrs := make(map[string]bool)
+			// excludeAddrs["furya17xpfvakm2amg962yls6f84z3kell8c5ljd5fsd"] = true
 // 			excludeAddrs["furya1jv65s3grqf6v6jl3dp4t6c9t9rk99cd89tn4j0"] = true
 // 			excludeAddrs["furya1vlthgax23ca9syk7xgaz347xmf4nunef9up7hq"] = true
 // 			excludeAddrs["furya1zw7guf74ez4mlmsxlt0kcgg9yj6hx94zcg9k6w"] = true
