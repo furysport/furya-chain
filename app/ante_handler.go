@@ -28,13 +28,13 @@ var maxVotingPower = sdk.NewDecWithPrec(66, 1)   // 6.6%
 type HandlerOptions struct {
 	ante.HandlerOptions
 
-	BankKeeper        bankkeeper.Keeper
-	StakingKeeper     *stakingkeeper.Keeper
-	AirdropKeeper     *airdropkeeper.Keeper
-	IBCKeeper         *ibckeeper.Keeper
-	TxCounterStoreKey storetypes.StoreKey
-	WasmConfig        wasmTypes.WasmConfig
-	Cdc               codec.BinaryCodec
+	BankKeeper        			bankkeeper.Keeper
+	StakingKeeper     			*stakingkeeper.Keeper
+	AirdropKeeper     			*airdropkeeper.Keeper
+	IBCKeeper         			*ibckeeper.Keeper
+	TxCounterStoreKey 		storetypes.StoreKey
+	WasmConfig        			wasmTypes.WasmConfig
+	Cdc               				codec.BinaryCodec
 }
 
 type MinCommissionDecorator struct {

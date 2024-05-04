@@ -31,6 +31,7 @@ require (
 	google.golang.org/grpc v1.60.1
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v2 v2.4.0
+	github.com/furysport/streampay/v2 v2.2.0-alpha.1	
 )
 
 require (

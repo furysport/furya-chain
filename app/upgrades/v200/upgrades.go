@@ -20,6 +20,8 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	streampaytypes "github.com/furysport/streampay/v2/x/streampay/types"
+	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 //nolint:all
@@ -61,6 +63,21 @@ func CreateUpgradeHandler(
 			}
 		}
 
+		// set streampay module params
+		streamPayParams := streampaytypes.DefaultParams()
+		streamPayParams.StreamPaymentFee = sdk.NewInt64Coin("ufury", 50_000_000) // 50 FURY
+		v := reflect.Indirect(reflect.ValueOf(streamPayParams.StreamPaymentFee)).Interface()
+		subspace, ok := app.StreamPayKeeper.GetSubspace(streampaytypes.ModuleName)
+		if !ok {
+			panic("invalid stream payment module subspace")
+		}
+		subspace.Set(ctx, streampaytypes.KeyStreamPaymentFee, v)
+		
+		err = keepers.TokenFactoryKeeper.SetParams(ctx, tokenfactorytypes.DefaultParams())
+		if err != nil {
+			return nil, err
+		}
+		
 		// Mint module params update
 		params := minttypes.Params{}
 		params.BlocksPerYear = 5733818
