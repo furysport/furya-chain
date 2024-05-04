@@ -11,9 +11,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/v4/app"
-	bindings "github.com/furysport/furya-chain/v4/x/tokenfactory/bindings/types"
-	"github.com/furysport/furya-chain/v4/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/app"
+	bindings "github.com/furysport/furya-chain/x/tokenfactory/bindings/types"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 func TestCreateDenomMsg(t *testing.T) {

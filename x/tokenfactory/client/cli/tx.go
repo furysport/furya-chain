@@ -13,7 +13,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	"github.com/furysport/furya-chain/v4/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 // GetTxCmd returns the transaction commands for this module

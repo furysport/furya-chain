@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 
-	"github.com/furysport/furya-chain/v4/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module

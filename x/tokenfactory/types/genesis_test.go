@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/furysport/furya-chain/v4/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 func TestGenesisState_Validate(t *testing.T) {

@@ -10,9 +10,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	"github.com/furysport/furya-chain/v4/app/apptesting"
-	"github.com/furysport/furya-chain/v4/x/tokenfactory/keeper"
-	"github.com/furysport/furya-chain/v4/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/app/apptesting"
+	"github.com/furysport/furya-chain/x/tokenfactory/keeper"
+	"github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 type KeeperTestSuite struct {

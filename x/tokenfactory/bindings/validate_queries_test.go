@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	wasmbinding "github.com/furysport/furya-chain/v4/x/tokenfactory/bindings"
+	wasmbinding "github.com/furysport/furya-chain/x/tokenfactory/bindings"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
