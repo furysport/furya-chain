@@ -27,7 +27,7 @@ import (
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	tokenfactorykeeper "github.com/furysport/furya-chain/x/tokenfactory/keeper"
-	bankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
+	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
