@@ -15,7 +15,7 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	appparams "github.com/furysport/app/params"
+	appparams "github.com/furysport/furya-chain/app/params"
 	globalfeekeeper "github.com/furysport/furya-chain/x/globalfee/keeper"
 	"github.com/furysport/furya-chain/x/globalfee/types"
 )

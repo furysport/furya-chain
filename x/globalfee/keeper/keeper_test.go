@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	appparams "github.com/furysport/app/params"
+	appparams "github.com/furysport/furya-chain/app/params"
 	globalfeekeeper "github.com/furysport/furya-chain/x/globalfee/keeper"
 	"github.com/furysport/furya-chain/x/globalfee/types"
 	dbm "github.com/cometbft/cometbft-db"
