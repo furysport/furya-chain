@@ -212,7 +212,6 @@ docs:
 	@echo "=========== Generate Complete ============"
 	@echo
 
-
 ###############################################################################
 ###                                Protobuf                                 ###
 ###############################################################################
@@ -244,6 +243,7 @@ update-swagger-docs:
 		echo "\033[92mSwagger docs are in sync\033[0m";\
 	fi
 .PHONY: update-swagger-docs
+
 
 .PHONY: docker.publish
 docker.publish:
