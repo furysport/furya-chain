@@ -162,10 +162,12 @@
       }
     },
     {
-      "url": "./tmp-swagger-gen/alliance/alliance/query.swagger.json",
+      "url": "./tmp-swagger-gen/osmosis/tokenfactory/v1beta1/query.swagger.json",
       "operationIds": {
         "rename": {
-          "Params": "AllianceParams"
+          "Params": "TokenfactoryParams"
+          "DenomAuthorityMetadata": "TokenfactoryDenomAuthorityMetadata"
+          "DenomsFromCreator": "TokenfactoryDenomsFromCreator"
         }
       }
     }

@@ -16,7 +16,6 @@ COSMOS_SDK_VERSION="v0.47.8"
 # Define the directory where you want to clone the repo
 COSMOS_SDK_DIR="./cosmos-sdk"
 
-go mod download github.com/terra-money/alliance
 go mod download github.com/cosmos/ibc-go/v7
 
 # Clone the specific version of cosmos-sdk
@@ -26,13 +25,10 @@ else
   echo "Cosmos SDK directory already exists, skipping clone"
 fi
 
-
-
-alliance_dir=$(go list -f '{{ .Dir }}' -m github.com/terra-money/alliance)
 ibc_dir=$(go list -f '{{ .Dir }}' -m github.com/cosmos/ibc-go/v7)
 
 cd proto
-proto_dirs=$(find ../$COSMOS_SDK_DIR/proto/cosmos $alliance_dir/proto $ibc_dir/proto ./furya -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
+proto_dirs=$(find ../$COSMOS_SDK_DIR/proto/cosmos ./osmosis $ibc_dir/proto ./furya -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
 
 for dir in $proto_dirs; do
   # generate swagger files (filter query files)

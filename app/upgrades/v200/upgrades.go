@@ -20,6 +20,7 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
 )
 
 //nolint:all
@@ -81,6 +82,12 @@ func CreateUpgradeHandler(
 			Evidence:  cp.Evidence,
 			Version:   cp.Version,
 		})
+
+		// Set token-factory denom creation fee
+		err := keepers.TokenFactoryKeeper.SetParams(ctx, tokenfactorytypes.DefaultParams())
+		if err != nil {
+			return nil, err
+		}
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}

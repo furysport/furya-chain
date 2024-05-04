@@ -75,15 +75,15 @@ Example:
 
 			// exclude module accounts
 			excludeAddrs := make(map[string]bool)
-			excludeAddrs["furya17xpfvakm2amg962yls6f84z3kell8c5ljd5fsd"] = true
-			excludeAddrs["furya1jv65s3grqf6v6jl3dp4t6c9t9rk99cd89tn4j0"] = true
-			excludeAddrs["furya1vlthgax23ca9syk7xgaz347xmf4nunef9up7hq"] = true
-			excludeAddrs["furya1zw7guf74ez4mlmsxlt0kcgg9yj6hx94zcg9k6w"] = true
-			excludeAddrs["furya1m3h30wlvsf8llruxtpukdvsy0km2kum829s3us"] = true
-			excludeAddrs["furya1tygms3xhhs3yv487phx3dw4a95jn7t7lr0zh5n"] = true
-			excludeAddrs["furya1yl6hdjhmkf37639730gffanpzndzdpmhvtpqvn"] = true
-			excludeAddrs["furya1fl48vsnmsdzcv85q5d2q4z5ajdha8yu3h07xz8"] = true
-			excludeAddrs["furya10d07y265gmmuvt4z0w9aw880jnsr700jckyvdr"] = true
+			// excludeAddrs["furya17xpfvakm2amg962yls6f84z3kell8c5ljd5fsd"] = true
+// 			excludeAddrs["furya1jv65s3grqf6v6jl3dp4t6c9t9rk99cd89tn4j0"] = true
+// 			excludeAddrs["furya1vlthgax23ca9syk7xgaz347xmf4nunef9up7hq"] = true
+// 			excludeAddrs["furya1zw7guf74ez4mlmsxlt0kcgg9yj6hx94zcg9k6w"] = true
+// 			excludeAddrs["furya1m3h30wlvsf8llruxtpukdvsy0km2kum829s3us"] = true
+// 			excludeAddrs["furya1tygms3xhhs3yv487phx3dw4a95jn7t7lr0zh5n"] = true
+// 			excludeAddrs["furya1yl6hdjhmkf37639730gffanpzndzdpmhvtpqvn"] = true
+// 			excludeAddrs["furya1fl48vsnmsdzcv85q5d2q4z5ajdha8yu3h07xz8"] = true
+// 			excludeAddrs["furya10d07y265gmmuvt4z0w9aw880jnsr700jckyvdr"] = true
 
 			decimal := sdk.NewDec(1000_000)
 

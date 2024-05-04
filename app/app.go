@@ -130,6 +130,10 @@ import (
 	intertx "github.com/furysport/furya-chain/x/intertx"
 	intertxkeeper "github.com/furysport/furya-chain/x/intertx/keeper"
 	intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
+	
+	tokenfactory "github.com/furysport/furya-chain/x/tokenfactory"
+	tokenfactorykeeper "github.com/furysport/furya-chain/x/tokenfactory/keeper"
+	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
 
 	furyaappparams "github.com/furysport/furya-chain/app/params"
 	"github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
@@ -155,6 +159,12 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 )
+
+var tokenFactoryCapabilities = []string{
+	tokenfactorytypes.EnableBurnFrom,
+	tokenfactorytypes.EnableForceTransfer,
+	tokenfactorytypes.EnableSetMetadata,
+}
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
 // produce a list of enabled proposals to pass into wasmd app.
@@ -235,6 +245,7 @@ var (
 		ibcfee.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		intertx.AppModule{},
+		tokenfactory.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -250,6 +261,7 @@ var (
 		airdroptypes.ModuleName:        			nil,
 		ibcfeetypes.ModuleName:         			nil,
 		wasmtypes.ModuleName:           		{authtypes.Burner},
+		tokenfactorytypes.ModuleName: 			{authtypes.Minter, authtypes.Burner},
 	}
 )
 
@@ -326,6 +338,7 @@ func NewFuryaApp(
 		consensusparamtypes.StoreKey,
 		intertxtypes.StoreKey,
 		crisistypes.StoreKey,
+		tokenfactorytypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -454,7 +467,7 @@ func NewFuryaApp(
 	app.StakingKeeper = stakingKeeper
 
 	app.AirdropKeeper = *airdropkeeper.NewKeeper(appCodec, keys[airdroptypes.StoreKey], app.GetSubspace(airdroptypes.ModuleName), app.BankKeeper, app.StakingKeeper, app.AccountKeeper)
-
+	
 	app.IBCKeeper = ibckeeper.NewKeeper(
 		appCodec,
 		keys[ibcexported.StoreKey],
@@ -558,6 +571,16 @@ func NewFuryaApp(
 	)
 
 	app.EvidenceKeeper = *evidenceKeeper
+	
+	app.TokenFactoryKeeper = tokenfactorykeeper.NewKeeper(
+		appCodec,
+		keys[tokenfactorytypes.StoreKey],
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.DistrKeeper,
+		tokenFactoryCapabilities,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
 
 	wasmDir := filepath.Join(homePath, "data")
 
@@ -654,6 +677,11 @@ func NewFuryaApp(
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		packetforwardModule,
 		interTxModule,
+		tokenfactory.NewAppModule(
+			app.AppKeepers.TokenFactoryKeeper,
+			app.AppKeepers.AccountKeeper,
+			app.AppKeepers.BankKeeper,
+		),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -686,6 +714,7 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
+		tokenfactorytypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		distrtypes.ModuleName,
@@ -713,6 +742,7 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
+		tokenfactorytypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -746,6 +776,7 @@ func NewFuryaApp(
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
+		tokenfactorytypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(app.CrisisKeeper)
@@ -774,19 +805,19 @@ func NewFuryaApp(
 	anteHandler, err := NewAnteHandler(
 		HandlerOptions{
 			HandlerOptions: ante.HandlerOptions{
-				AccountKeeper:   app.AccountKeeper,
-				BankKeeper:      app.BankKeeper,
-				FeegrantKeeper:  app.FeeGrantKeeper,
-				SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
-				SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
+				AccountKeeper:   			app.AccountKeeper,
+				BankKeeper:      			app.BankKeeper,
+				FeegrantKeeper:  			app.FeeGrantKeeper,
+				SignModeHandler: 			encodingConfig.TxConfig.SignModeHandler(),
+				SigGasConsumer:  			ante.DefaultSigVerificationGasConsumer,
 			},
-			StakingKeeper:     app.StakingKeeper,
-			BankKeeper:        app.BankKeeper,
-			AirdropKeeper:     &app.AirdropKeeper,
-			IBCKeeper:         app.IBCKeeper,
-			TxCounterStoreKey: keys[wasmtypes.StoreKey],
-			WasmConfig:        wasmConfig,
-			Cdc:               appCodec,
+			StakingKeeper:     				app.StakingKeeper,
+			BankKeeper:        				app.BankKeeper,
+			AirdropKeeper:     				&app.AirdropKeeper,
+			IBCKeeper:         				app.IBCKeeper,
+			TxCounterStoreKey: 			keys[wasmtypes.StoreKey],
+			WasmConfig:        				wasmConfig,
+			Cdc:               					appCodec,
 		},
 	)
 	if err != nil {
@@ -824,12 +855,12 @@ func NewFuryaApp(
 		app.CapabilityKeeper.Seal()
 	}
 
-	app.ScopedIBCKeeper = scopedIBCKeeper
-	app.ScopedTransferKeeper = scopedTransferKeeper
-	app.ScopedICAControllerKeeper = scopedICAControllerKeeper
-	app.ScopedICAHostKeeper = scopedICAHostKeeper
-	app.ScopedInterTxKeeper = scopedInterTxKeeper
-	app.ScopedWasmKeeper = scopedWasmKeeper
+	app.ScopedIBCKeeper 				= scopedIBCKeeper
+	app.ScopedTransferKeeper 			= scopedTransferKeeper
+	app.ScopedICAControllerKeeper 	= scopedICAControllerKeeper
+	app.ScopedICAHostKeeper 			= scopedICAHostKeeper
+	app.ScopedInterTxKeeper 			= scopedInterTxKeeper
+	app.ScopedWasmKeeper 			= scopedWasmKeeper
 
 	return app
 }
@@ -1037,6 +1068,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(airdroptypes.ModuleName)
+	paramsKeeper.Subspace(tokenfactorytypes.ModuleName).WithKeyTable(packetforwardtypes.ParamKeyTable())
 
 	return paramsKeeper
 }
