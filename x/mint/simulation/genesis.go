@@ -31,20 +31,7 @@ var (
 		Staking:          sdk.NewDecWithPrec(40, 2), // 40%
 		DeveloperRewards: sdk.NewDecWithPrec(15, 2), // 15%
 	}
-	weightedDevRewardReceivers = []types.MonthlyVestingAddress{
-		{
-			Address:        "furya1g2escsu26508tgrpv865d80d62pvmw69je2ztn",
-			MonthlyAmounts: []math.Int{sdk.NewInt(7000), sdk.NewInt(7000), sdk.NewInt(7000)},
-		},
-		{
-			Address:        "furya1g2escsu26508tgrpv865d80d62pvmw69je2ztn",
-			MonthlyAmounts: []math.Int{sdk.NewInt(2000), sdk.NewInt(2000), sdk.NewInt(2000)},
-		},
-		{
-			Address:        "furya1g2escsu26508tgrpv865d80d62pvmw69je2ztn",
-			MonthlyAmounts: []math.Int{sdk.NewInt(1000), sdk.NewInt(1000), sdk.NewInt(1000)},
-		},
-	}
+	weightedDevRewardReceivers = []types.MonthlyVestingAddress{}
 )
 
 // RandomizedGenState generates a random GenesisState for mint.

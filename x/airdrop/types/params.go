@@ -34,7 +34,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 // DefaultParams return the default params
 func DefaultParams() Params {
 	return Params{
-		Owner: "furya12ezu9ms7sypmasdvxxk6x8q4nu9ndhsje7tm70",
+		Owner: "furya1f9eh8dh7j4nqe8nfq0lhpnr2elh5jr2w4nngt2",
 	}
 }
 
