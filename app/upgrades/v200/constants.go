@@ -12,6 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/group"
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
 	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
+	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 )
 
 const (
@@ -32,6 +33,7 @@ var Upgrade = upgrades.Upgrade{
 			ibcfeetypes.StoreKey,
 			group.StoreKey,
 			tokenfactorytypes.StoreKey,
+			alliancemoduletypes.StoreKey,
 		},
 	},
 }
