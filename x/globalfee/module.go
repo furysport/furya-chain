@@ -16,9 +16,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 
-	"github.com/furysport/x/globalfee/client/cli"
-	"github.com/furysport/x/globalfee/keeper"
-	"github.com/furysport/x/globalfee/types"
+	"github.com/furysport/furya-chain/x/globalfee/client/cli"
+	"github.com/furysport/furya-chain/x/globalfee/keeper"
+	"github.com/furysport/furya-chain/x/globalfee/types"
 )
 
 var (

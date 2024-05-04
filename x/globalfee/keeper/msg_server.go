@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/furysport/x/globalfee/types"
+	"github.com/furysport/furya-chain/x/globalfee/types"
 )
 
 var _ types.MsgServer = msgServer{}

@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/furysport/x/globalfee/types"
+	"github.com/furysport/furya-chain/x/globalfee/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

@@ -5,8 +5,8 @@ import (
 	"time"
 
 	appparams "github.com/furysport/app/params"
-	globalfeekeeper "github.com/furysport/x/globalfee/keeper"
-	"github.com/furysport/x/globalfee/types"
+	globalfeekeeper "github.com/furysport/furya-chain/x/globalfee/keeper"
+	"github.com/furysport/furya-chain/x/globalfee/types"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"

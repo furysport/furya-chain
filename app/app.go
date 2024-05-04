@@ -129,9 +129,9 @@ import (
 	intertxkeeper "github.com/furysport/furya-chain/x/intertx/keeper"
 	intertxtypes "github.com/furysport/furya-chain/x/intertx/types"
 	
-	globalfee "github.com/furysport/x/globalfee"
-	globalfeekeeper "github.com/furysport/x/globalfee/keeper"
-	globalfeetypes "github.com/furysport/x/globalfee/types"
+	globalfee "github.com/furysport/furya-chain/x/globalfee"
+	globalfeekeeper "github.com/furysport/furya-chain/x/globalfee/keeper"
+	globalfeetypes "github.com/furysport/furya-chain/x/globalfee/types"
 
 	
 	tokenfactory "github.com/furysport/furya-chain/x/tokenfactory"

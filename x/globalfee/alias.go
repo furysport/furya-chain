@@ -1,7 +1,7 @@
 package globalfee
 
 import (
-	"github.com/furysport/x/globalfee/types"
+	"github.com/furysport/furya-chain/x/globalfee/types"
 )
 
 const (
