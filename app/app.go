@@ -1084,12 +1084,12 @@ func GetMaccPerms() map[string][]string {
 func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey storetypes.StoreKey) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
 
-	paramsKeeper.Subspace(authtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
-	paramsKeeper.Subspace(banktypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(authtypes.ModuleName)
+	paramsKeeper.Subspace(banktypes.ModuleName)
 	paramsKeeper.Subspace(stakingtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
 	paramsKeeper.Subspace(minttypes.ModuleName)
-	paramsKeeper.Subspace(distrtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
-	paramsKeeper.Subspace(slashingtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(distrtypes.ModuleName)
+	paramsKeeper.Subspace(slashingtypes.ModuleName)
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
 	paramsKeeper.Subspace(crisistypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
