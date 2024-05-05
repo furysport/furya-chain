@@ -6,7 +6,7 @@ import (
 
 	"cosmossdk.io/math"
 
-	"github.com/furysport/furya-chain/app"
+	"github.com/furysport/furya-chain/v2/app"
 
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"

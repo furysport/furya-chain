@@ -4,8 +4,8 @@ import (
 	"reflect"
 
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/furysport/furya-chain/app/keepers"
-	minttypes "github.com/furysport/furya-chain/x/mint/types"
+	"github.com/furysport/furya-chain/v2/app/keepers"
+	minttypes "github.com/furysport/furya-chain/v2/x/mint/types"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -20,7 +20,7 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
+	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
 )
 
 //nolint:all

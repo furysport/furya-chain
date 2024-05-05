@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/furysport/furya-chain/x/airdrop/types"
+	"github.com/furysport/furya-chain/v2/x/airdrop/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

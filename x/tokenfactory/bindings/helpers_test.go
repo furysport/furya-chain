@@ -15,7 +15,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktestutil "github.com/cosmos/cosmos-sdk/x/bank/testutil"
 
-	"github.com/furysport/furya-chain/app"
+	"github.com/furysport/furya-chain/v2/app"
 )
 
 func CreateTestInput(t *testing.T) (*app.FuryaApp, sdk.Context) {

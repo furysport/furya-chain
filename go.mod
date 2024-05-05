@@ -1,4 +1,4 @@
-module github.com/furysport/furya-chain
+module github.com/furysport/furya-chain/v2/v2
 
 go 1.20
 
@@ -28,11 +28,11 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.8.4
-	github.com/terra-money/alliance v0.3.2
 	google.golang.org/genproto/googleapis/api v0.0.0-20231212172506-995d672761c0
 	google.golang.org/grpc v1.60.1
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v2 v2.4.0
+	github.com/terra-money/alliance v0.3.2
 )
 
 require (

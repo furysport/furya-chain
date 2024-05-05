@@ -2,7 +2,7 @@ package furya
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
-	"github.com/furysport/furya-chain/app/params"
+	"github.com/furysport/furya-chain/v2/app/params"
 
 	"github.com/cosmos/cosmos-sdk/std"
 )

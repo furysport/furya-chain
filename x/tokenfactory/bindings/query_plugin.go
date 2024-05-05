@@ -6,7 +6,7 @@ import (
 
 	errorsmod "cosmossdk.io/errors"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
-	bindingstypes "github.com/furysport/furya-chain/x/tokenfactory/bindings/types"
+	bindingstypes "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

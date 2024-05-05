@@ -12,9 +12,9 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	bindingstypes "github.com/furysport/furya-chain/x/tokenfactory/bindings/types"
-	tokenfactorykeeper "github.com/furysport/furya-chain/x/tokenfactory/keeper"
-	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
+	bindingstypes "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings/types"
+	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
+	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
 )
 
 // CustomMessageDecorator returns decorator for custom CosmWasm bindings messages

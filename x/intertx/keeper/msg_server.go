@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"cosmossdk.io/errors"
-	"github.com/furysport/furya-chain/x/intertx/types"
+	"github.com/furysport/furya-chain/v2/x/intertx/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cosmostypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"

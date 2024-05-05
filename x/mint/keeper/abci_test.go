@@ -2,7 +2,7 @@ package keeper_test
 
 import (
 	"cosmossdk.io/math"
-	"github.com/furysport/furya-chain/x/mint/types"
+	"github.com/furysport/furya-chain/v2/x/mint/types"
 	"github.com/cometbft/cometbft/crypto/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

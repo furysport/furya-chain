@@ -7,8 +7,8 @@ import (
 	icagenesistypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/genesis/types"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
-	"github.com/furysport/furya-chain/app/config"
-	tokenfactorytypes "github.com/furysport/furya-chain/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/v2/app/config"
+	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"

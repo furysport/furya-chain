@@ -8,9 +8,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	wasmbinding "github.com/furysport/furya-chain/x/tokenfactory/bindings"
-	bindings "github.com/furysport/furya-chain/x/tokenfactory/bindings/types"
-	"github.com/furysport/furya-chain/x/tokenfactory/types"
+	wasmbinding "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings"
+	bindings "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings/types"
+	"github.com/furysport/furya-chain/v2/x/tokenfactory/types"
 )
 
 func TestCreateDenom(t *testing.T) {

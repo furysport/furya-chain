@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/CosmWasm/wasmd/app"
-	furya "github.com/furysport/furya-chain/app"
-	"github.com/furysport/furya-chain/app/helpers"
+	furya "github.com/furysport/furya-chain/v2/app"
+	"github.com/furysport/furya-chain/v2/app/helpers"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cometbft/cometbft/libs/rand"
