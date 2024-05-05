@@ -7,17 +7,17 @@ const (
 	// AppName is the application name
 	AppName = "FuryaApp"
 
-	// CoinType is the LUNA coin type as defined in SLIP44 (https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
+	// CoinType is the FURY coin type as defined in SLIP44 (https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
 	CoinType = 118
 
 	// BondDenom staking denom
 	BondDenom = "ufury"
 
 	// More denoms
-	// Luna      = "luna"    // 1 (base denom unit)
-	// MilliLuna = "mluna"   // 10^-3 (milli)
-	MicroLuna = BondDenom // 10^-6 (micro)
-	// NanoLuna  = "nluna"   // 10^-9 (nano)
+	// Fury      = "fury"    // 1 (base denom unit)
+	// MilliFury = "mfury"   // 10^-3 (milli)
+	MicroFury = BondDenom // 10^-6 (micro)
+	// NanoFury  = "nfury"   // 10^-9 (nano)
 
 	// Modules Msgs
 	AuthzMsgExec                        = "/cosmos.authz.v1beta1.MsgExec"

@@ -35,7 +35,7 @@ func NewDefaultGenesisState() GenesisState {
 }
 
 
-// SetDefaultTerraConfig generates the default state for Terra's Core application.
+// SetDefaultFuryaConfig generates the default state for Furya's Core application.
 func (genState GenesisState) SetDefaultFuryaConfig(encCfg codec.JSONCodec) GenesisState {
 	// customize bond denom
 	var stakingGenState stakingtypes.GenesisState
