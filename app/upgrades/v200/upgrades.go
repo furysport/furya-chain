@@ -83,40 +83,14 @@ func CreateUpgradeHandler(
 			Version:   cp.Version,
 		})
 
-		// Migrate Tendermint consensus parameters from x/params module to a deprecated x/consensus module.
-		// The old params module is required to still be imported in your app.go in order to handle this migration.
-		baseAppLegacySS := keepers.ParamsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramstypes.ConsensusParamsKeyTable())
-		baseapp.MigrateParams(ctx, baseAppLegacySS, &keepers.ConsensusParamsKeeper)
-
-		// Run migrations before applying any other state changes.
-		// NOTE: DO NOT PUT ANY STATE CHANGES BEFORE RunMigrations().
-		versionMap, err := mm.RunMigrations(ctx, cfg, fromVM)
-		if err != nil {
-			return nil, err
-		}
-
-		// explicitly update the IBC 02-client params, adding the localhost client type
-		params := keepers.IBCKeeper.ClientKeeper.GetParams(ctx)
-		params.AllowedClients = append(params.AllowedClients, exported.Localhost)
-		keepers.IBCKeeper.ClientKeeper.SetParams(ctx, params)
-
 		// set proposal's minimum initial deposit to 20%
 		govParams := keepers.GovKeeper.GetParams(ctx)
 		govParams.MinInitialDepositRatio = sdk.NewDec(20).Quo(sdk.NewDec(100)).String()
 		if err := keepers.GovKeeper.SetParams(ctx, govParams); err != nil {
 			return nil, err
 		}
-
-		// set validator's minimum commission to 5%
-		stakingParams := keepers.StakingKeeper.GetParams(ctx)
-		stakingParams.MinCommissionRate = sdk.NewDecWithPrec(5, 2)
-		err = keepers.StakingKeeper.SetParams(ctx, stakingParams)
-		if err != nil {
-			return nil, err
-		}
-
-		// set token-factory denom creation fee
-		err = keepers.TokenFactoryKeeper.SetParams(ctx, tokenfactorytypes.DefaultParams())
+		// Set token-factory denom creation fee
+		err := keepers.TokenFactoryKeeper.SetParams(ctx, tokenfactorytypes.DefaultParams())
 		if err != nil {
 			return nil, err
 		}

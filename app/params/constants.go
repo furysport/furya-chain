@@ -1,6 +1,6 @@
 package params
 
 const (
-	Name      = "Furya"
+	Name      = "Fury"
 	BondDenom = "ufury"
 )

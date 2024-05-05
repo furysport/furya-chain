@@ -34,7 +34,6 @@ var Upgrade = upgrades.Upgrade{
 			group.StoreKey,
 			tokenfactorytypes.ModuleName,
 			alliancemoduletypes.ModuleName,
-			globalfeetypes.ModuleName,
 		},
 	},
 }
