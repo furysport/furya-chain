@@ -83,6 +83,12 @@ func CreateUpgradeHandler(
 			Version:   cp.Version,
 		})
 
+		// set proposal's minimum initial deposit to 20%
+		govParams := keepers.GovKeeper.GetParams(ctx)
+		govParams.MinInitialDepositRatio = sdk.NewDec(20).Quo(sdk.NewDec(100)).String()
+		if err := keepers.GovKeeper.SetParams(ctx, govParams); err != nil {
+			return nil, err
+		}
 		// Set token-factory denom creation fee
 		err := keepers.TokenFactoryKeeper.SetParams(ctx, tokenfactorytypes.DefaultParams())
 		if err != nil {
