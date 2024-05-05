@@ -1106,7 +1106,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(airdroptypes.ModuleName)
 	paramsKeeper.Subspace(tokenfactorytypes.ModuleName)
-	paramsKeeper.Subspace(alliancemoduletypes.ModuleName).WithKeyTable(tokenfactorytypes.ParamKeyTable()) //nolint:staticcheck
+	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
 
 	return paramsKeeper
 }
