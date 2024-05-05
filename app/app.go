@@ -199,24 +199,6 @@ func GetWasmOpts(appOpts servertypes.AppOptions) []wasmkeeper.Option {
 	return wasmOpts
 }
 
-func getGovProposalHandlers() []govclient.ProposalHandler {
-	var govProposalHandlers []govclient.ProposalHandler
-
-	govProposalHandlers = append(govProposalHandlers,
-		paramsclient.ProposalHandler,
-		upgradeclient.LegacyProposalHandler,
-		upgradeclient.LegacyCancelProposalHandler,
-		ibcclientclient.UpdateClientProposalHandler,
-		ibcclientclient.UpgradeProposalHandler,
-		
-		alliancemoduleclient.CreateAllianceProposalHandler,
-		alliancemoduleclient.UpdateAllianceProposalHandler,
-		alliancemoduleclient.DeleteAllianceProposalHandler,
-	)
-
-	return govProposalHandlers
-}
-
 var (
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
@@ -235,7 +217,19 @@ var (
 		staking.AppModuleBasic{},
 		mint.AppModuleBasic{},
 		distr.AppModuleBasic{},
-		gov.NewAppModuleBasic(getGovProposalHandlers()),
+		gov.NewAppModuleBasic(
+			[]govclient.ProposalHandler{
+				paramsclient.ProposalHandler,
+				upgradeclient.LegacyProposalHandler,
+				upgradeclient.LegacyCancelProposalHandler,
+				ibcclientclient.UpdateClientProposalHandler,
+				ibcclientclient.UpgradeProposalHandler,
+				
+				alliancemoduleclient.CreateAllianceProposalHandler,
+				alliancemoduleclient.UpdateAllianceProposalHandler,
+				alliancemoduleclient.DeleteAllianceProposalHandler,
+			},
+		),
 		params.AppModuleBasic{},
 		crisis.AppModuleBasic{},
 		slashing.AppModuleBasic{},
@@ -331,9 +325,9 @@ func NewFuryaApp(
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *FuryaApp {
 
-	appCodec := encodingConfig.Marshaler
-	legacyAmino := encodingConfig.Amino
-	interfaceRegistry := encodingConfig.InterfaceRegistry
+	appCodec := 				encodingConfig.Marshaler
+	legacyAmino := 			encodingConfig.Amino
+	interfaceRegistry := 	encodingConfig.InterfaceRegistry
 
 	bApp := baseapp.NewBaseApp(appName, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
@@ -654,7 +648,7 @@ func NewFuryaApp(
 		govRouter.AddRoute(wasmtypes.RouterKey, wasmkeeper.NewWasmProposalHandler(app.WasmKeeper, enabledProposals)) //nolint:staticcheck
 	}
 	// Set legacy router for backwards compatibility with gov v1beta1
-	app.GovKeeper.SetLegacyRouter(govRouter)
+	govKeeper.SetLegacyRouter(govRouter)
 
 	var wasmStack ibcporttypes.IBCModule
 	wasmStack = wasm.NewIBCHandler(app.WasmKeeper, app.IBCKeeper.ChannelKeeper, app.IBCFeeKeeper)
@@ -1090,17 +1084,17 @@ func GetMaccPerms() map[string][]string {
 func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey storetypes.StoreKey) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
 
-	paramsKeeper.Subspace(authtypes.ModuleName)
-	paramsKeeper.Subspace(banktypes.ModuleName)
-	paramsKeeper.Subspace(stakingtypes.ModuleName)
-	paramsKeeper.Subspace(minttypes.ModuleName)
-	paramsKeeper.Subspace(distrtypes.ModuleName)
-	paramsKeeper.Subspace(slashingtypes.ModuleName)
-	paramsKeeper.Subspace(govtypes.ModuleName)
-	paramsKeeper.Subspace(crisistypes.ModuleName)
+	paramsKeeper.Subspace(authtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(banktypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(stakingtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(minttypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(distrtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(slashingtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
+	paramsKeeper.Subspace(crisistypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibcexported.ModuleName)
-	paramsKeeper.Subspace(wasmtypes.ModuleName)
+	paramsKeeper.Subspace(wasmtypes.ModuleName).WithKeyTable(authtypes.ParamKeyTable())
 	paramsKeeper.Subspace(packetforwardtypes.ModuleName).WithKeyTable(packetforwardtypes.ParamKeyTable())
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
