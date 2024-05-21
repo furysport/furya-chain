@@ -1,0 +1,6 @@
+syntax = "proto3";
+package furya.airdrop;
+
+option go_package = "github.com/furysport/furya-chain/v2/x/airdrop/types";
+
+service Msg {}

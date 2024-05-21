@@ -3,6 +3,8 @@ module github.com/furysport/furya-chain/v2
 go 1.20
 
 require (
+	github.com/Stride-Labs/stride/v6 v6.0.0
+	
 	cosmossdk.io/errors v1.0.1
 	cosmossdk.io/math v1.2.0
 	github.com/CosmWasm/wasmd v0.41.0
@@ -210,3 +212,5 @@ require (
 )
 
 replace github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
+replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+

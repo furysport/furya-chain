@@ -16,6 +16,7 @@ import (
 	v131 "github.com/furysport/furya-chain/v2/app/upgrades/v131"
 	v140 "github.com/furysport/furya-chain/v2/app/upgrades/v140"
 	v200 "github.com/furysport/furya-chain/v2/app/upgrades/v200"
+	v201 "github.com/furysport/furya-chain/v2/app/upgrades/v201"
 	airdrop "github.com/furysport/furya-chain/v2/x/airdrop"
 	airdropkeeper "github.com/furysport/furya-chain/v2/x/airdrop/keeper"
 	airdroptypes "github.com/furysport/furya-chain/v2/x/airdrop/types"
@@ -139,6 +140,19 @@ import (
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
+	
+	"github.com/furysport/furya-chain/v2/x/icqueries"
+	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
+	
+	millionsclient "github.com/furysport/furya-chain/v2/x/millions/client"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks"
+	"github.com/furysport/furya-chain/v2/x/millions"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
+	
+	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
+	
+	"github.com/furysport/furya-chain/v2/x/epochs"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
 
 	furyaappparams "github.com/furysport/furya-chain/v2/app/params"
 	"github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
@@ -203,7 +217,7 @@ var (
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
 
-	Upgrades = []upgrades.Upgrade{v130.Upgrade, v131.Upgrade, v140.Upgrade, v200.Upgrade}
+	Upgrades = []upgrades.Upgrade{v130.Upgrade, v131.Upgrade, v140.Upgrade, v200.Upgrade, v201.Upgrade}
 
 	// ModuleBasics defines the module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -228,6 +242,10 @@ var (
 				alliancemoduleclient.CreateAllianceProposalHandler,
 				alliancemoduleclient.UpdateAllianceProposalHandler,
 				alliancemoduleclient.DeleteAllianceProposalHandler,
+				
+				millionsclient.RegisterPoolProposalHandler,
+				millionsclient.UpdatePoolProposalHandler,
+				millionsclient.UpdateParamsProposalHandler,
 			},
 		),
 		params.AppModuleBasic{},
@@ -242,6 +260,8 @@ var (
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		icacallbacks.AppModuleBasic{},
+		icqueries.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		packetforward.AppModuleBasic{},
 		wasm.AppModuleBasic{},
@@ -250,24 +270,28 @@ var (
 		intertx.AppModule{},
 		tokenfactory.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
+		millions.AppModuleBasic{},
+		epochs.AppModuleBasic{},
 	)
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:     			nil,
-		distrtypes.ModuleName:          			nil,
-		icatypes.ModuleName:            			nil,
-		minttypes.ModuleName:           			{authtypes.Minter},
-		stakingtypes.BondedPoolName:    		{authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName: 		{authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:            			{authtypes.Burner},
-		ibctransfertypes.ModuleName:    			{authtypes.Minter, authtypes.Burner},
-		airdroptypes.ModuleName:        			nil,
-		ibcfeetypes.ModuleName:         			nil,
-		wasmtypes.ModuleName:           		{authtypes.Burner},
-		tokenfactorytypes.ModuleName:   		{authtypes.Minter, authtypes.Burner},
-		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
-		alliancemoduletypes.RewardsPoolName: nil,
+		authtypes.FeeCollectorName:     						nil,
+		distrtypes.ModuleName:          						nil,
+		icatypes.ModuleName:            						nil,
+		minttypes.ModuleName:           						{authtypes.Minter},
+		stakingtypes.BondedPoolName:    					{authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName: 					{authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:            						{authtypes.Burner},
+		ibctransfertypes.ModuleName:    						{authtypes.Minter, authtypes.Burner},
+		airdroptypes.ModuleName:        						nil,
+		ibcfeetypes.ModuleName:         						nil,
+		wasmtypes.ModuleName:           					{authtypes.Burner},
+		tokenfactorytypes.ModuleName:   					{authtypes.Minter, authtypes.Burner},
+		alliancemoduletypes.ModuleName:      			{authtypes.Minter, authtypes.Burner},
+		alliancemoduletypes.RewardsPoolName: 			nil,
+		icqueriestypes.ModuleName: 							nil,
+		millionstypes.ModuleName: 							{authtypes.Minter, authtypes.Burner, authtypes.Staking},
 	}
 )
 
@@ -339,7 +363,8 @@ func NewFuryaApp(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibcexported.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey,
-		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey, packetforwardtypes.StoreKey,
+		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey, icacallbackstypes.StoreKey, icqueriestypes.StoreKey, epochstypes.StoreKey,
+		packetforwardtypes.StoreKey,
 		icacontrollertypes.StoreKey, group.StoreKey,
 		ibcfeetypes.StoreKey,
 		icahosttypes.StoreKey,
@@ -350,6 +375,7 @@ func NewFuryaApp(
 		crisistypes.StoreKey,
 		tokenfactorytypes.StoreKey,
 		alliancemoduletypes.StoreKey,
+		millionstypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -385,6 +411,8 @@ func NewFuryaApp(
 	scopedInterTxKeeper := app.CapabilityKeeper.ScopeToModule(intertxtypes.ModuleName)
 	scopedICAHostKeeper := app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	scopedICAControllerKeeper := app.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
+	scopedICACallbacksKeeper := app.CapabilityKeeper.ScopeToModule(icacallbackstypes.ModuleName)
+	scopedMillionsKeeper := app.CapabilityKeeper.ScopeToModule(millionstypes.ModuleName)
 
 	scopedWasmKeeper := app.CapabilityKeeper.ScopeToModule(wasmtypes.ModuleName)
 
@@ -529,7 +557,8 @@ func NewFuryaApp(
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
-		AddRoute(alliancemoduletypes.RouterKey, alliancemodule.NewAllianceProposalHandler(app.AllianceKeeper))
+		AddRoute(alliancemoduletypes.RouterKey, alliancemodule.NewAllianceProposalHandler(app.AllianceKeeper)).
+		AddRoute(millionstypes.RouterKey, millions.NewMillionsProposalHandler(*app.MillionsKeeper))
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,
@@ -543,7 +572,42 @@ func NewFuryaApp(
 		scopedTransferKeeper,
 	)
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
+	
+	// Initialize our ICA callbacks keeper
+	app.ICACallbacksKeeper = icacallbackskeeper.NewKeeper(
+		appCodec,
+		keys[icacallbackstypes.StoreKey],
+		keys[icacallbackstypes.MemStoreKey],
+		app.GetSubspace(icacallbackstypes.ModuleName),
+		app.ScopedICACallbacksKeeper,
+		*app.IBCKeeper,
+		*app.ICAControllerKeeper,
+	)
+
+	// Initialize our ICQueries keeper
+	app.ICQueriesKeeper = icquerieskeeper.NewKeeper(appCodec, keys[icqueriestypes.StoreKey], app.IBCKeeper)
+	
+	// Initialize custom epochs
+	app.EpochsKeeper = epochskeeper.NewKeeper(appCodec, keys[epochstypes.StoreKey])
+
+	// Initialize our custom millions keeper
+	app.MillionsKeeper = millionskeeper.NewKeeper(
+		appCodec,
+		keys[millionstypes.StoreKey],
+		app.GetSubspace(millionstypes.ModuleName),
+		app.ScopedMillionsKeeper,
+		*app.AccountKeeper,
+		*app.IBCKeeper,
+		*app.TransferKeeper,
+		*app.ICAControllerKeeper,
+		*app.ICACallbacksKeeper,
+		*app.ICQueriesKeeper,
+		app.BankKeeper,
+		app.DistrKeeper,
+		app.StakingKeeper,
+	)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
+	transferStack := millions.NewIBCMiddleware(*app.MillionsKeeper, transferIBCModule)
 
 	app.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
 		appCodec, keys[icacontrollertypes.StoreKey], app.GetSubspace(icacontrollertypes.SubModuleName),
@@ -568,6 +632,21 @@ func NewFuryaApp(
 	interTxModule := intertx.NewAppModule(appCodec, app.InterTxKeeper)
 
 	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
+	
+	millionsIBCModule := millions.NewIBCModule(*app.MillionsKeeper)
+	icaControllerIBCModule := icacontroller.NewIBCMiddleware(millionsIBCModule, *app.ICAControllerKeeper)
+	
+	// Register our ICACallbacks handlers
+	err := app.ICACallbacksKeeper.SetICACallbackHandler(millionstypes.ModuleName, app.MillionsKeeper.ICACallbackHandler())
+	if err != nil {
+		panic(err)
+	}
+
+	// Register our ICQueries handlers
+	err = app.ICQueriesKeeper.SetCallbackHandler(millionstypes.ModuleName, app.MillionsKeeper.ICQCallbackHandler())
+	if err != nil {
+		panic(err)
+	}
 
 	var icaControllerStack ibcporttypes.IBCModule
 	icaControllerStack = intertx.NewIBCModule(app.InterTxKeeper)
@@ -658,6 +737,7 @@ func NewFuryaApp(
 	ibcRouter := porttypes.NewRouter()
 	ibcRouter.AddRoute(icacontrollertypes.SubModuleName, icaControllerStack).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
+		AddRoute(millionstypes.ModuleName, icaControllerIBCModule).
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule).
 		AddRoute(intertxtypes.ModuleName, icaControllerStack).
 		AddRoute(wasmtypes.ModuleName, wasmStack)
@@ -668,6 +748,7 @@ func NewFuryaApp(
 		// register the governance hooks
 		),
 	)
+	app.EpochsKeeper.SetHooks(epochstypes.NewMultiEpochHooks(app.MillionsKeeper.Hooks()))
 
 	skipGenesisInvariants := cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
 
@@ -709,6 +790,10 @@ func NewFuryaApp(
 			app.AppKeepers.BankKeeper,
 		),
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry, app.GetSubspace(alliancemoduletypes.ModuleName)),
+		millions.NewAppModule(appCodec, *app.MillionsKeeper),
+		icacallbacks.NewAppModule(appCodec, *app.ICACallbacksKeeper, app.AccountKeeper, app.BankKeeper),
+		icqueries.NewAppModule(appCodec, *app.ICQueriesKeeper),
+		epochs.NewAppModule(appCodec, *app.EpochsKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -724,6 +809,9 @@ func NewFuryaApp(
 		govtypes.ModuleName,
 		feegrant.ModuleName,
 		ibctransfertypes.ModuleName,
+		icqueriestypes.ModuleName,
+		icacallbackstypes.ModuleName,
+		epochstypes.ModuleName,
 		genutiltypes.ModuleName,
 		banktypes.ModuleName,
 		authz.ModuleName,
@@ -743,10 +831,14 @@ func NewFuryaApp(
 		intertxtypes.ModuleName,
 		tokenfactorytypes.ModuleName,
 		alliancemoduletypes.ModuleName,
+		millionstypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
 		distrtypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		icqueriestypes.ModuleName,
+		icacallbackstypes.ModuleName,
+		epochstypes.ModuleName,
 		minttypes.ModuleName,
 		upgradetypes.ModuleName,
 		paramstypes.ModuleName,
@@ -772,6 +864,7 @@ func NewFuryaApp(
 		intertxtypes.ModuleName,
 		tokenfactorytypes.ModuleName,
 		alliancemoduletypes.ModuleName,
+		millionstypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -801,12 +894,16 @@ func NewFuryaApp(
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
 		authz.ModuleName,
+		icqueriestypes.ModuleName,
+		icacallbackstypes.ModuleName,
+		epochstypes.ModuleName,
 		packetforwardtypes.ModuleName,
 		airdroptypes.ModuleName,
 		wasmtypes.ModuleName,
 		intertxtypes.ModuleName,
 		tokenfactorytypes.ModuleName,
 		alliancemoduletypes.ModuleName,
+		millionstypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(app.CrisisKeeper)
@@ -1101,6 +1198,10 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(airdroptypes.ModuleName)
 	paramsKeeper.Subspace(tokenfactorytypes.ModuleName).WithKeyTable(tokenfactorytypes.ParamKeyTable())
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName).WithKeyTable(alliancemoduletypes.ParamKeyTable())
+	paramsKeeper.Subspace(icacallbackstypes.ModuleName)
+	paramsKeeper.Subspace(icqueriestypes.ModuleName)
+	paramsKeeper.Subspace(epochstypes.ModuleName)
+	paramsKeeper.Subspace(millionstypes.ModuleName)
 
 	return paramsKeeper
 }
