@@ -1,73 +1,54 @@
 package v201
 
 import (
-	"reflect"
-
 	"github.com/furysport/furya-chain/v2/app/keepers"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-// 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-// 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-// 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
-// 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-// 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-// 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
-// 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
-// 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
-// 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
-	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"	
-	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
-	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
-
+	iccontrollertypes "github.com/furysport/furya-chain/v2/x/icacontroller/types"
 )
 
-//nolint:all
+// CreateUpgradeHandler returns an UpgradeHandler for the v2.0.1 upgrade
 func CreateUpgradeHandler(
 	mm *module.Manager,
 	configurator module.Configurator,
 	keepers keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
+	return func(ctx types.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
 		ctx.Logger().Info("start to run module migrations...")
-		
+
 		// Get the actual params
-		icaHostParams := app.ICAHostKeeper.GetParams(ctx)
+		icaHostParams := keepers.ICAHostKeeper.GetParams(ctx)
 
 		// Patch the parameters - Enable the controller and patch the allowed messages for host
-		icaControllerParams := icacontrollertypes.Params{
+		icaControllerParams := iccontrollertypes.Params{
 			ControllerEnabled: true,
 		}
 		icaHostParams.AllowMessages = append(icaHostParams.AllowMessages,
 			// Change: added dfract and millions messages
-			sdk.MsgTypeURL(&dfracttypes.MsgDeposit{}),
-			sdk.MsgTypeURL(&millionstypes.MsgDeposit{}),
-			sdk.MsgTypeURL(&millionstypes.MsgDepositRetry{}),
-			sdk.MsgTypeURL(&millionstypes.MsgClaimPrize{}),
-			sdk.MsgTypeURL(&millionstypes.MsgWithdrawDeposit{}),
-			sdk.MsgTypeURL(&millionstypes.MsgWithdrawDepositRetry{}),
-			sdk.MsgTypeURL(&millionstypes.MsgDrawRetry{}),
+			types.MsgTypeURL(&dfracttypes.MsgDeposit{}),
+			types.MsgTypeURL(&millionstypes.MsgDeposit{}),
+			types.MsgTypeURL(&millionstypes.MsgDepositRetry{}),
+			types.MsgTypeURL(&millionstypes.MsgClaimPrize{}),
+			types.MsgTypeURL(&millionstypes.MsgWithdrawDeposit{}),
+			types.MsgTypeURL(&millionstypes.MsgWithdrawDepositRetry{}),
+			types.MsgTypeURL(&millionstypes.MsgDrawRetry{}),
 		)
 
 		// Apply patched parameters
-		app.ICAHostKeeper.SetParams(ctx, icaHostParams)
-		app.ICAControllerKeeper.SetParams(ctx, icaControllerParams)
-
-		// Set the ICA Callbacks, ICQueries and Millions modules versions so InitGenesis is not run
-		icacallbacksVersion := app.mm.Modules[icacallbackstypes.ModuleName].ConsensusVersion()
-		icqueriesVersion := app.mm.Modules[icqueriestypes.ModuleName].ConsensusVersion()
-		millionsVersion := app.mm.Modules[millionstypes.ModuleName].ConsensusVersion()
+		keepers.ICAHostKeeper.SetParams(ctx, icaHostParams)
+		keepers.ICAControllerKeeper.SetParams(ctx, icaControllerParams)
 
 		// Apply initial millions state
 		genState := millionstypes.DefaultGenesisState()
-		app.MillionsKeeper.SetParams(ctx, genState.Params)
-		app.MillionsKeeper.SetNextPoolID(ctx, genState.NextPoolId)
-		app.MillionsKeeper.SetNextDepositID(ctx, genState.NextDepositId)
-		app.MillionsKeeper.SetNextPrizeID(ctx, genState.NextPrizeId)
-		app.MillionsKeeper.SetNextWithdrawalID(ctx, genState.NextWithdrawalId)
+		keepers.MillionsKeeper.SetParams(ctx, genState.Params)
+		keepers.MillionsKeeper.SetNextPoolID(ctx, genState.NextPoolId)
+		keepers.MillionsKeeper.SetNextDepositID(ctx, genState.NextDepositId)
+		keepers.MillionsKeeper.SetNextPrizeID(ctx, genState.NextPrizeId)
+		keepers.MillionsKeeper.SetNextWithdrawalID(ctx, genState.NextWithdrawalId)
 
-		app.Logger().Info("v2.0.1 upgrade applied: Millions module enabled and ICA configuration updated.")
+		keepers.Logger().Info("v2.0.1 upgrade applied: Millions module enabled and ICA configuration updated.")
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}

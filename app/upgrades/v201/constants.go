@@ -16,7 +16,7 @@ import (
 	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"	
 	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
-	epochstypestypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
 
 )
 
