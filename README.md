@@ -36,7 +36,7 @@ Join the vanguard of blockchain sports, gaming and decentralization. Your journe
 | 📓   | [Run a Node](/#) | Learn how to become a node operator, relayer, or validator on Furya.         |
 | 🏗️ | [Manage a Node](/#)                          | Guide on how to manage your Furya validator node. |
 | 🚰   | [FURY Token](/#)                | Information about the FURY token and its deflationary design.                                   |
-| 🧱   | [Modules](/(https://github.com/furysport/furya-chain/tree/v2.0.0.Rawhide))                                                      | Modules available within the Furya Binary.                      |
+| 🧱   | [Modules](/#)                                                      | Modules available within the Furya Binary.                      |
 
 ## 🏔️ [Core concepts](/design/core-design-principles)
 
