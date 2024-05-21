@@ -36,7 +36,7 @@ var Upgrade = upgrades.Upgrade{
 			millionstypes.StoreKey,
 			icqueriestypes.StoreKey,
 			icacallbackstypes.StoreKey,
-			epochstypes.StoreKey
+			epochstypes.StoreKey,
 		},
 	},
 }
