@@ -28,8 +28,8 @@ furyad query group groups
 VALIDATOR=$(furyad keys show -a validator --home $HOME/.furyad --keyring-backend=test)
 
 furyad tx group create-group furya1f9eh8dh7j4nqe8nfq0lhpnr2elh5jr2w4nngt2 "" group-members.json \
- --from furya --chain-id testing --keyring-backend=test \
- --chain-id=testing --home=$HOME/.furyad --yes -b sync
+ --from emergency 
+ --chain-id=praetoria-1 --yes
 
 # Check newly added queries
 # - inflation
@@ -37,5 +37,3 @@ furyad query mint inflation
 # - stakingAPR
 furyad query mint staking-apr
 # IBC transfer test
-
-118547020000

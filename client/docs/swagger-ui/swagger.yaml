@@ -37291,97 +37291,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /furya/airdrop/v1beta1/allocation/{address}:
-    get:
-      operationId: AirdropAllocation
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              allocation:
-                type: object
-                properties:
-                  chain:
-                    type: string
-                  address:
-                    type: string
-                  amount:
-                    type: string
-                  claimed_amount:
-                    type: string
-                description: AirdropAllocation defines the user's airdrop allocation.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    type_url:
-                      type: string
-                    value:
-                      type: string
-                      format: byte
-      parameters:
-        - name: address
-          description: address is the address to query allocation for.
-          in: path
-          required: true
-          type: string
-      tags:
-        - Query
-  /furya/airdrop/v1beta1/params:
-    get:
-      operationId: AirdropParams
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              params:
-                type: object
-                properties:
-                  owner:
-                    type: string
-                description: Params defines the module's parameters.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    type_url:
-                      type: string
-                    value:
-                      type: string
-                      format: byte
-      tags:
-        - Query
-  /terra/alliances:
+  /furya/alliances:
     get:
       summary: Query paginated alliances
       operationId: Alliances
@@ -37558,7 +37468,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/delegations:
+  /furya/alliances/delegations:
     get:
       summary: Query all paginated alliance delegations
       operationId: AllAlliancesDelegations
@@ -37734,7 +37644,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/delegations/{delegator_addr}:
+  /furya/alliances/delegations/{delegator_addr}:
     get:
       summary: Query all paginated alliance delegations for a delegator addr
       operationId: AlliancesDelegation
@@ -37914,7 +37824,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/delegations/{delegator_addr}/{validator_addr}:
+  /furya/alliances/delegations/{delegator_addr}/{validator_addr}:
     get:
       summary: >-
         Query all paginated alliance delegations for a delegator addr and
@@ -38100,7 +38010,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/delegations/{delegator_addr}/{validator_addr}/ibc/{hash}:
+  /furya/alliances/delegations/{delegator_addr}/{validator_addr}/ibc/{hash}:
     get:
       summary: >-
         Query a delegation to an alliance by delegator addr, validator_addr and
@@ -38109,7 +38019,7 @@ paths:
         @deprecated: this endpoint will be replaced for by the encoded version
 
         of the denom e.g.:
-        GET:/terra/alliances/terradr1231/terravaloper41234/ibc%2Falliance
+        GET:/furya/alliances/furyadr1231/furyavaloper41234/ibc%2Falliance
       operationId: IBCAllianceDelegation
       responses:
         '200':
@@ -38265,7 +38175,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/delegations/{delegator_addr}/{validator_addr}/{denom}:
+  /furya/alliances/delegations/{delegator_addr}/{validator_addr}/{denom}:
     get:
       summary: >-
         Query a delegation to an alliance by delegator addr, validator_addr and
@@ -38425,12 +38335,12 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/ibc/{hash}:
+  /furya/alliances/ibc/{hash}:
     get:
       summary: |-
         Query a specific alliance by ibc hash
         @deprecated: this endpoint will be replaced for by the encoded version
-        of the denom e.g.: GET:/terra/alliances/ibc%2Falliance
+        of the denom e.g.: GET:/furya/alliances/ibc%2Falliance
       operationId: IBCAlliance
       responses:
         '200':
@@ -38522,7 +38432,7 @@ paths:
           type: string
       tags:
         - Query
-  /terra/alliances/params:
+  /furya/alliances/params:
     get:
       operationId: AllianceParams
       responses:
@@ -38569,7 +38479,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /terra/alliances/redelegations/{denom}/{delegator_addr}:
+  /furya/alliances/redelegations/{denom}/{delegator_addr}:
     get:
       summary: Query redelegations by denom and delegator address
       operationId: AllianceRedelegations
@@ -38733,7 +38643,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/rewards/{delegator_addr}/{validator_addr}/ibc/{hash}:
+  /furya/alliances/rewards/{delegator_addr}/{validator_addr}/ibc/{hash}:
     get:
       summary: >-
         Query for rewards by delegator addr, validator_addr and denom
@@ -38741,7 +38651,7 @@ paths:
         @deprecated: this endpoint will be replaced for by the encoded version
 
         of the denom e.g.:
-        GET:/terra/alliances/terradr1231/terravaloper41234/ibc%2Falliance
+        GET:/furya/alliances/furyadr1231/furyavaloper41234/ibc%2Falliance
       operationId: IBCAllianceDelegationRewards
       responses:
         '200':
@@ -38859,7 +38769,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/rewards/{delegator_addr}/{validator_addr}/{denom}:
+  /furya/alliances/rewards/{delegator_addr}/{validator_addr}/{denom}:
     get:
       summary: Query for rewards by delegator addr, validator_addr and denom
       operationId: AllianceDelegationRewards
@@ -38979,7 +38889,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/unbondings/{denom}/{delegator_addr}:
+  /furya/alliances/unbondings/{denom}/{delegator_addr}:
     get:
       summary: Query for rewards by delegator addr, validator_addr and denom
       operationId: AllianceUnbondingsByDenomAndDelegator
@@ -39128,7 +39038,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/unbondings/{denom}/{delegator_addr}/{validator_addr}:
+  /furya/alliances/unbondings/{denom}/{delegator_addr}/{validator_addr}:
     get:
       summary: Query for rewards by delegator addr, validator_addr and denom
       operationId: AllianceUnbondings
@@ -39281,7 +39191,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/validators:
+  /furya/alliances/validators:
     get:
       summary: Query all paginated alliance validators
       operationId: AllAllianceValidators
@@ -39461,7 +39371,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /terra/alliances/validators/{validator_addr}:
+  /furya/alliances/validators/{validator_addr}:
     get:
       summary: Query alliance validator
       operationId: AllianceValidator
@@ -39556,7 +39466,7 @@ paths:
           type: string
       tags:
         - Query
-  /terra/alliances/{denom}:
+  /furya/alliances/{denom}:
     get:
       summary: Query a specific alliance by denom
       operationId: Alliance
@@ -39648,6 +39558,49 @@ paths:
           in: path
           required: true
           type: string
+      tags:
+        - Query
+  /furya/feeburn/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: FeeBurnParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+                properties:
+                  tx_fee_burn_percent:
+                    type: string
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
       tags:
         - Query
 definitions:
@@ -65504,48 +65457,6 @@ definitions:
        - VOTE_OPTION_ABSTAIN: VOTE_OPTION_ABSTAIN defines an abstain vote option.
        - VOTE_OPTION_NO: VOTE_OPTION_NO defines a no vote option.
        - VOTE_OPTION_NO_WITH_VETO: VOTE_OPTION_NO_WITH_VETO defines a no with veto vote option.
-  furya.airdrop.v1beta1.AirdropAllocation:
-    type: object
-    properties:
-      chain:
-        type: string
-      address:
-        type: string
-      amount:
-        type: string
-      claimed_amount:
-        type: string
-    description: AirdropAllocation defines the user's airdrop allocation.
-  furya.airdrop.v1beta1.Params:
-    type: object
-    properties:
-      owner:
-        type: string
-    description: Params defines the module's parameters.
-  furya.airdrop.v1beta1.QueryAllocationResponse:
-    type: object
-    properties:
-      allocation:
-        type: object
-        properties:
-          chain:
-            type: string
-          address:
-            type: string
-          amount:
-            type: string
-          claimed_amount:
-            type: string
-        description: AirdropAllocation defines the user's airdrop allocation.
-  furya.airdrop.v1beta1.QueryParamsResponse:
-    type: object
-    properties:
-      params:
-        type: object
-        properties:
-          owner:
-            type: string
-        description: Params defines the module's parameters.
   alliance.alliance.AllianceAsset:
     type: object
     properties:
@@ -66359,3 +66270,19 @@ definitions:
         type: string
         description: amount defines the tokens to receive at completion.
     description: UnbondingDelegation defines an unbonding object with relevant metadata.
+  furya.feeburn.Params:
+    type: object
+    properties:
+      tx_fee_burn_percent:
+        type: string
+    description: Params defines the parameters for the module.
+  furya.feeburn.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+        properties:
+          tx_fee_burn_percent:
+            type: string
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
