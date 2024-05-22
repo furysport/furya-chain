@@ -21,6 +21,11 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
+	millionstypes "github.com/lum-network/chain/x/millions/types"
+	icqueriestypes "github.com/lum-network/chain/x/icqueries/types"
+	icacallbackstypes "github.com/lum-network/chain/x/icacallbacks/types"
+	epochstypes "github.com/lum-network/chain/x/epochs/types"
+
 )
 
 //nolint:all
@@ -94,6 +99,42 @@ func CreateUpgradeHandler(
 		if err != nil {
 			return nil, err
 		}
+		
+		// Get the actual params
+		icaHostParams := keepers.ICAHostKeeper.GetParams(ctx)
+		
+		// Patch the parameters - Enable the controller and patch the allowed messages for host
+		icaControllerParams := icacontrollertypes.Params{
+			ControllerEnabled: true,
+		}
+		icaHostParams.AllowMessages = append(
+			icaHostParams.AllowMessages,
+			// Change: added millions messages
+			sdk.MsgTypeURL(&millionstypes.MsgDeposit{}),
+			sdk.MsgTypeURL(&millionstypes.MsgDepositRetry{}),
+			sdk.MsgTypeURL(&millionstypes.MsgClaimPrize{}),
+			sdk.MsgTypeURL(&millionstypes.MsgWithdrawDeposit{}),
+			sdk.MsgTypeURL(&millionstypes.MsgWithdrawDepositRetry{}),
+			sdk.MsgTypeURL(&millionstypes.MsgDrawRetry{}),
+		)
+		
+		// Apply patched parameters
+		keepers.ICAHostKeeper.SetParams(ctx, icaHostParams)
+		keepers.ICAControllerKeeper.SetParams(ctx, icaControllerParams)
+		
+		// Set the ICA Callbacks, ICQueries and Millions modules versions so InitGenesis is not run
+		callbacksVersion := keepers.mm.GetVersionMap()[icacallbackstypes.ModuleName]
+		queriesVersion := keepers.mm.GetVersionMap()[icqueriestypes.ModuleName]
+		millionsVersion := keepers.mm.GetVersionMap()[millionstypes.ModuleName]
+		
+		// Apply initial millions state
+		genState := millionstypes.DefaultGenesisState()
+		keepers.MillionsKeeper.SetParams(ctx, genState.Params)
+		keepers.MillionsKeeper.SetNextPoolID(ctx, genState.NextPoolId)
+		keepers.MillionsKeeper.SetNextDepositID(ctx, genState.NextDepositId)
+		keepers.MillionsKeeper.SetNextPrizeID(ctx, genState.NextPrizeId)
+		keepers.MillionsKeeper.SetNextWithdrawalID(ctx, genState.NextWithdrawalId)
+
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}

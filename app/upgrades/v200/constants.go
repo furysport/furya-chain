@@ -13,6 +13,11 @@ import (
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
+	millionstypes "github.com/lum-network/chain/x/millions/types"
+	icqueriestypes "github.com/lum-network/chain/x/icqueries/types"
+	icacallbackstypes "github.com/lum-network/chain/x/icacallbacks/types"
+	epochstypes "github.com/lum-network/chain/x/epochs/types"
+
 )
 
 const (
@@ -34,6 +39,10 @@ var Upgrade = upgrades.Upgrade{
 			group.StoreKey,
 			tokenfactorytypes.StoreKey,
 			alliancemoduletypes.StoreKey,
+			millionstypes.StoreKey,
+			icqueriestypes.StoreKey,
+			icacallbackstypes.StoreKey,
+			epochstypes.StoreKey,
 		},
 	},
 }
