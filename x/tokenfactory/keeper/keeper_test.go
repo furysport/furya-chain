@@ -10,9 +10,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	"github.com/OmniFlix/omniflixhub/v3/app/apptesting"
-	"github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/keeper"
-	"github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/v2/app/apptesting"
+	"github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
+	"github.com/furysport/furya-chain/v2/x/tokenfactory/types"
 )
 
 type KeeperTestSuite struct {

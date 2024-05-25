@@ -132,7 +132,7 @@ import (
 	tokenfactory "github.com/furysport/furya-chain/v2/x/tokenfactory"
 	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
-	tfbindings "github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/bindings"
+	tfbindings "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings"
 	
 	bank "github.com/terra-money/alliance/custom/bank"
 	bankkeeper "github.com/terra-money/alliance/custom/bank/keeper"

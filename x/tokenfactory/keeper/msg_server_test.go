@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	"github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/types"
+	"github.com/furysport/furya-chain/v2/x/tokenfactory/types"
 )
 
 // TestMintDenomMsg tests TypeMsgMint message is emitted on a successful mint
@@ -91,7 +91,7 @@ func (suite *KeeperTestSuite) TestBurnDenomMsg() {
 
 // TestCreateDenomMsg tests TypeMsgCreateDenom message is emitted on a successful denom creation
 func (suite *KeeperTestSuite) TestCreateDenomMsg() {
-	defaultDenomCreationFee := types.Params{DenomCreationFee: sdk.NewCoins(sdk.NewCoin("uflix", sdk.NewInt(50000000)))}
+	defaultDenomCreationFee := types.Params{DenomCreationFee: sdk.NewCoins(sdk.NewCoin("ufury", sdk.NewInt(50000000)))}
 	for _, tc := range []struct {
 		desc                  string
 		denomCreationFee      types.Params

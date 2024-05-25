@@ -10,8 +10,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/OmniFlix/omniflixhub/v3/app"
-	bindings "github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/bindings/types"
+	"github.com/furysport/furya-chain/v2/app"
+	bindings "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings/types"
 )
 
 func TestQueryFullDenom(t *testing.T) {
@@ -47,7 +47,7 @@ type ChainResponse struct {
 	Data []byte `json:"data"`
 }
 
-func queryCustom(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp, contract sdk.AccAddress, request bindings.TokenFactoryQuery, response interface{}) {
+func queryCustom(t *testing.T, ctx sdk.Context, customApp *app.FuryaApp, contract sdk.AccAddress, request bindings.TokenFactoryQuery, response interface{}) {
 	t.Helper()
 
 	msgBz, err := json.Marshal(request)
