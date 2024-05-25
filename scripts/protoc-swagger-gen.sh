@@ -31,7 +31,7 @@ alliance_dir=$(go list -f '{{ .Dir }}' -m github.com/terra-money/alliance)
 ibc_dir=$(go list -f '{{ .Dir }}' -m github.com/cosmos/ibc-go/v7)
 
 cd proto
-proto_dirs=$(find ../$COSMOS_SDK_DIR/proto/cosmos $alliance_dir/proto $ibc_dir/proto ./furya ./osmosis -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
+proto_dirs=$(find ../$COSMOS_SDK_DIR/proto/cosmos $alliance_dir/proto $ibc_dir/proto ./furya ./osmosis ./lum ./stride -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
 
 for dir in $proto_dirs; do
   # generate swagger files (filter query files)
