@@ -21,8 +21,6 @@ import (
 	"github.com/lum-network/chain/x/millions"
 	millionstypes "github.com/lum-network/chain/x/millions/types"
 	epochstypes "github.com/lum-network/chain/x/epochs/types"
-
-	
 )
 
 const (

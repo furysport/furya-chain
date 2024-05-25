@@ -11,7 +11,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 
-	"github.com/lum-network/chain/app"
+	"github.com/furysport/furya-chain/v2/app"
 )
 
 // AddTestAddrs constructs and returns accNum amount of accounts with an
