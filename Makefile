@@ -175,6 +175,17 @@ format: format-tools
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs misspell -w
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gci write --skip-generated -s standard -s default -s "prefix(cosmossdk.io)" -s "prefix(github.com/cosmos/cosmos-sdk)" -s "prefix(github.com/furysport/furyad)" --custom-order
 
+<<<<<<< HEAD
+###############################################################################
+###                                Protobuf                                 ###
+###############################################################################
+
+protoVer=0.13.1
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
+protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
+
+proto-all: proto-format proto-lint proto-gen
+=======
 
 ###############################################################################
 ###                                Protobuf                                 ###
@@ -182,11 +193,29 @@ format: format-tools
 protoVer=0.13.0
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
+>>>>>>> develop
 
 proto-gen:
 	@echo "Generating Protobuf files"
 	@$(protoImage) sh ./scripts/protocgen.sh
 
+<<<<<<< HEAD
+proto-swagger-gen:
+	@echo "Generating Protobuf Swagger"
+	@$(protoImage) sh ./scripts/protoc-swagger-gen.sh
+	$(MAKE) update-swagger-docs
+
+proto-format:
+	@$(protoImage) find ./ -name "*.proto" -exec clang-format -i {} \;
+
+proto-lint:
+	@$(protoImage) buf lint --error-format=json
+
+proto-check-breaking:
+	@$(protoImage) buf breaking --against $(HTTPS_GIT)#branch=main
+
+.PHONY: proto-all proto-gen proto-gen-any proto-swagger-gen proto-format proto-lint proto-check-breaking proto-update-deps docs
+=======
 proto-swagger:
 	bash scripts/protoc-swagger-gen.sh
 
@@ -203,6 +232,7 @@ proto-all: proto-gen proto-swagger update-swagger-docs
 
 .PHONY: proto-gen gen-swagger update-swagger-docs proto-all
 
+>>>>>>> develop
 
 
 .PHONY: docker.publish
