@@ -189,13 +189,37 @@ func GetEnabledProposals() []wasmtypes.ProposalType {
 	return proposals
 }
 
-func GetWasmOpts(appOpts servertypes.AppOptions) []wasmkeeper.Option {
+// AcceptedStargateQueries returns the accepted Stargate queries
+func AcceptedStargateQueries() wasmkeeper.AcceptedStargateQueries {
+	return wasmkeeper.AcceptedStargateQueries{
+		"/osmosis.tokenfactory.v1beta1.Query/Params":                 &tokenfactorytypes.QueryParamsResponse{},
+		"/osmosis.tokenfactory.v1beta1.Query/DenomAuthorityMetadata": &tokenfactorytypes.QueryDenomAuthorityMetadataResponse{},
+		"/osmosis.tokenfactory.v1beta1.Query/DenomsFromCreator":      &tokenfactorytypes.QueryDenomsFromCreatorResponse{},
+	}
+}
+
+func GetWasmOpts(appOpts servertypes.AppOptions, appKeepers *keepers.AppKeepers, bApp *baseapp.BaseApp, appCodec codec.Codec) []wasmkeeper.Option {
 	var wasmOpts []wasmkeeper.Option
 	if cast.ToBool(appOpts.Get("telemetry.enabled")) {
 		wasmOpts = append(wasmOpts, wasmkeeper.WithVMCacheMetrics(prometheus.DefaultRegisterer))
 	}
 
 	wasmOpts = append(wasmOpts, wasmkeeper.WithGasRegister(NewPoppWasmGasRegister()))
+
+	// Custom tokenfactory messages
+	tfOpts := tfbindings.RegisterCustomPlugins(app.BankKeeper, &app.TokenFactoryKeeper)
+	wasmOpts = append(wasmOpts, tfOpts...)
+
+	// Stargate Queries
+	querierOpts := wasmkeeper.WithQueryPlugins(
+		&wasmkeeper.QueryPlugins{
+			Stargate: wasmkeeper.AcceptListStargateQuerier(
+				AcceptedStargateQueries(),
+				bApp.GRPCQueryRouter(),
+				appCodec,
+			),
+		})
+	wasmOpts = append(wasmOpts, querierOpts)
 
 	return wasmOpts
 }
@@ -617,15 +641,11 @@ func NewFuryaApp(
 	}
 
 	app.setupUpgradeStoreLoaders()
-	
-	// custom tokenfactory messages
-	tfOpts := tfbindings.RegisterCustomPlugins(appKeepers.BankKeeper, &appKeepers.TokenFactoryKeeper)
-	wasmOpts = append(wasmOpts, tfOpts...)
 
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
 	availableCapabilities := "iterator,staking,stargate,cosmwasm_1_1,cosmwasm_1_2,tokenfactory"
-	wasmOpts := GetWasmOpts(appOpts)
+	wasmOpts := GetWasmOpts(appOpts, appKeepers, bApp, appCodec)
 	app.WasmKeeper = wasmkeeper.NewKeeper(
 		appCodec,
 		keys[wasmtypes.StoreKey],
