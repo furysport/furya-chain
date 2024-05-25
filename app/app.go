@@ -132,6 +132,7 @@ import (
 	tokenfactory "github.com/furysport/furya-chain/v2/x/tokenfactory"
 	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
+	tfbindings "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings"
 	
 	bank "github.com/terra-money/alliance/custom/bank"
 	bankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
@@ -614,13 +615,24 @@ func NewFuryaApp(
 	if err != nil {
 		panic("error while reading wasm config: " + err.Error())
 	}
+	
+	// custom tokenfactory messages
+	tfOpts := tfbindings.RegisterCustomPlugins(app.BankKeeper, &app.TokenFactoryKeeper)
+	
+	// Ensure that wasmOpts is defined before appending tfOpts to it
+	var wasmOpts []wasmkeeper.Option
+	
+	// Append tfOpts to wasmOpts
+	wasmOpts = append(wasmOpts, tfOpts...)
+
 
 	app.setupUpgradeStoreLoaders()
+	
+	
 
-	// The last arguments can contain custom message handlers, and custom query handlers,
-	// if we want to allow any custom callbacks
 	availableCapabilities := "iterator,staking,stargate,cosmwasm_1_1,cosmwasm_1_2,tokenfactory"
-	wasmOpts := GetWasmOpts(appOpts)
+	wasmOpts = GetWasmOpts(appOpts) // Change := to =
+	
 	app.WasmKeeper = wasmkeeper.NewKeeper(
 		appCodec,
 		keys[wasmtypes.StoreKey],
@@ -704,9 +716,9 @@ func NewFuryaApp(
 		packetforwardModule,
 		interTxModule,
 		tokenfactory.NewAppModule(
-			app.AppKeepers.TokenFactoryKeeper,
-			app.AppKeepers.AccountKeeper,
-			app.AppKeepers.BankKeeper,
+			app.TokenFactoryKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
 		),
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry, app.GetSubspace(alliancemoduletypes.ModuleName)),
 	)
