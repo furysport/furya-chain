@@ -3,8 +3,6 @@ module github.com/furysport/furya-chain/v2
 go 1.20
 
 require (
-	github.com/lum-network/chain v1.6.5
-	
 	cosmossdk.io/errors v1.0.1
 	cosmossdk.io/math v1.2.0
 	github.com/CosmWasm/wasmd v0.41.0
@@ -22,6 +20,7 @@ require (
 	github.com/golang/protobuf v1.5.3
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
+	github.com/lum-network/chain v1.6.5
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0
 	github.com/rakyll/statik v0.1.7

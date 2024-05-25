@@ -1,0 +1,146 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "furya/airdrop/v1beta1/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/furya/airdrop/v1beta1/allocation/{address}": {
+      "get": {
+        "operationId": "Allocation",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furya.airdrop.v1beta1.QueryAllocationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "address",
+            "description": "address is the address to query allocation for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/furya/airdrop/v1beta1/params": {
+      "get": {
+        "operationId": "Params",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furya.airdrop.v1beta1.QueryParamsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "furya.airdrop.v1beta1.AirdropAllocation": {
+      "type": "object",
+      "properties": {
+        "chain": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "claimed_amount": {
+          "type": "string"
+        }
+      },
+      "description": "AirdropAllocation defines the user's airdrop allocation."
+    },
+    "furya.airdrop.v1beta1.Params": {
+      "type": "object",
+      "properties": {
+        "owner": {
+          "type": "string"
+        }
+      },
+      "description": "Params defines the module's parameters."
+    },
+    "furya.airdrop.v1beta1.QueryAllocationResponse": {
+      "type": "object",
+      "properties": {
+        "allocation": {
+          "$ref": "#/definitions/furya.airdrop.v1beta1.AirdropAllocation"
+        }
+      }
+    },
+    "furya.airdrop.v1beta1.QueryParamsResponse": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "$ref": "#/definitions/furya.airdrop.v1beta1.Params"
+        }
+      }
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "osmosis/tokenfactory/v1beta1/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/osmosis/tokenfactory/v1beta1/denoms/{denom}/authority_metadata": {
+      "get": {
+        "summary": "Given the denom, returns the authority metadata for the denom.\nThis method can receive both the denom encoded to URL (for the LCD requests)\nand the denom not encoded:\ne.g. factory%2Fterra1v0eee20gjl68fuk0chyrkch2z7suw2mhg3wkxf%2Futoken931",
+        "operationId": "DenomAuthorityMetadata",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/osmosis.tokenfactory.v1beta1.QueryDenomAuthorityMetadataResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "denom",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/osmosis/tokenfactory/v1beta1/denoms/{denom}/before_send_hook": {
+      "get": {
+        "summary": "BeforeSendHookAddress defines a gRPC query method for\ngetting the address registered for the before send hook.",
+        "operationId": "BeforeSendHookAddress",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/osmosis.tokenfactory.v1beta1.QueryBeforeSendHookAddressResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "denom",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/osmosis/tokenfactory/v1beta1/denoms_from_creator/{creator}": {
+      "get": {
+        "summary": "DenomsFromCreator defines a gRPC query method for fetching all\ndenominations created by a specific admin/creator.",
+        "operationId": "DenomsFromCreator",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/osmosis.tokenfactory.v1beta1.QueryDenomsFromCreatorResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "creator",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/osmosis/tokenfactory/v1beta1/params": {
+      "get": {
+        "summary": "Params defines a gRPC query method that returns the tokenfactory module's\nparameters.",
+        "operationId": "Params",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/osmosis.tokenfactory.v1beta1.QueryParamsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "cosmos.base.v1beta1.Coin": {
+      "type": "object",
+      "properties": {
+        "denom": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      },
+      "description": "Coin defines a token with a denomination and an amount.\n\nNOTE: The amount field is an Int which implements the custom method\nsignatures required by gogoproto."
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    },
+    "osmosis.tokenfactory.v1beta1.DenomAuthorityMetadata": {
+      "type": "object",
+      "properties": {
+        "admin": {
+          "type": "string",
+          "title": "Can be empty for no admin, or a valid osmosis address"
+        }
+      },
+      "description": "DenomAuthorityMetadata specifies metadata for addresses that have specific\ncapabilities over a token factory denom. Right now there is only one Admin\npermission, but is planned to be extended to the future."
+    },
+    "osmosis.tokenfactory.v1beta1.Params": {
+      "type": "object",
+      "properties": {
+        "denom_creation_fee": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cosmos.base.v1beta1.Coin"
+          },
+          "description": "DenomCreationFee defines the fee to be charged on the creation of a new\ndenom. The fee is drawn from the MsgCreateDenom's sender account, and\ntransferred to the community pool."
+        },
+        "denom_creation_gas_consume": {
+          "type": "string",
+          "format": "uint64",
+          "description": "DenomCreationGasConsume defines the gas cost for creating a new denom.\nThis is intended as a spam deterrence mechanism.\n\nSee: https://github.com/CosmWasm/token-factory/issues/11"
+        }
+      },
+      "description": "Params defines the parameters for the tokenfactory module."
+    },
+    "osmosis.tokenfactory.v1beta1.QueryBeforeSendHookAddressResponse": {
+      "type": "object",
+      "properties": {
+        "cosmwasm_address": {
+          "type": "string"
+        }
+      },
+      "description": "QueryBeforeSendHookAddressResponse defines the response structure for the\nDenomBeforeSendHook gRPC query."
+    },
+    "osmosis.tokenfactory.v1beta1.QueryDenomAuthorityMetadataResponse": {
+      "type": "object",
+      "properties": {
+        "authority_metadata": {
+          "$ref": "#/definitions/osmosis.tokenfactory.v1beta1.DenomAuthorityMetadata"
+        }
+      },
+      "description": "QueryDenomAuthorityMetadataResponse defines the response structure for the\nDenomAuthorityMetadata gRPC query."
+    },
+    "osmosis.tokenfactory.v1beta1.QueryDenomsFromCreatorResponse": {
+      "type": "object",
+      "properties": {
+        "denoms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "QueryDenomsFromCreatorRequest defines the response structure for the\nDenomsFromCreator gRPC query."
+    },
+    "osmosis.tokenfactory.v1beta1.QueryParamsResponse": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "$ref": "#/definitions/osmosis.tokenfactory.v1beta1.Params",
+          "description": "params defines the parameters of the module."
+        }
+      },
+      "description": "QueryParamsResponse is the response type for the Query/Params RPC method."
+    }
+  }
+}

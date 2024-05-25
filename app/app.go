@@ -635,7 +635,7 @@ func NewFuryaApp(
 		keys[icacallbackstypes.MemStoreKey],
 		app.GetSubspace(icacallbackstypes.ModuleName),
 		*app.IBCKeeper,
-		*app.ICAControllerKeeper,
+		app.ICAControllerKeeper,
 	)
 
 	// Initialize our ICQueries keeper
@@ -644,23 +644,22 @@ func NewFuryaApp(
 	// Initialize custom epochs
 	app.EpochsKeeper = epochskeeper.NewKeeper(appCodec, keys[epochstypes.StoreKey])
 	
-	// Initialize our custom millions keeper
 	app.MillionsKeeper = millionskeeper.NewKeeper(
 		appCodec,
 		keys[millionstypes.StoreKey],
 		app.GetSubspace(millionstypes.ModuleName),
 		app.AccountKeeper,
-		app.IBCKeeper.ChannelKeeper,
-		&app.IBCKeeper.PortKeeper,
+		*app.IBCKeeper,
 		app.TransferKeeper,
 		app.ICAControllerKeeper,
 		*app.ICACallbacksKeeper,
 		*app.ICQueriesKeeper,
 		app.BankKeeper,
-		app.DistrKeeper,
+		&app.DistrKeeper,  // Note the change here: add '&' to pass a pointer
 		app.StakingKeeper,
 	)
-
+	
+	// Create IBC modules and middleware
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 	transferStack := millions.NewIBCMiddleware(*app.MillionsKeeper, transferIBCModule)
 	
@@ -727,9 +726,9 @@ func NewFuryaApp(
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 	ibcRouter.
-		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack, millionsIBCStack).
+		AddRoute(icacontrollertypes.SubModuleName, millionsIBCStack). // Use the middleware stack here
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
-		AddRoute(ibctransfertypes.ModuleName, transferIBCModule).
+		AddRoute(ibctransfertypes.ModuleName, transferStack).  // Use the transferStack here
 		AddRoute(intertxtypes.ModuleName, icaControllerStack).
 		AddRoute(wasmtypes.ModuleName, wasmStack)
 	app.IBCKeeper.SetRouter(ibcRouter)

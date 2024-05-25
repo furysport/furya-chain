@@ -7,9 +7,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
-	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
-	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
+	icacallbackstypes "github.com/lum-network/chain/x/icacallbacks/types"
+	icqueriestypes "github.com/lum-network/chain/x/icqueries/types"
+	millionstypes "github.com/lum-network/chain/x/millions/types"
 	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 )

@@ -902,6 +902,8 @@ github.com/linxGnu/grocksdb v1.7.16 h1:Q2co1xrpdkr5Hx3Fp+f+f7fRGhQFQhvi/+226dtLm
 github.com/linxGnu/grocksdb v1.7.16/go.mod h1:JkS7pl5qWpGpuVb3bPqTz8nC12X3YtPZT+Xq7+QfQo4=
 github.com/logrusorgru/aurora v2.0.3+incompatible h1:tOpm7WcpBTn4fjmVfgpQq0EfczGlG91VSDkswnjF5A8=
 github.com/logrusorgru/aurora v2.0.3+incompatible/go.mod h1:7rIyQOR62GCctdiQpZ/zOJlFyk6y+94wXzv6RNZgaR4=
+github.com/lum-network/chain v1.6.5 h1:vXu1wfPWJYzjKlpriqKWchy9/B2JlqiuVquTWm0AAl0=
+github.com/lum-network/chain v1.6.5/go.mod h1:3ZacaXjQD9CbGS4WiFp3nXHlojphfX+mABtQ1zAxRCU=
 github.com/lyft/protoc-gen-validate v0.0.13/go.mod h1:XbGvPuh87YZc5TdIa2/I4pLk0QoUACkjt2znoq26NVQ=
 github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
 github.com/magiconair/properties v1.8.1/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=

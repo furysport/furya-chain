@@ -1,0 +1,102 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "furya/intertx/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/inter-tx/interchain_account/owner/{owner}/connection/{connection_id}": {
+      "get": {
+        "summary": "QueryInterchainAccount returns the interchain account for given owner\naddress on a given connection pair",
+        "operationId": "InterchainAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furya.intertx.QueryInterchainAccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connection_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "furya.intertx.QueryInterchainAccountResponse": {
+      "type": "object",
+      "properties": {
+        "interchain_account_address": {
+          "type": "string"
+        }
+      },
+      "title": "QueryInterchainAccountResponse the response type for the\nQuery/InterchainAccountAddress RPC"
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    }
+  }
+}
