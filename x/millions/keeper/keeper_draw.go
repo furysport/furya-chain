@@ -21,14 +21,14 @@ type draw struct {
 	DrawValue sdk.Dec
 }
 
-type DepositTWB struct {
+type PaymentTWB struct {
 	Address string
 	Amount  sdkmath.Int
 }
 
 type PrizeDraw struct {
 	Amount sdkmath.Int
-	Winner *DepositTWB
+	Winner *PaymentTWB
 }
 
 type DrawResult struct {
@@ -396,12 +396,12 @@ func (k Keeper) ExecuteDraw(ctx sdk.Context, poolID uint64, drawID uint64) (*typ
 	// Generate draw random seed
 	draw.RandSeed = k.ComputeRandomSeed(ctx)
 
-	// Acquire TWB deposits
-	depositorsTWB := k.ComputeDepositsTWB(
+	// Acquire TWB payments
+	paymentorsTWB := k.ComputePaymentsTWB(
 		ctx,
 		ctx.BlockTime().Add(-pool.DrawSchedule.DrawDelta),
 		ctx.BlockTime(),
-		k.ListPoolDeposits(ctx, poolID),
+		k.ListPoolPayments(ctx, poolID),
 	)
 
 	// Acquire available amount from pool to compute final prize pool amount
@@ -425,7 +425,7 @@ func (k Keeper) ExecuteDraw(ctx sdk.Context, poolID uint64, drawID uint64) (*typ
 		ctx,
 		draw.PrizePool,
 		prizeStrat,
-		depositorsTWB,
+		paymentorsTWB,
 		draw.RandSeed,
 	)
 	if err != nil {
@@ -525,50 +525,50 @@ func (k Keeper) OnExecuteDrawCompleted(ctx sdk.Context, pool *types.Pool, draw *
 	return draw, err
 }
 
-// ComputeDepositsTWB takes deposits and computes the weight based on their deposit time and the draw duration
-// It essentially computes the Time Weighted Balance of each deposit for the DrawPrizes phase
-func (k Keeper) ComputeDepositsTWB(ctx sdk.Context, depositStartAt time.Time, drawAt time.Time, deposits []types.Deposit) []DepositTWB {
+// ComputePaymentsTWB takes payments and computes the weight based on their payment time and the draw duration
+// It essentially computes the Time Weighted Balance of each payment for the DrawPrizes phase
+func (k Keeper) ComputePaymentsTWB(ctx sdk.Context, paymentStartAt time.Time, drawAt time.Time, payments []types.Payment) []PaymentTWB {
 	params := k.GetParams(ctx)
 
-	totalElapsed := drawAt.Unix() - depositStartAt.Unix()
+	totalElapsed := drawAt.Unix() - paymentStartAt.Unix()
 	if totalElapsed < 0 {
 		totalElapsed = 0
 	}
 
-	var depositsTWB []DepositTWB
-	for _, d := range deposits {
+	var paymentsTWB []PaymentTWB
+	for _, d := range payments {
 		twb := d.Amount.Amount
-		if d.State != types.DepositState_Success {
-			// Only take into account completed deposits
+		if d.State != types.PaymentState_Success {
+			// Only take into account completed payments
 			continue
 		} else if d.IsSponsor {
 			// Sponsors waive their drawing chances
 			continue
 		}
-		if d.CreatedAt.After(depositStartAt) {
-			// Apply Time Weight for deposits within the draw deposit delta
+		if d.CreatedAt.After(paymentStartAt) {
+			// Apply Time Weight for payments within the draw payment delta
 			elapsed := drawAt.Unix() - d.CreatedAt.Unix()
-			if elapsed < int64(params.MinDepositDrawDelta.Seconds()) {
-				// Consider deposits which do not abide to the min deposit to draw delta to be 0
+			if elapsed < int64(params.MinPaymentDrawDelta.Seconds()) {
+				// Consider payments which do not abide to the min payment to draw delta to be 0
 				elapsed = 0
 			}
 			twb = sdkmath.LegacyNewDec(int64(elapsed)).QuoInt64(int64(totalElapsed)).MulInt(d.Amount.Amount).RoundInt()
 		}
-		dtwb := DepositTWB{
+		dtwb := PaymentTWB{
 			Address: d.WinnerAddress,
 			Amount:  twb,
 		}
-		depositsTWB = append(depositsTWB, dtwb)
+		paymentsTWB = append(paymentsTWB, dtwb)
 	}
 
-	return depositsTWB
+	return paymentsTWB
 }
 
 // RunDrawPrizes computes available prizes and draws the prizes and their potential winners based on the specified prize strategy
 // this method does not store nor send anything, it only computes the DrawResult
-func (k Keeper) RunDrawPrizes(ctx sdk.Context, prizePool sdk.Coin, prizeStrat types.PrizeStrategy, deposits []DepositTWB, randSeed int64) (result DrawResult, err error) {
+func (k Keeper) RunDrawPrizes(ctx sdk.Context, prizePool sdk.Coin, prizeStrat types.PrizeStrategy, payments []PaymentTWB, randSeed int64) (result DrawResult, err error) {
 	if prizeStrat.ContainsUniqueBatch() {
-		return k.RunDrawPrizesWithUniques(ctx, prizePool, prizeStrat, deposits, randSeed)
+		return k.RunDrawPrizesWithUniques(ctx, prizePool, prizeStrat, payments, randSeed)
 	}
 	result.TotalWinAmount = sdk.ZeroInt()
 
@@ -578,31 +578,31 @@ func (k Keeper) RunDrawPrizes(ctx sdk.Context, prizePool sdk.Coin, prizeStrat ty
 		return result, err
 	}
 
-	// Create deposits buffer and mapping
-	// - drawBuffer is a representation of the deposits as if we put them on a line with the distance between them being their deposited amount
-	// - bufferToDeposit is the link between the deposit position on the line and the actual deposit
+	// Create payments buffer and mapping
+	// - drawBuffer is a representation of the payments as if we put them on a line with the distance between them being their paymented amount
+	// - bufferToPayment is the link between the payment position on the line and the actual payment
 	// Visual representation:
-	// - drawBuffer = deposits weighted position A(2), B(5), C(3): ..A.....B...C,,,,,
-	// - bufferToDeposit = {2: A, 7: B, 12: C}
-	// - note that the positions marked by commas (,) instead of dots (.) are outside of the depositors owned area (no winner zone)
+	// - drawBuffer = payments weighted position A(2), B(5), C(3): ..A.....B...C,,,,,
+	// - bufferToPayment = {2: A, 7: B, 12: C}
+	// - note that the positions marked by commas (,) instead of dots (.) are outside of the paymentors owned area (no winner zone)
 	drawBuffer := []sdkmath.Int{}
-	bufferToDeposit := map[sdkmath.Int]DepositTWB{}
-	totalDeposits := sdk.ZeroInt()
-	for _, d := range deposits {
+	bufferToPayment := map[sdkmath.Int]PaymentTWB{}
+	totalPayments := sdk.ZeroInt()
+	for _, d := range payments {
 		if d.Amount.LTE(sdk.ZeroInt()) {
-			// Ignore 0 deposits just in case since it would break the draw logic
+			// Ignore 0 payments just in case since it would break the draw logic
 			// can happen due to rounding approximation (TWB)
 			continue
 		}
-		totalDeposits = totalDeposits.Add(d.Amount)
-		drawBuffer = append(drawBuffer, totalDeposits)
-		bufferToDeposit[totalDeposits] = d
+		totalPayments = totalPayments.Add(d.Amount)
+		drawBuffer = append(drawBuffer, totalPayments)
+		bufferToPayment[totalPayments] = d
 	}
 
 	// Initialise rand source
 	rnd := rand.New(rand.NewSource(randSeed))
 
-	// Compute each prize draw and sort by drawValue ascending in order to only iterate forward on the deposits buffer
+	// Compute each prize draw and sort by drawValue ascending in order to only iterate forward on the payments buffer
 	// We maintain the draw order here since we do not want to mess with the individual probabilities of prizes
 	var draws []draw
 	for i := range prizes {
@@ -615,33 +615,33 @@ func (k Keeper) RunDrawPrizes(ctx sdk.Context, prizePool sdk.Coin, prizeStrat ty
 		return draws[i].DrawValue.LT(draws[j].DrawValue)
 	})
 
-	// Compute each prize winner based on the price draw and the deposit position in the buffer
+	// Compute each prize winner based on the price draw and the payment position in the buffer
 	// - No winner if the drawValue >= drawProbability
 	// Visual representation (no winner case):
 	// - drawBuffer  : ..A.....B...C,,,,,,,,,,
 	// - drawPosition: .............,,,,,,x,,,
-	// - no winner since x is outside the buffer owned by depositors
+	// - no winner since x is outside the buffer owned by paymentors
 	//
 	// Otherwise the winner is the one which owns the position in the buffer
 	// Visual representation (winner case):
 	// - drawBuffer  : ..A.....B...C,,,,,,,,,,
 	// - drawPosition: .....x.......,,,,,,,,,,
-	// - winner is depositor B since they own the range from A) to B]
+	// - winner is paymentor B since they own the range from A) to B]
 	i := 0
 	result.PrizeDraws = make([]PrizeDraw, len(prizes))
 	for _, draw := range draws {
 		prize := prizes[draw.PrizeIdx]
 		nowinner := false
 		winner := false
-		if totalDeposits.GT(sdk.ZeroInt()) && draw.DrawValue.LT(prize.DrawProbability) {
-			// Prize draw has a winner (inside the buffer owned by depositors)
-			// normalize draw position to make it a portion of the depositors owned buffer and ignore the potential extra unassigned buffer part
-			drawPosition := draw.DrawValue.Quo(prize.DrawProbability).MulInt(totalDeposits).RoundInt()
+		if totalPayments.GT(sdk.ZeroInt()) && draw.DrawValue.LT(prize.DrawProbability) {
+			// Prize draw has a winner (inside the buffer owned by paymentors)
+			// normalize draw position to make it a portion of the paymentors owned buffer and ignore the potential extra unassigned buffer part
+			drawPosition := draw.DrawValue.Quo(prize.DrawProbability).MulInt(totalPayments).RoundInt()
 			for i < len(drawBuffer) {
 				// keep iterating in the buffer
 				// winner is the one owning the current portion of the buffer
 				if drawPosition.LTE(drawBuffer[i]) {
-					dep := bufferToDeposit[drawBuffer[i]]
+					dep := bufferToPayment[drawBuffer[i]]
 					result.PrizeDraws[draw.PrizeIdx] = PrizeDraw{
 						Amount: prize.Amount,
 						Winner: &dep,
@@ -674,7 +674,7 @@ func (k Keeper) RunDrawPrizes(ctx sdk.Context, prizePool sdk.Coin, prizeStrat ty
 // RunDrawPrizesWithUniques computes available prizes and draws the prizes and their potential winners based on the specified prize strategy
 // this method does not store nor send anything, it only computes the DrawResult
 // this is a variant of RunDrawPrizes which takes into account unique prize batches (i.e: the kind of prize which prevent a winner to win other prizes)
-func (k Keeper) RunDrawPrizesWithUniques(ctx sdk.Context, prizePool sdk.Coin, prizeStrat types.PrizeStrategy, deposits []DepositTWB, randSeed int64) (result DrawResult, err error) {
+func (k Keeper) RunDrawPrizesWithUniques(ctx sdk.Context, prizePool sdk.Coin, prizeStrat types.PrizeStrategy, payments []PaymentTWB, randSeed int64) (result DrawResult, err error) {
 	result.TotalWinAmount = sdk.ZeroInt()
 
 	// Compute all prizes probs
@@ -683,25 +683,25 @@ func (k Keeper) RunDrawPrizesWithUniques(ctx sdk.Context, prizePool sdk.Coin, pr
 		return result, err
 	}
 
-	// Create deposits buffer and mapping
-	// - drawBuffer is a representation of the deposits as if we put them on a line with the distance between them being their deposited amount
-	// - bufferToDeposit is the link between the deposit position on the line and the actual deposit
+	// Create payments buffer and mapping
+	// - drawBuffer is a representation of the payments as if we put them on a line with the distance between them being their paymented amount
+	// - bufferToPayment is the link between the payment position on the line and the actual payment
 	// Visual representation:
-	// - drawBuffer = deposits weighted position A(2), B(5), C(3): ..A.....B...C,,,,,
-	// - bufferToDeposit = {2: A, 7: B, 12: C}
-	// - note that the positions marked by commas (,) instead of dots (.) are outside of the depositors owned area (no winner zone)
+	// - drawBuffer = payments weighted position A(2), B(5), C(3): ..A.....B...C,,,,,
+	// - bufferToPayment = {2: A, 7: B, 12: C}
+	// - note that the positions marked by commas (,) instead of dots (.) are outside of the paymentors owned area (no winner zone)
 	var drawBuffer []sdkmath.Int
-	var bufferToDeposit map[sdkmath.Int]DepositTWB
-	var totalDeposits sdkmath.Int
+	var bufferToPayment map[sdkmath.Int]PaymentTWB
+	var totalPayments sdkmath.Int
 	excludedWinnerAddresses := map[string]bool{}
 
 	refreshBuffer := func() {
-		totalDeposits = sdk.ZeroInt()
+		totalPayments = sdk.ZeroInt()
 		drawBuffer = []sdkmath.Int{}
-		bufferToDeposit = map[sdkmath.Int]DepositTWB{}
-		for _, d := range deposits {
+		bufferToPayment = map[sdkmath.Int]PaymentTWB{}
+		for _, d := range payments {
 			if d.Amount.LTE(sdk.ZeroInt()) {
-				// Ignore 0 deposits just in case since it would break the draw logic
+				// Ignore 0 payments just in case since it would break the draw logic
 				// can happen due to rounding approximation (TWB)
 				continue
 			}
@@ -710,9 +710,9 @@ func (k Keeper) RunDrawPrizesWithUniques(ctx sdk.Context, prizePool sdk.Coin, pr
 				// can happen if the address already won a prize marked as unique
 				continue
 			}
-			totalDeposits = totalDeposits.Add(d.Amount)
-			drawBuffer = append(drawBuffer, totalDeposits)
-			bufferToDeposit[totalDeposits] = d
+			totalPayments = totalPayments.Add(d.Amount)
+			drawBuffer = append(drawBuffer, totalPayments)
+			bufferToPayment[totalPayments] = d
 		}
 	}
 	refreshBuffer()
@@ -720,32 +720,32 @@ func (k Keeper) RunDrawPrizesWithUniques(ctx sdk.Context, prizePool sdk.Coin, pr
 	// Initialise rand source
 	rnd := rand.New(rand.NewSource(randSeed))
 
-	// Compute each prize winner based on the price draw and the deposit position in the buffer
+	// Compute each prize winner based on the price draw and the payment position in the buffer
 	// - No winner if the drawValue >= drawProbability
 	// Visual representation (no winner case):
 	// - drawBuffer  : ..A.....B...C,,,,,,,,,,
 	// - drawPosition: .............,,,,,,x,,,
-	// - no winner since x is outside the buffer owned by depositors
+	// - no winner since x is outside the buffer owned by paymentors
 	//
 	// Otherwise the winner is the one which owns the position in the buffer
 	// Visual representation (winner case):
 	// - drawBuffer  : ..A.....B...C,,,,,,,,,,
 	// - drawPosition: .....x.......,,,,,,,,,,
-	// - winner is depositor B since they own the range from A) to B]
+	// - winner is paymentor B since they own the range from A) to B]
 	result.PrizeDraws = make([]PrizeDraw, len(prizes))
 	for pIdx, prize := range prizes {
 		nowinner := false
 		winner := false
 		drawValue := sdk.NewDec(rnd.Int63()).QuoInt64(math.MaxInt64)
-		if totalDeposits.GT(sdk.ZeroInt()) && drawValue.LT(prize.DrawProbability) {
-			// Prize draw has a winner (inside the buffer owned by depositors)
-			// normalize draw position to make it a portion of the depositors owned buffer and ignore the potential extra unassigned buffer part
-			drawPosition := drawValue.Quo(prize.DrawProbability).MulInt(totalDeposits).RoundInt()
+		if totalPayments.GT(sdk.ZeroInt()) && drawValue.LT(prize.DrawProbability) {
+			// Prize draw has a winner (inside the buffer owned by paymentors)
+			// normalize draw position to make it a portion of the paymentors owned buffer and ignore the potential extra unassigned buffer part
+			drawPosition := drawValue.Quo(prize.DrawProbability).MulInt(totalPayments).RoundInt()
 			for i := 0; i < len(drawBuffer); i++ {
 				// keep iterating in the buffer
 				// winner is the one owning the current portion of the buffer
 				if drawPosition.LTE(drawBuffer[i]) {
-					dep := bufferToDeposit[drawBuffer[i]]
+					dep := bufferToPayment[drawBuffer[i]]
 					result.PrizeDraws[pIdx] = PrizeDraw{
 						Amount: prize.Amount,
 						Winner: &dep,

@@ -16,13 +16,13 @@ import "furya/millions/prize_strategy.proto";
 option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 service Msg {
-  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
-  rpc DepositRetry(MsgDepositRetry) returns (MsgDepositRetryResponse);
-  rpc DepositEdit(MsgDepositEdit) returns (MsgDepositEditResponse);
+  rpc Payment(MsgPayment) returns (MsgPaymentResponse);
+  rpc PaymentRetry(MsgPaymentRetry) returns (MsgPaymentRetryResponse);
+  rpc PaymentEdit(MsgPaymentEdit) returns (MsgPaymentEditResponse);
   rpc ClaimPrize(MsgClaimPrize) returns (MsgClaimPrizeResponse);
-  rpc WithdrawDeposit(MsgWithdrawDeposit) returns (MsgWithdrawDepositResponse);
-  rpc WithdrawDepositRetry(MsgWithdrawDepositRetry)
-      returns (MsgWithdrawDepositRetryResponse);
+  rpc WithdrawPayment(MsgWithdrawPayment) returns (MsgWithdrawPaymentResponse);
+  rpc WithdrawPaymentRetry(MsgWithdrawPaymentRetry)
+      returns (MsgWithdrawPaymentRetryResponse);
   rpc DrawRetry(MsgDrawRetry) returns (MsgDrawRetryResponse);
   rpc RestoreInterchainAccounts(MsgRestoreInterchainAccounts)
       returns (MsgRestoreInterchainAccountsResponse);
@@ -99,8 +99,8 @@ message MsgUpdatePool {
 
 message MsgUpdatePoolResponse {}
 
-message MsgDeposit {
-  option (amino.name) = "furya/millions/MsgDeposit";
+message MsgPayment {
+  option (amino.name) = "furya/millions/MsgPayment";
 
   uint64 pool_id = 1;
   cosmos.base.v1beta1.Coin amount = 2 [ (gogoproto.nullable) = false ];
@@ -110,10 +110,10 @@ message MsgDeposit {
   bool is_sponsor = 5;
 }
 
-message MsgDepositResponse { uint64 deposit_id = 1; }
+message MsgPaymentResponse { uint64 deposit_id = 1; }
 
-message MsgDepositRetry {
-  option (amino.name) = "furya/millions/MsgDepositRetry";
+message MsgPaymentRetry {
+  option (amino.name) = "furya/millions/MsgPaymentRetry";
 
   uint64 pool_id = 1;
   uint64 deposit_id = 2;
@@ -121,8 +121,8 @@ message MsgDepositRetry {
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message MsgDepositEdit {
-  option (amino.name) = "furya/millions/MsgDepositEdit";
+message MsgPaymentEdit {
+  option (amino.name) = "furya/millions/MsgPaymentEdit";
 
   uint64 pool_id = 1;
   uint64 deposit_id = 2;
@@ -132,9 +132,9 @@ message MsgDepositEdit {
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message MsgDepositEditResponse {}
+message MsgPaymentEditResponse {}
 
-message MsgDepositRetryResponse {}
+message MsgPaymentRetryResponse {}
 
 message MsgClaimPrize {
   option (amino.name) = "furya/millions/MsgClaimPrize";
@@ -147,8 +147,8 @@ message MsgClaimPrize {
 
 message MsgClaimPrizeResponse {}
 
-message MsgWithdrawDeposit {
-  option (amino.name) = "furya/millions/MsgWithdrawDeposit";
+message MsgWithdrawPayment {
+  option (amino.name) = "furya/millions/MsgWithdrawPayment";
 
   uint64 pool_id = 1;
   uint64 deposit_id = 2;
@@ -157,10 +157,10 @@ message MsgWithdrawDeposit {
   string to_address = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message MsgWithdrawDepositResponse { uint64 withdrawal_id = 1; }
+message MsgWithdrawPaymentResponse { uint64 withdrawal_id = 1; }
 
-message MsgWithdrawDepositRetry {
-  option (amino.name) = "furya/millions/MsgWithdrawDepositRetry";
+message MsgWithdrawPaymentRetry {
+  option (amino.name) = "furya/millions/MsgWithdrawPaymentRetry";
 
   uint64 pool_id = 1;
   uint64 withdrawal_id = 2;
@@ -168,7 +168,7 @@ message MsgWithdrawDepositRetry {
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message MsgWithdrawDepositRetryResponse {}
+message MsgWithdrawPaymentRetryResponse {}
 
 message MsgDrawRetry {
   option (amino.name) = "furya/millions/MsgDrawRetry";

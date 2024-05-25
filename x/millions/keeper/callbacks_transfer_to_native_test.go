@@ -16,7 +16,7 @@ func (suite *KeeperTestSuite) TestCallbacks_TransfersToNative() {
 	// Construct our callback data
 	callbackData := millionstypes.TransferToNativeCallback{
 		PoolId:    pool.GetPoolId(),
-		DepositId: 1,
+		PaymentId: 1,
 	}
 
 	// Serialize our callback
@@ -44,5 +44,5 @@ func (suite *KeeperTestSuite) TestCallbacks_TransfersToNative() {
 
 	// Make sure it matches
 	suite.Require().Equal(callbackData.PoolId, unmarshalledCallbackData.PoolId)
-	suite.Require().Equal(callbackData.DepositId, unmarshalledCallbackData.DepositId)
+	suite.Require().Equal(callbackData.PaymentId, unmarshalledCallbackData.PaymentId)
 }

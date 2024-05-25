@@ -20,8 +20,8 @@ func (msg MsgRestoreInterchainAccounts) Type() string {
 }
 
 func (msg *MsgRestoreInterchainAccounts) GetSigners() []sdk.AccAddress {
-	depositor := sdk.MustAccAddressFromBech32(msg.GetRestorerAddress())
-	return []sdk.AccAddress{depositor}
+	paymentor := sdk.MustAccAddressFromBech32(msg.GetRestorerAddress())
+	return []sdk.AccAddress{paymentor}
 }
 
 func (msg *MsgRestoreInterchainAccounts) GetSignBytes() []byte {

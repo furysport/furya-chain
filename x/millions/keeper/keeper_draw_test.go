@@ -33,7 +33,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizeToWin() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{},
+		[]millionskeeper.PaymentTWB{},
 		seed,
 	)
 	suite.Require().NoError(err)
@@ -50,7 +50,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizeToWin() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[2].String(), Amount: sdk.NewInt(1_000_000)},
@@ -62,7 +62,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizeToWin() {
 	suite.Require().Equal(uint64(0), result.TotalWinCount)
 	suite.Require().Len(result.PrizeDraws, 0)
 
-	// No depositors should return prizes without winners
+	// No paymentors should return prizes without winners
 	prizePool = sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(1_000_000))
 	result, err = app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
@@ -73,7 +73,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizeToWin() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{},
+		[]millionskeeper.PaymentTWB{},
 		seed,
 	)
 	suite.Require().NoError(err)
@@ -89,7 +89,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizesWon() {
 
 	seed := int64(84)
 
-	// No depositors should return prizes without winners
+	// No paymentors should return prizes without winners
 	prizePool := sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(1_000_000))
 	result, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
@@ -100,7 +100,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizesWon() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{},
+		[]millionskeeper.PaymentTWB{},
 		seed,
 	)
 	suite.Require().NoError(err)
@@ -121,7 +121,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizesWon() {
 				{PoolPercent: 50, Quantity: 10, DrawProbability: floatToDec(0.00001)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[2].String(), Amount: sdk.NewInt(1_000_000)},
@@ -229,7 +229,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 
 	seed := int64(336)
 
-	// No depositors post TWB should result in no winner
+	// No paymentors post TWB should result in no winner
 	prizePool := sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(1_000_000))
 	result, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
@@ -238,7 +238,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 				{PoolPercent: 100, Quantity: 100, DrawProbability: floatToDec(1.0)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(0)},
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(0)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(0)},
@@ -252,7 +252,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 		suite.Require().Nil(pd.Winner)
 	}
 
-	// Lone depositors should win with certainty
+	// Lone paymentors should win with certainty
 	prizePool = sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(1_000_000))
 	result, err = app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
@@ -261,7 +261,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 				{PoolPercent: 100, Quantity: 100, DrawProbability: floatToDec(1.0)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1_000_000)},
 		},
 		seed,
@@ -274,7 +274,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 		suite.Require().Equal(suite.addrs[0].String(), pd.Winner.Address)
 	}
 
-	// Small deposits and prize pool should be possible even though they are not recommended
+	// Small payments and prize pool should be possible even though they are not recommended
 	prizePool = sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(1))
 	result, err = app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
@@ -285,7 +285,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 				{PoolPercent: 98, Quantity: 100, DrawProbability: floatToDec(1.0)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(1)},
 			{Address: suite.addrs[2].String(), Amount: sdk.NewInt(1)},
@@ -306,7 +306,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 				{PoolPercent: 98, Quantity: 100, DrawProbability: floatToDec(1.0)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(1)},
 			{Address: suite.addrs[2].String(), Amount: sdk.NewInt(1)},
@@ -317,7 +317,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 	suite.Require().Equal(uint64(2), result.TotalWinCount)
 	suite.Require().Equal(int64(2), result.TotalWinAmount.Int64())
 
-	// Large deposits and prize pool should work as expected
+	// Large payments and prize pool should work as expected
 	prizePool = sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(int64(^uint64(0)>>1)))
 	result, err = app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
@@ -328,7 +328,7 @@ func (suite *KeeperTestSuite) TestDraw_UnusualPrizeCases() {
 				{PoolPercent: 95, Quantity: 1_000_000, DrawProbability: floatToDec(0.0)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: prizePool.Amount.QuoRaw(3)},
 			{Address: suite.addrs[1].String(), Amount: prizePool.Amount.QuoRaw(3)},
 			{Address: suite.addrs[2].String(), Amount: prizePool.Amount.QuoRaw(3)},
@@ -359,7 +359,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesOrdering() {
 				{PoolPercent: 50, Quantity: 1000, DrawProbability: floatToDec(0.60)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[2].String(), Amount: sdk.NewInt(1_000_000)},
@@ -386,10 +386,10 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawDeterminism() {
 	ctx := suite.ctx
 
 	prizePool := sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(42_000_000_000))
-	depositors := []millionskeeper.DepositTWB{}
+	paymentors := []millionskeeper.PaymentTWB{}
 	for i := 0; i < 100; i++ {
 		uid := fmt.Sprintf("small_%d", i)
-		depositors = append(depositors, millionskeeper.DepositTWB{Address: uid, Amount: sdk.NewInt(1_000_000)})
+		paymentors = append(paymentors, millionskeeper.PaymentTWB{Address: uid, Amount: sdk.NewInt(1_000_000)})
 	}
 
 	// Init stable strategy for all draws
@@ -403,7 +403,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawDeterminism() {
 	firstDraw, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
 		strat,
-		depositors,
+		paymentors,
 		seed,
 	)
 	suite.Require().NoError(err)
@@ -412,7 +412,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawDeterminism() {
 		draw, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 			prizePool,
 			strat,
-			depositors,
+			paymentors,
 			seed,
 		)
 		suite.Require().NoError(err)
@@ -452,7 +452,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizePoolPersistence() {
 		p.Denom, p.NativeDenom, p.ChainId, p.ConnectionId, p.TransferChannelId,
 		[]string{suite.valAddrs[0].String()},
 		p.Bech32PrefixAccAddr, p.Bech32PrefixValAddr,
-		p.MinDepositAmount,
+		p.MinPaymentAmount,
 		p.UnbondingDuration,
 		p.MaxUnbondingEntries,
 		p.DrawSchedule,
@@ -477,7 +477,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizePoolPersistence() {
 		p.Denom, p.NativeDenom, p.ChainId, p.ConnectionId, p.TransferChannelId,
 		[]string{suite.valAddrs[0].String()},
 		p.Bech32PrefixAccAddr, p.Bech32PrefixValAddr,
-		p.MinDepositAmount,
+		p.MinPaymentAmount,
 		p.UnbondingDuration,
 		p.MaxUnbondingEntries,
 		p.DrawSchedule,
@@ -492,20 +492,20 @@ func (suite *KeeperTestSuite) TestDraw_PrizePoolPersistence() {
 	suite.Require().Len(app.MillionsKeeper.ListDraws(ctx), 0)
 
 	// Run 2 draws for pool #2
-	// - Create one deposit for pool #2 which will allow to draw prizes (no prize pool = no prizes)
+	// - Create one payment for pool #2 which will allow to draw prizes (no prize pool = no prizes)
 	// - Run reward distribution
 	// - Run draw #1 which should attribute 50% of the rewards
 	// - Run draw #2 which has no reward but should get the 50% rewards remaining from draw #1
-	resp, err := msgServer.Deposit(goCtx, millionstypes.NewMsgDeposit(
+	resp, err := msgServer.Payment(goCtx, millionstypes.NewMsgPayment(
 		suite.addrs[0].String(),
 		sdk.NewCoin(pool2.Denom, sdk.NewInt(1_000_000)),
 		pool2.PoolId,
 	))
 	suite.Require().NoError(err)
-	deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, pool2.PoolId, resp.DepositId)
+	payment, err := app.MillionsKeeper.GetPoolPayment(ctx, pool2.PoolId, resp.PaymentId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(millionstypes.DepositState_Success, deposit.State)
-	pool2Delegations := app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pool2.IcaDepositAddress), 100)
+	suite.Require().Equal(millionstypes.PaymentState_Success, payment.State)
+	pool2Delegations := app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pool2.IcaPaymentAddress), 100)
 	suite.Require().Len(pool2Delegations, 1)
 
 	// Move to next block and next draw
@@ -518,7 +518,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizePoolPersistence() {
 
 		// Attribute delegation
 		staking.EndBlocker(ctx, app.StakingKeeper)
-		err = app.DistrKeeper.Hooks().AfterDelegationModified(ctx, sdk.MustAccAddressFromBech32(pool2.IcaDepositAddress), val.MustValAddressFromBech32())
+		err = app.DistrKeeper.Hooks().AfterDelegationModified(ctx, sdk.MustAccAddressFromBech32(pool2.IcaPaymentAddress), val.MustValAddressFromBech32())
 		suite.Require().NoError(err)
 
 		// Simulate inflation minted
@@ -560,8 +560,8 @@ func (suite *KeeperTestSuite) TestDraw_PrizePoolPersistence() {
 	// Pool #1 should have 0 draw
 	suite.Require().Len(app.MillionsKeeper.ListPoolDraws(ctx, pool1.PoolId), 0)
 
-	// Run 3 draws for pool #1 which should have no effect since their is no depositor
-	_, err = msgServer.Deposit(goCtx, millionstypes.NewMsgDeposit(
+	// Run 3 draws for pool #1 which should have no effect since their is no paymentor
+	_, err = msgServer.Payment(goCtx, millionstypes.NewMsgPayment(
 		suite.addrs[0].String(),
 		sdk.NewCoin(pool1.Denom, sdk.NewInt(1_000_000)),
 		pool1.PoolId,
@@ -572,7 +572,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizePoolPersistence() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(millionstypes.DrawState_Success, p1Draw1.State)
 
-	_, err = msgServer.Deposit(goCtx, millionstypes.NewMsgDeposit(
+	_, err = msgServer.Payment(goCtx, millionstypes.NewMsgPayment(
 		suite.addrs[0].String(),
 		sdk.NewCoin(pool1.Denom, sdk.NewInt(1_000_000)),
 		pool1.PoolId,
@@ -583,7 +583,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizePoolPersistence() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(millionstypes.DrawState_Success, p1Draw2.State)
 
-	_, err = msgServer.Deposit(goCtx, millionstypes.NewMsgDeposit(
+	_, err = msgServer.Payment(goCtx, millionstypes.NewMsgPayment(
 		suite.addrs[0].String(),
 		sdk.NewCoin(pool1.Denom, sdk.NewInt(1_000_000)),
 		pool1.PoolId,
@@ -667,68 +667,68 @@ func (suite *KeeperTestSuite) TestDraw_TimeWeightedBalance() {
 	})
 	app.MillionsKeeper.AddPool(ctx, pool)
 
-	// Simulate deposits at various time for first draw
+	// Simulate payments at various time for first draw
 	t0 := time.Now().UTC()
 	denom := app.StakingKeeper.BondDenom(ctx)
-	dState := millionstypes.DepositState_Success
-	depositsTWB := app.MillionsKeeper.ComputeDepositsTWB(
+	dState := millionstypes.PaymentState_Success
+	paymentsTWB := app.MillionsKeeper.ComputePaymentsTWB(
 		ctx,
 		t0.Add(-1_000_000*time.Second),
 		t0,
-		[]millionstypes.Deposit{
+		[]millionstypes.Payment{
 			{State: dState, CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(-1_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(-500_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(-250_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(0 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(1_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
-			{State: dState, IsSponsor: true, WinnerAddress: "6", DepositorAddress: "6", CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
-			{State: dState, WinnerAddress: "8", DepositorAddress: "7", CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
-			{State: millionstypes.DepositState_Failure, CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
+			{State: dState, IsSponsor: true, WinnerAddress: "6", PaymentorAddress: "6", CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
+			{State: dState, WinnerAddress: "8", PaymentorAddress: "7", CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
+			{State: millionstypes.PaymentState_Failure, CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 		},
 	)
-	suite.Require().Equal(int64(1_000_000), depositsTWB[0].Amount.Int64())
-	suite.Require().Equal(int64(1_000_000), depositsTWB[1].Amount.Int64())
-	suite.Require().Equal(int64(500_000), depositsTWB[2].Amount.Int64())
-	suite.Require().Equal(int64(250_000), depositsTWB[3].Amount.Int64())
-	suite.Require().Equal(int64(0), depositsTWB[4].Amount.Int64())
-	suite.Require().Equal(int64(0), depositsTWB[5].Amount.Int64())
+	suite.Require().Equal(int64(1_000_000), paymentsTWB[0].Amount.Int64())
+	suite.Require().Equal(int64(1_000_000), paymentsTWB[1].Amount.Int64())
+	suite.Require().Equal(int64(500_000), paymentsTWB[2].Amount.Int64())
+	suite.Require().Equal(int64(250_000), paymentsTWB[3].Amount.Int64())
+	suite.Require().Equal(int64(0), paymentsTWB[4].Amount.Int64())
+	suite.Require().Equal(int64(0), paymentsTWB[5].Amount.Int64())
 	// TWB should not return sponsors since they waive their drawing chances
-	suite.Require().Len(depositsTWB, 7)
-	suite.Require().Equal("8", depositsTWB[6].Address)
+	suite.Require().Len(paymentsTWB, 7)
+	suite.Require().Equal("8", paymentsTWB[6].Address)
 
-	// Simulate deposits at various time for a subsequent draw
+	// Simulate payments at various time for a subsequent draw
 	params := app.MillionsKeeper.GetParams(ctx)
 	lastDrawAt := t0.Add(-500_000 * time.Second)
-	depositsTWB = app.MillionsKeeper.ComputeDepositsTWB(
+	paymentsTWB = app.MillionsKeeper.ComputePaymentsTWB(
 		ctx,
 		lastDrawAt,
 		t0,
-		[]millionstypes.Deposit{
+		[]millionstypes.Payment{
 			{State: dState, CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(-1_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(-500_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(-250_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
-			{State: dState, CreatedAt: t0.Add(-params.MinDepositDrawDelta), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
-			{State: dState, CreatedAt: t0.Add(-params.MinDepositDrawDelta + 1*time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
+			{State: dState, CreatedAt: t0.Add(-params.MinPaymentDrawDelta), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
+			{State: dState, CreatedAt: t0.Add(-params.MinPaymentDrawDelta + 1*time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(0 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 			{State: dState, CreatedAt: t0.Add(1_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
-			{State: dState, IsSponsor: true, WinnerAddress: "6", DepositorAddress: "6", CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
-			{State: dState, WinnerAddress: "8", DepositorAddress: "7", CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
-			{State: millionstypes.DepositState_IbcTransfer, CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
+			{State: dState, IsSponsor: true, WinnerAddress: "6", PaymentorAddress: "6", CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
+			{State: dState, WinnerAddress: "8", PaymentorAddress: "7", CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
+			{State: millionstypes.PaymentState_IbcTransfer, CreatedAt: t0.Add(-2_000_000 * time.Second), Amount: sdk.NewCoin(denom, sdk.NewInt(1_000_000))},
 		},
 	)
-	suite.Require().Equal(int64(1_000_000), depositsTWB[0].Amount.Int64())
-	suite.Require().Equal(int64(1_000_000), depositsTWB[1].Amount.Int64())
-	suite.Require().Equal(int64(1_000_000), depositsTWB[2].Amount.Int64())
-	suite.Require().Equal(int64(500_000), depositsTWB[3].Amount.Int64())
-	suite.Require().Greater(depositsTWB[4].Amount.Int64(), int64(0))
-	suite.Require().Equal(int64(0), depositsTWB[5].Amount.Int64())
-	suite.Require().Equal(int64(0), depositsTWB[6].Amount.Int64())
-	suite.Require().Equal(int64(0), depositsTWB[7].Amount.Int64())
+	suite.Require().Equal(int64(1_000_000), paymentsTWB[0].Amount.Int64())
+	suite.Require().Equal(int64(1_000_000), paymentsTWB[1].Amount.Int64())
+	suite.Require().Equal(int64(1_000_000), paymentsTWB[2].Amount.Int64())
+	suite.Require().Equal(int64(500_000), paymentsTWB[3].Amount.Int64())
+	suite.Require().Greater(paymentsTWB[4].Amount.Int64(), int64(0))
+	suite.Require().Equal(int64(0), paymentsTWB[5].Amount.Int64())
+	suite.Require().Equal(int64(0), paymentsTWB[6].Amount.Int64())
+	suite.Require().Equal(int64(0), paymentsTWB[7].Amount.Int64())
 	// TWB should not return sponsors since they waive their drawing chances
-	suite.Require().Len(depositsTWB, 9)
-	suite.Require().Equal("8", depositsTWB[8].Address)
+	suite.Require().Len(paymentsTWB, 9)
+	suite.Require().Equal("8", paymentsTWB[8].Address)
 }
 
 // TestDraw_PrizeDistribution tests draw prize distribution phase
@@ -750,7 +750,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizeDistribution() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[2].String(), Amount: sdk.NewInt(1_000_000)},
@@ -867,14 +867,14 @@ func (suite *KeeperTestSuite) TestDraw_TriggerAndPrizePool() {
 
 // TestDraw_EvenPrizeDistributionLLN tests if the prize distribution abides by the law of large numbers
 // A large number of draws should converge to the expected drawing probabilities
-// In this case an even distribution for depositors with similar amounts
+// In this case an even distribution for paymentors with similar amounts
 func (suite *KeeperTestSuite) TestDraw_EvenPrizeDistributionLLN() {
 	app := suite.app
 	ctx := suite.ctx
 
 	type balanceControl struct {
 		address        string
-		deposit        math.Int
+		payment        math.Int
 		inflationGains math.Int
 		millionsGains  math.Int
 		millionsDrawn  int
@@ -884,14 +884,14 @@ func (suite *KeeperTestSuite) TestDraw_EvenPrizeDistributionLLN() {
 	// Prepare expected inflation
 	yearlyInflation := 0.34
 	weeklyInflation := math.LegacyNewDecWithPrec(int64(yearlyInflation/52.0*1_000_000), 6)
-	// Prepare depositors
-	depositors := []millionskeeper.DepositTWB{}
+	// Prepare paymentors
+	paymentors := []millionskeeper.PaymentTWB{}
 	balancesControls := map[string]*balanceControl{}
 	for i := 0; i < 100; i++ {
 		uid := fmt.Sprintf("small_%d", i)
-		deposit := sdk.NewCoin(prizePool.Denom, sdk.NewInt(1_000_000))
-		depositors = append(depositors, millionskeeper.DepositTWB{Address: uid, Amount: deposit.Amount})
-		balancesControls[uid] = &balanceControl{address: uid, deposit: deposit.Amount, inflationGains: math.ZeroInt(), millionsGains: math.ZeroInt()}
+		payment := sdk.NewCoin(prizePool.Denom, sdk.NewInt(1_000_000))
+		paymentors = append(paymentors, millionskeeper.PaymentTWB{Address: uid, Amount: payment.Amount})
+		balancesControls[uid] = &balanceControl{address: uid, payment: payment.Amount, inflationGains: math.ZeroInt(), millionsGains: math.ZeroInt()}
 	}
 
 	// Init stable strategy for all draws
@@ -913,7 +913,7 @@ func (suite *KeeperTestSuite) TestDraw_EvenPrizeDistributionLLN() {
 		// Attribute inflation gains and compute prizePool
 		prizePool := math.ZeroInt().Add(remainsFromLastDraw)
 		for i := range balancesControls {
-			inf := weeklyInflation.MulInt(balancesControls[i].deposit).RoundInt()
+			inf := weeklyInflation.MulInt(balancesControls[i].payment).RoundInt()
 			balancesControls[i].inflationGains = balancesControls[i].inflationGains.Add(inf)
 			prizePool = prizePool.Add(inf)
 			totalInf = totalInf.Add(inf)
@@ -923,7 +923,7 @@ func (suite *KeeperTestSuite) TestDraw_EvenPrizeDistributionLLN() {
 		results, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 			sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), prizePool),
 			strat,
-			depositors,
+			paymentors,
 			seed,
 		)
 		suite.Require().NoError(err, "error at draw %d: %v", i, err)
@@ -954,7 +954,7 @@ func (suite *KeeperTestSuite) TestDraw_EvenPrizeDistributionLLN() {
 	suite.Require().Greater(float64(totalWinAmount.Int64())/float64(totalInf.Int64()), 0.999)
 	suite.Require().Less(float64(totalWinAmount.Int64())/float64(totalInf.Int64()), 1.001)
 
-	// Each depositor gains should be close to inflation (less than 0.1% difference) since they are all identical
+	// Each paymentor gains should be close to inflation (less than 0.1% difference) since they are all identical
 	for _, b := range balancesControls {
 		suite.Require().Greater(float64(b.millionsGains.Int64())/float64(b.inflationGains.Int64()), float64(0.99))
 		suite.Require().Less(float64(b.millionsGains.Int64())/float64(b.inflationGains.Int64()), float64(1.01))
@@ -963,14 +963,14 @@ func (suite *KeeperTestSuite) TestDraw_EvenPrizeDistributionLLN() {
 
 // TestDraw_WeightedPrizeDistributionLLN tests if the prize distribution abides by the law of large numbers
 // A large number of draws should converge to the expected drawing probabilities
-// In this case a weighted distribution based on each depositor stakes
+// In this case a weighted distribution based on each paymentor stakes
 func (suite *KeeperTestSuite) TestDraw_WeightedPrizeDistributionLLN() {
 	app := suite.app
 	ctx := suite.ctx
 
 	type balanceControl struct {
 		address        string
-		deposit        math.Int
+		payment        math.Int
 		inflationGains math.Int
 		millionsGains  math.Int
 		millionsDrawn  int
@@ -980,29 +980,29 @@ func (suite *KeeperTestSuite) TestDraw_WeightedPrizeDistributionLLN() {
 	// Prepare expected inflation
 	yearlyInflation := 0.34
 	weeklyInflation := math.LegacyNewDecWithPrec(int64(yearlyInflation/52.0*1_000_000), 6)
-	// Prepare depositors
-	depositors := []millionskeeper.DepositTWB{}
+	// Prepare paymentors
+	paymentors := []millionskeeper.PaymentTWB{}
 	balancesControls := map[string]*balanceControl{}
-	// large depositors
+	// large paymentors
 	for i := 0; i < 10; i++ {
 		uid := fmt.Sprintf("large_%d", i)
-		deposit := sdk.NewCoin(prizePool.Denom, sdk.NewInt(100_000_000))
-		depositors = append(depositors, millionskeeper.DepositTWB{Address: uid, Amount: deposit.Amount})
-		balancesControls[uid] = &balanceControl{address: uid, deposit: deposit.Amount, inflationGains: math.ZeroInt(), millionsGains: math.ZeroInt()}
+		payment := sdk.NewCoin(prizePool.Denom, sdk.NewInt(100_000_000))
+		paymentors = append(paymentors, millionskeeper.PaymentTWB{Address: uid, Amount: payment.Amount})
+		balancesControls[uid] = &balanceControl{address: uid, payment: payment.Amount, inflationGains: math.ZeroInt(), millionsGains: math.ZeroInt()}
 	}
-	// medium depositors
+	// medium paymentors
 	for i := 0; i < 20; i++ {
 		uid := fmt.Sprintf("medium_%d", i)
-		deposit := sdk.NewCoin(prizePool.Denom, sdk.NewInt(10_000_000))
-		depositors = append(depositors, millionskeeper.DepositTWB{Address: uid, Amount: deposit.Amount})
-		balancesControls[uid] = &balanceControl{address: uid, deposit: deposit.Amount, inflationGains: math.ZeroInt(), millionsGains: math.ZeroInt()}
+		payment := sdk.NewCoin(prizePool.Denom, sdk.NewInt(10_000_000))
+		paymentors = append(paymentors, millionskeeper.PaymentTWB{Address: uid, Amount: payment.Amount})
+		balancesControls[uid] = &balanceControl{address: uid, payment: payment.Amount, inflationGains: math.ZeroInt(), millionsGains: math.ZeroInt()}
 	}
-	// small depositors
+	// small paymentors
 	for i := 0; i < 40; i++ {
 		uid := fmt.Sprintf("small_%d", i)
-		deposit := sdk.NewCoin(prizePool.Denom, sdk.NewInt(1_000_000))
-		depositors = append(depositors, millionskeeper.DepositTWB{Address: uid, Amount: deposit.Amount})
-		balancesControls[uid] = &balanceControl{address: uid, deposit: deposit.Amount, inflationGains: math.ZeroInt(), millionsGains: math.ZeroInt()}
+		payment := sdk.NewCoin(prizePool.Denom, sdk.NewInt(1_000_000))
+		paymentors = append(paymentors, millionskeeper.PaymentTWB{Address: uid, Amount: payment.Amount})
+		balancesControls[uid] = &balanceControl{address: uid, payment: payment.Amount, inflationGains: math.ZeroInt(), millionsGains: math.ZeroInt()}
 	}
 
 	// Init stable strategy for all draws
@@ -1024,7 +1024,7 @@ func (suite *KeeperTestSuite) TestDraw_WeightedPrizeDistributionLLN() {
 		// Attribute inflation gains and compute prizePool
 		prizePool := math.ZeroInt().Add(remainsFromLastDraw)
 		for i := range balancesControls {
-			inf := weeklyInflation.MulInt(balancesControls[i].deposit).RoundInt()
+			inf := weeklyInflation.MulInt(balancesControls[i].payment).RoundInt()
 			balancesControls[i].inflationGains = balancesControls[i].inflationGains.Add(inf)
 			prizePool = prizePool.Add(inf)
 			totalInf = totalInf.Add(inf)
@@ -1034,7 +1034,7 @@ func (suite *KeeperTestSuite) TestDraw_WeightedPrizeDistributionLLN() {
 		results, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 			sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), prizePool),
 			strat,
-			depositors,
+			paymentors,
 			seed,
 		)
 		suite.Require().NoError(err, "error at draw %d: %v", i, err)
@@ -1065,8 +1065,8 @@ func (suite *KeeperTestSuite) TestDraw_WeightedPrizeDistributionLLN() {
 	suite.Require().Greater(float64(totalWinAmount.Int64())/float64(totalInf.Int64()), 0.999)
 	suite.Require().Less(float64(totalWinAmount.Int64())/float64(totalInf.Int64()), 1.00)
 
-	// Each depositor gains should be close to inflation (less than 5% difference)
-	// A higher difference from inflation is understandable here especially for small depositors for which a win
+	// Each paymentor gains should be close to inflation (less than 5% difference)
+	// A higher difference from inflation is understandable here especially for small paymentors for which a win
 	// is less likely but has a higher impact on their final balance
 	for _, b := range balancesControls {
 		suite.Require().Greater(float64(b.millionsGains.Int64())/float64(b.inflationGains.Int64()), float64(0.95))
@@ -1201,7 +1201,7 @@ func (suite *KeeperTestSuite) TestDraw_ClaimYieldOnRemoteZone() {
 			BondedAmount:    sdk.NewInt(1_000_000),
 			IsEnabled:       true,
 		}},
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaPaymentAddress:   cosmosIcaPaymentAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		PrizeStrategy: millionstypes.PrizeStrategy{
 			PrizeBatches: []millionstypes.PrizeBatch{
@@ -1294,7 +1294,7 @@ func (suite *KeeperTestSuite) TestDraw_ClaimYieldOnRemoteZone() {
 	}))
 	// List pools
 	pools = app.MillionsKeeper.ListPools(ctx)
-	_, err = msgServer.Deposit(goCtx, millionstypes.NewMsgDeposit(
+	_, err = msgServer.Payment(goCtx, millionstypes.NewMsgPayment(
 		suite.addrs[0].String(),
 		sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000)),
 		pools[1].PoolId,
@@ -1352,7 +1352,7 @@ func (suite *KeeperTestSuite) TestDraw_TransferFreshPrizePoolCoinsToLocalZone() 
 			BondedAmount:    sdk.NewInt(1_000_000),
 			IsEnabled:       true,
 		}},
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaPaymentAddress:   cosmosIcaPaymentAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		PrizeStrategy: millionstypes.PrizeStrategy{
 			PrizeBatches: []millionstypes.PrizeBatch{
@@ -1434,7 +1434,7 @@ func (suite *KeeperTestSuite) TestDraw_TransferFreshPrizePoolCoinsToLocalZone() 
 	}))
 	// List pools
 	pools = app.MillionsKeeper.ListPools(ctx)
-	_, err = msgServer.Deposit(goCtx, millionstypes.NewMsgDeposit(
+	_, err = msgServer.Payment(goCtx, millionstypes.NewMsgPayment(
 		suite.addrs[0].String(),
 		sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000)),
 		pools[1].PoolId,
@@ -1520,7 +1520,7 @@ func (suite *KeeperTestSuite) TestDraw_ExecuteDraw() {
 	app.MillionsKeeper.AddPool(ctx, pool)
 	pools = app.MillionsKeeper.ListPools(ctx)
 
-	_, err = msgServer.Deposit(goCtx, millionstypes.NewMsgDeposit(
+	_, err = msgServer.Payment(goCtx, millionstypes.NewMsgPayment(
 		suite.addrs[0].String(),
 		sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000)),
 		pools[1].PoolId,
@@ -1577,7 +1577,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizeToWin_WithUnique() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{},
+		[]millionskeeper.PaymentTWB{},
 		seed,
 	)
 	suite.Require().NoError(err)
@@ -1594,7 +1594,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizeToWin_WithUnique() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[2].String(), Amount: sdk.NewInt(1_000_000)},
@@ -1606,7 +1606,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizeToWin_WithUnique() {
 	suite.Require().Equal(uint64(0), result.TotalWinCount)
 	suite.Require().Len(result.PrizeDraws, 0)
 
-	// No depositors should return prizes without winners
+	// No paymentors should return prizes without winners
 	prizePool = sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(1_000_000))
 	result, err = app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
@@ -1617,7 +1617,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizeToWin_WithUnique() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{},
+		[]millionskeeper.PaymentTWB{},
 		seed,
 	)
 	suite.Require().NoError(err)
@@ -1633,7 +1633,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizesWon_WithUnique() {
 
 	seed := int64(84)
 
-	// No depositors should return prizes without winners
+	// No paymentors should return prizes without winners
 	prizePool := sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(1_000_000))
 	result, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
@@ -1644,7 +1644,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizesWon_WithUnique() {
 				{PoolPercent: 50, Quantity: 1, DrawProbability: floatToDec(1.00)},
 			},
 		},
-		[]millionskeeper.DepositTWB{},
+		[]millionskeeper.PaymentTWB{},
 		seed,
 	)
 	suite.Require().NoError(err)
@@ -1665,7 +1665,7 @@ func (suite *KeeperTestSuite) TestDraw_NoPrizesWon_WithUnique() {
 				{PoolPercent: 50, Quantity: 10, DrawProbability: floatToDec(0.00001)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: suite.addrs[0].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[1].String(), Amount: sdk.NewInt(1_000_000)},
 			{Address: suite.addrs[2].String(), Amount: sdk.NewInt(1_000_000)},
@@ -1688,10 +1688,10 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawDeterminism_WithUnique() {
 	ctx := suite.ctx
 
 	prizePool := sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(42_000_000_000))
-	depositors := []millionskeeper.DepositTWB{}
+	paymentors := []millionskeeper.PaymentTWB{}
 	for i := 0; i < 100; i++ {
 		uid := fmt.Sprintf("small_%d", i)
-		depositors = append(depositors, millionskeeper.DepositTWB{Address: uid, Amount: sdk.NewInt(1_000_000)})
+		paymentors = append(paymentors, millionskeeper.PaymentTWB{Address: uid, Amount: sdk.NewInt(1_000_000)})
 	}
 
 	// Init stable strategy for all draws
@@ -1705,7 +1705,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawDeterminism_WithUnique() {
 	firstDraw, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 		prizePool,
 		strat,
-		depositors,
+		paymentors,
 		seed,
 	)
 	suite.Require().NoError(err)
@@ -1714,7 +1714,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawDeterminism_WithUnique() {
 		draw, err := app.MillionsKeeper.RunDrawPrizes(ctx,
 			prizePool,
 			strat,
-			depositors,
+			paymentors,
 			seed,
 		)
 		suite.Require().NoError(err)
@@ -1748,7 +1748,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawUniqueExclusion_WithUnique() {
 				{PoolPercent: 100, Quantity: 100, DrawProbability: floatToDec(1.0), IsUnique: true},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: "whale1", Amount: sdk.NewInt(1_000_000_000)},
 			{Address: "dep1", Amount: sdk.NewInt(1_000_000)},
 		},
@@ -1773,7 +1773,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawUniqueExclusion_WithUnique() {
 				{PoolPercent: 50, Quantity: 100, DrawProbability: floatToDec(1.0)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: "whale1", Amount: sdk.NewInt(1_000_000_000)},
 			{Address: "dep1", Amount: sdk.NewInt(1_000_000)},
 			{Address: "dep2", Amount: sdk.NewInt(1_000_000)},
@@ -1795,7 +1795,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawUniqueExclusion_WithUnique() {
 	suite.Require().Greater(depCnts["dep1"], 30)
 	suite.Require().Greater(depCnts["dep2"], 30)
 
-	// Test multiple deposits with same winner address with multiple unique batches
+	// Test multiple payments with same winner address with multiple unique batches
 	// ensure that exclusion works in this case
 	draw, err = app.MillionsKeeper.RunDrawPrizes(ctx,
 		sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(42_000_000_000)),
@@ -1806,7 +1806,7 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawUniqueExclusion_WithUnique() {
 				{PoolPercent: 50, Quantity: 100, DrawProbability: floatToDec(1.0)},
 			},
 		},
-		[]millionskeeper.DepositTWB{
+		[]millionskeeper.PaymentTWB{
 			{Address: "whale1", Amount: sdk.NewInt(1_000_000_000)},
 			{Address: "whale2", Amount: sdk.NewInt(1_000_000_000)},
 			{Address: "whale2", Amount: sdk.NewInt(1_000_000_000)},
@@ -1842,14 +1842,14 @@ func (suite *KeeperTestSuite) TestDraw_PrizesDrawUniqueExclusion_WithUnique() {
 		depCnts[draw.PrizeDraws[i].Winner.Address]++
 	}
 	// Whales should get one of the big unique prizes
-	// The first 5 prizes should be attributed to unique depositors (3 whales + 2 random depositors)
+	// The first 5 prizes should be attributed to unique paymentors (3 whales + 2 random paymentors)
 	suite.Require().Equal(1, depCnts["whale1"])
 	suite.Require().Equal(1, depCnts["whale2"])
 	suite.Require().Equal(1, depCnts["whale3"])
 	suite.Require().NotEqual(draw.PrizeDraws[4].Winner.Address, draw.PrizeDraws[3].Winner.Address)
 	suite.Require().Equal(1, depCnts[draw.PrizeDraws[3].Winner.Address])
 	suite.Require().Equal(1, depCnts[draw.PrizeDraws[4].Winner.Address])
-	// All other prizes should go to the depositors who did not get a unique prize
+	// All other prizes should go to the paymentors who did not get a unique prize
 	// The first 5 winners (of unique prizes) should not be found as a winner in any other prize
 	for i := 5; i < len(draw.PrizeDraws); i++ {
 		suite.Require().NotEqual(draw.PrizeDraws[i].Winner.Address, "whale1")

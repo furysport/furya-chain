@@ -144,7 +144,7 @@ func (suite *KeeperTestSuite) TestFees_DrawPrizesFees() {
 		p.Denom, p.NativeDenom, p.ChainId, p.ConnectionId, p.TransferChannelId,
 		[]string{suite.valAddrs[0].String()},
 		p.Bech32PrefixAccAddr, p.Bech32PrefixValAddr,
-		p.MinDepositAmount,
+		p.MinPaymentAmount,
 		p.UnbondingDuration,
 		p.MaxUnbondingEntries,
 		p.DrawSchedule,
@@ -155,9 +155,9 @@ func (suite *KeeperTestSuite) TestFees_DrawPrizesFees() {
 	p, err = app.MillionsKeeper.GetPool(ctx, poolID)
 	suite.Require().NoError(err)
 
-	// make a deposit for the draw to draw prizes
+	// make a payment for the draw to draw prizes
 	ctx = ctx.WithBlockHeight(ctx.BlockHeight() + 1).WithBlockTime(ctx.BlockTime().Add(24 * time.Hour))
-	_, err = msgServer.Deposit(goCtx, millionstypes.NewMsgDeposit(
+	_, err = msgServer.Payment(goCtx, millionstypes.NewPayment(
 		suite.addrs[0].String(),
 		sdk.NewCoin(p.Denom, sdk.NewInt(1_000_000)),
 		p.PoolId,

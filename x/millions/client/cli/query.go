@@ -37,11 +37,11 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		GetCmdParams(),
 		GetCmdPools(groupAll.ID),
 		GetCmdPool(groupPool.ID),
-		GetCmdDeposits(groupAll.ID),
-		GetCmdPoolDeposits(groupPool.ID),
-		GetCmdPoolDeposit(groupPool.ID),
-		GetCmdAccountDeposits(groupAccount.ID),
-		GetCmdAccountPoolDeposits(groupAccount.ID),
+		GetCmdPayments(groupAll.ID),
+		GetCmdPoolPayments(groupPool.ID),
+		GetCmdPoolPayment(groupPool.ID),
+		GetCmdAccountPayments(groupAccount.ID),
+		GetCmdAccountPoolPayments(groupAccount.ID),
 		GetCmdDraws(groupAll.ID),
 		GetCmdPoolDraws(groupPool.ID),
 		GetCmdPoolDraw(groupDraw.ID),
@@ -163,11 +163,11 @@ func GetCmdPool(groupID string) *cobra.Command {
 	return cmd
 }
 
-func GetCmdDeposits(groupID string) *cobra.Command {
+func GetCmdPayments(groupID string) *cobra.Command {
 	cmd := &cobra.Command{
 		GroupID: groupID,
-		Use:     "deposits",
-		Short:   "Query the deposits from all the pools",
+		Use:     "payments",
+		Short:   "Query the payments from all the pools",
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Acquire the client instance
@@ -183,12 +183,12 @@ func GetCmdDeposits(groupID string) *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			// Construct the params payload
-			params := &types.QueryDepositsRequest{
+			params := &types.QueryPaymentsRequest{
 				Pagination: pageReq,
 			}
 
 			// Construct the query
-			res, err := queryClient.Deposits(cmd.Context(), params)
+			res, err := queryClient.Payments(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -197,15 +197,15 @@ func GetCmdDeposits(groupID string) *cobra.Command {
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
-	flags.AddPaginationFlagsToCmd(cmd, "all deposits")
+	flags.AddPaginationFlagsToCmd(cmd, "all payments")
 	return cmd
 }
 
-func GetCmdPoolDeposits(groupID string) *cobra.Command {
+func GetCmdPoolPayments(groupID string) *cobra.Command {
 	cmd := &cobra.Command{
 		GroupID: groupID,
-		Use:     "pool-deposits <pool_id>",
-		Short:   "Query the deposits for a given poolID",
+		Use:     "pool-payments <pool_id>",
+		Short:   "Query the payments for a given poolID",
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Acquire the client instance
@@ -226,13 +226,13 @@ func GetCmdPoolDeposits(groupID string) *cobra.Command {
 			}
 
 			// Construct the params payload
-			params := &types.QueryPoolDepositsRequest{
+			params := &types.QueryPoolPaymentsRequest{
 				PoolId:     poolId,
 				Pagination: pageReq,
 			}
 
 			// Construct the query
-			res, err := queryClient.PoolDeposits(cmd.Context(), params)
+			res, err := queryClient.PoolPayments(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -241,15 +241,15 @@ func GetCmdPoolDeposits(groupID string) *cobra.Command {
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
-	flags.AddPaginationFlagsToCmd(cmd, "all deposits by pool")
+	flags.AddPaginationFlagsToCmd(cmd, "all payments by pool")
 	return cmd
 }
 
-func GetCmdPoolDeposit(groupID string) *cobra.Command {
+func GetCmdPoolPayment(groupID string) *cobra.Command {
 	cmd := &cobra.Command{
 		GroupID: groupID,
-		Use:     "pool-deposit <pool_id> <deposit_id>",
-		Short:   "Query a deposit by ID for a given poolID",
+		Use:     "pool-payment <pool_id> <payment_id>",
+		Short:   "Query a payment by ID for a given poolID",
 		Args:    cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Acquire the client instance
@@ -262,19 +262,19 @@ func GetCmdPoolDeposit(groupID string) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			depositID, err := strconv.ParseUint(args[1], 0, 64)
+			paymentID, err := strconv.ParseUint(args[1], 0, 64)
 			if err != nil {
 				return err
 			}
 
 			// Construct the params payload
-			params := &types.QueryPoolDepositRequest{
+			params := &types.QueryPoolPaymentRequest{
 				PoolId:    poolID,
-				DepositId: depositID,
+				PaymentId: paymentID,
 			}
 
 			// Construct the query
-			res, err := queryClient.PoolDeposit(cmd.Context(), params)
+			res, err := queryClient.PoolPayment(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -286,11 +286,11 @@ func GetCmdPoolDeposit(groupID string) *cobra.Command {
 	return cmd
 }
 
-func GetCmdAccountDeposits(groupID string) *cobra.Command {
+func GetCmdAccountPayments(groupID string) *cobra.Command {
 	cmd := &cobra.Command{
 		GroupID: groupID,
-		Use:     "account-deposits <address>",
-		Short:   "Query deposits for a given account address",
+		Use:     "account-payments <address>",
+		Short:   "Query payments for a given account address",
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Acquire the client instance
@@ -306,13 +306,13 @@ func GetCmdAccountDeposits(groupID string) *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			// Construct the params payload
-			params := &types.QueryAccountDepositsRequest{
-				DepositorAddress: args[0],
+			params := &types.QueryAccountPaymentsRequest{
+				PaymentorAddress: args[0],
 				Pagination:       pageReq,
 			}
 
 			// Construct the query
-			res, err := queryClient.AccountDeposits(cmd.Context(), params)
+			res, err := queryClient.AccountPayments(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -321,15 +321,15 @@ func GetCmdAccountDeposits(groupID string) *cobra.Command {
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
-	flags.AddPaginationFlagsToCmd(cmd, "all deposits by pool")
+	flags.AddPaginationFlagsToCmd(cmd, "all payments by pool")
 	return cmd
 }
 
-func GetCmdAccountPoolDeposits(groupID string) *cobra.Command {
+func GetCmdAccountPoolPayments(groupID string) *cobra.Command {
 	cmd := &cobra.Command{
 		GroupID: groupID,
-		Use:     "account-pool-deposits <address> <pool_id>",
-		Short:   "Query the pool deposits for a given account address",
+		Use:     "account-pool-payments <address> <pool_id>",
+		Short:   "Query the pool payments for a given account address",
 		Args:    cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Acquire the client instance
@@ -350,14 +350,14 @@ func GetCmdAccountPoolDeposits(groupID string) *cobra.Command {
 			}
 
 			// Construct the params payload
-			params := &types.QueryAccountPoolDepositsRequest{
-				DepositorAddress: args[0],
+			params := &types.QueryAccountPoolPaymentsRequest{
+				PaymentorAddress: args[0],
 				PoolId:           poolID,
 				Pagination:       pageReq,
 			}
 
 			// Construct the query
-			res, err := queryClient.AccountPoolDeposits(cmd.Context(), params)
+			res, err := queryClient.AccountPoolPayments(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -366,7 +366,7 @@ func GetCmdAccountPoolDeposits(groupID string) *cobra.Command {
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
-	flags.AddPaginationFlagsToCmd(cmd, "all deposits by address and pool")
+	flags.AddPaginationFlagsToCmd(cmd, "all payments by address and pool")
 	return cmd
 }
 
@@ -949,7 +949,7 @@ func GetCmdAccountWithdrawals(groupID string) *cobra.Command {
 
 			// Construct the params payload
 			params := &types.QueryAccountWithdrawalsRequest{
-				DepositorAddress: args[0],
+				PaymentorAddress: args[0],
 				Pagination:       pageReq,
 			}
 
@@ -993,7 +993,7 @@ func GetCmdAccountPoolWithdrawals(groupID string) *cobra.Command {
 
 			// Construct the params payload
 			params := &types.QueryAccountPoolWithdrawalsRequest{
-				DepositorAddress: args[0],
+				PaymentorAddress: args[0],
 				PoolId:           poolID,
 				Pagination:       pageReq,
 			}

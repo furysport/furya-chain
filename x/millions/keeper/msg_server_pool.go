@@ -35,21 +35,21 @@ func (k msgServer) RestoreInterchainAccounts(goCtx context.Context, msg *types.M
 		return nil, errorsmod.Wrapf(types.ErrFailedToRestorePool, "Pool is local")
 	}
 
-	// Regenerate our deposit port only if required (open active channel not found)
-	icaDepositPortName := string(types.NewPoolName(pool.GetPoolId(), types.ICATypeDeposit))
-	if pool.GetIcaDepositPortId() == "" {
+	// Regenerate our payment port only if required (open active channel not found)
+	icaPaymentPortName := string(types.NewPoolName(pool.GetPoolId(), types.ICATypePayment))
+	if pool.GetIcaPaymentPortId() == "" {
 		// Unusual case - no port ID was set at Pool registration time (ex: genesis import without portID)
-		pool.IcaDepositPortId = icaDepositPortName
+		pool.IcaPaymentPortId = icaPaymentPortName
 		k.updatePool(ctx, &pool)
 	}
-	_, found := k.ICAControllerKeeper.GetOpenActiveChannel(ctx, pool.GetConnectionId(), pool.GetIcaDepositPortId())
+	_, found := k.ICAControllerKeeper.GetOpenActiveChannel(ctx, pool.GetConnectionId(), pool.GetIcaPaymentPortId())
 	if !found {
-		if err := k.ICAControllerKeeper.RegisterInterchainAccount(ctx, pool.GetConnectionId(), icaDepositPortName, appVersion); err != nil {
-			return nil, errorsmod.Wrapf(types.ErrFailedToRestorePool, fmt.Sprintf("Unable to trigger deposit account registration, err: %s", err.Error()))
+		if err := k.ICAControllerKeeper.RegisterInterchainAccount(ctx, pool.GetConnectionId(), icaPaymentPortName, appVersion); err != nil {
+			return nil, errorsmod.Wrapf(types.ErrFailedToRestorePool, fmt.Sprintf("Unable to trigger payment account registration, err: %s", err.Error()))
 		}
-		k.restoreICADepositEntities(ctx, pool.GetPoolId())
+		k.restoreICAPaymentEntities(ctx, pool.GetPoolId())
 		// Exit to prevent a double channel registration which might create unpredictable behaviours
-		// The registration of the ICA PrizePool will either be automatically triggered once the ICA Deposit gets ACK (see keeper.OnSetupPoolICACompleted)
+		// The registration of the ICA PrizePool will either be automatically triggered once the ICA Payment gets ACK (see keeper.OnSetupPoolICACompleted)
 		// or can be restored by calling this method again
 		return &types.MsgRestoreInterchainAccountsResponse{}, nil
 	}
@@ -57,7 +57,7 @@ func (k msgServer) RestoreInterchainAccounts(goCtx context.Context, msg *types.M
 	// Regenerate our prizepool port only if required (open active channel not found)
 	icaPrizePoolPortName := string(types.NewPoolName(pool.GetPoolId(), types.ICATypePrizePool))
 	if pool.GetIcaPrizepoolPortId() == "" {
-		// Unusual case - no port ID was set at Pool ICA Deposit ACK time
+		// Unusual case - no port ID was set at Pool ICA Payment ACK time
 		pool.IcaPrizepoolPortId = icaPrizePoolPortName
 		k.updatePool(ctx, &pool)
 	}
@@ -72,20 +72,20 @@ func (k msgServer) RestoreInterchainAccounts(goCtx context.Context, msg *types.M
 	return &types.MsgRestoreInterchainAccountsResponse{}, nil
 }
 
-// restoreICADepositEntities restores all blocked entities by putting them in error state instead of locked state
+// restoreICAPaymentEntities restores all blocked entities by putting them in error state instead of locked state
 // thus leaving users the opportunity to retry the operation
-func (k msgServer) restoreICADepositEntities(ctx sdk.Context, poolID uint64) {
-	// Restore deposits ICA locked operations on ICADeposit account
-	deposits := k.Keeper.ListPoolDeposits(ctx, poolID)
-	for _, d := range deposits {
-		if d.State == types.DepositState_IcaDelegate {
+func (k msgServer) restoreICAPaymentEntities(ctx sdk.Context, poolID uint64) {
+	// Restore payments ICA locked operations on ICAPayment account
+	payments := k.Keeper.ListPoolPayments(ctx, poolID)
+	for _, d := range payments {
+		if d.State == types.PaymentState_IcaDelegate {
 			d.ErrorState = d.State
-			d.State = types.DepositState_Failure
-			k.Keeper.setPoolDeposit(ctx, &d)
-			k.Keeper.setAccountDeposit(ctx, &d)
+			d.State = types.PaymentState_Failure
+			k.Keeper.setPoolPayment(ctx, &d)
+			k.Keeper.setAccountPayment(ctx, &d)
 		}
 	}
-	// Restore withdrawals ICA locked operations on ICADeposit account
+	// Restore withdrawals ICA locked operations on ICAPayment account
 	withdrawals := k.Keeper.ListPoolWithdrawals(ctx, poolID)
 	for _, w := range withdrawals {
 		if w.State == types.WithdrawalState_IcaUndelegate || w.State == types.WithdrawalState_IbcTransfer {
@@ -95,7 +95,7 @@ func (k msgServer) restoreICADepositEntities(ctx sdk.Context, poolID uint64) {
 			k.Keeper.setAccountWithdrawal(ctx, w)
 		}
 	}
-	// Restore draws ICA locked operations on ICADeposit account
+	// Restore draws ICA locked operations on ICAPayment account
 	draws := k.Keeper.ListPoolDraws(ctx, poolID)
 	for _, d := range draws {
 		if d.State == types.DrawState_IcaWithdrawRewards || d.State == types.DrawState_IbcTransfer {

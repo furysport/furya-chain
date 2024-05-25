@@ -1,10 +1,10 @@
 package types
 
-func NewGenesisState(params Params, nextPoolID uint64, nextDepositID uint64, nextPrizeID uint64, nexWithdrawalID uint64) *GenesisState {
+func NewGenesisState(params Params, nextPoolID uint64, nextPaymentID uint64, nextPrizeID uint64, nexWithdrawalID uint64) *GenesisState {
 	return &GenesisState{
 		Params:           params,
 		NextPoolId:       nextPoolID,
-		NextDepositId:    nextDepositID,
+		NextPaymentId:    nextPaymentID,
 		NextPrizeId:      nextPrizeID,
 		NextWithdrawalId: nexWithdrawalID,
 	}
@@ -14,7 +14,7 @@ func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		Params:           DefaultParams(),
 		NextPoolId:       1,
-		NextDepositId:    1,
+		NextPaymentId:    1,
 		NextPrizeId:      1,
 		NextWithdrawalId: 1,
 	}

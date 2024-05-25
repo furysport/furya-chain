@@ -15,21 +15,21 @@ func MigrateFailedIcaUndelegationsToEpochUnbonding(ctx sdk.Context, k millionske
 		return err
 	}
 
-	// Patch broken deposit entities to allow for retry
+	// Patch broken payment entities to allow for retry
 	// We acquire both entities that are broken. If there is any error, it shouldn't be returned to allow for testnet execution
 	// We require to ensure it here, cuz on a sub level, it would panic out in case entity does not exist
 	// Both entities are flagged on error state IcaDelegate to allow them to be retried out by their owner
 	poolId := uint64(2)
-	ctx.Logger().Info("Patching broken deposit entities...")
-	_, err := k.GetPoolDeposit(ctx, poolId, 429)
+	ctx.Logger().Info("Patching broken payment entities...")
+	_, err := k.GetPoolPayment(ctx, poolId, 429)
 	if err == nil {
-		k.UpdateDepositStatus(ctx, poolId, 429, types.DepositState_IcaDelegate, true)
-		ctx.Logger().Info("Deposit 429 patched")
+		k.UpdatePaymentStatus(ctx, poolId, 429, types.PaymentState_IcaDelegate, true)
+		ctx.Logger().Info("Payment 429 patched")
 	}
-	_, err = k.GetPoolDeposit(ctx, poolId, 450)
+	_, err = k.GetPoolPayment(ctx, poolId, 450)
 	if err == nil {
-		k.UpdateDepositStatus(ctx, poolId, 450, types.DepositState_IcaDelegate, true)
-		ctx.Logger().Info("Deposit 450 patched")
+		k.UpdatePaymentStatus(ctx, poolId, 450, types.PaymentState_IcaDelegate, true)
+		ctx.Logger().Info("Payment 450 patched")
 	}
 
 	return nil

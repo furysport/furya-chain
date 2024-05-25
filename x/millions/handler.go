@@ -19,14 +19,14 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		goCtx := sdk.WrapSDKContext(ctx)
 
 		switch msg := msg.(type) {
-		case *types.MsgDeposit:
-			res, err := msgServer.Deposit(goCtx, msg)
+		case *types.MsgPayment:
+			res, err := msgServer.Payment(goCtx, msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgDepositRetry:
-			res, err := msgServer.DepositRetry(goCtx, msg)
+		case *types.MsgPaymentRetry:
+			res, err := msgServer.PaymentRetry(goCtx, msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgDepositEdit:
-			res, err := msgServer.DepositEdit(goCtx, msg)
+		case *types.MsgPaymentEdit:
+			res, err := msgServer.PaymentEdit(goCtx, msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgClaimPrize:
 			res, err := msgServer.ClaimPrize(goCtx, msg)
@@ -34,11 +34,11 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgDrawRetry:
 			res, err := msgServer.DrawRetry(goCtx, msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgWithdrawDeposit:
-			res, err := msgServer.WithdrawDeposit(goCtx, msg)
+		case *types.MsgWithdrawPayment:
+			res, err := msgServer.WithdrawPayment(goCtx, msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgWithdrawDepositRetry:
-			res, err := msgServer.WithdrawDepositRetry(goCtx, msg)
+		case *types.MsgWithdrawPaymentRetry:
+			res, err := msgServer.WithdrawPaymentRetry(goCtx, msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgRestoreInterchainAccounts:
 			res, err := msgServer.RestoreInterchainAccounts(goCtx, msg)

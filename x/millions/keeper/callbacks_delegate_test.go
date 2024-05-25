@@ -24,7 +24,7 @@ func (suite *KeeperTestSuite) TestCallbacks_Delegates() {
 	// Construct our callback data
 	callbackData := millionstypes.DelegateCallback{
 		PoolId:           pool.GetPoolId(),
-		DepositId:        1,
+		PaymentId:        1,
 		SplitDelegations: splits,
 	}
 
@@ -53,7 +53,7 @@ func (suite *KeeperTestSuite) TestCallbacks_Delegates() {
 
 	// Make sure it matches
 	suite.Require().Equal(callbackData.PoolId, unmarshalledCallbackData.PoolId)
-	suite.Require().Equal(callbackData.DepositId, unmarshalledCallbackData.DepositId)
+	suite.Require().Equal(callbackData.PaymentId, unmarshalledCallbackData.PaymentId)
 	suite.Require().Equal(len(callbackData.SplitDelegations), len(unmarshalledCallbackData.SplitDelegations))
 	suite.Require().Equal(callbackData.SplitDelegations[0].ValidatorAddress, unmarshalledCallbackData.SplitDelegations[0].ValidatorAddress)
 	suite.Require().Equal(callbackData.SplitDelegations[0].Amount.Int64(), unmarshalledCallbackData.SplitDelegations[0].Amount.Int64())

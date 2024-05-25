@@ -39,53 +39,53 @@ var (
 
 var testGenesis = millionstypes.GenesisState{
 	Params: millionstypes.Params{
-		MinDepositAmount:        sdk.NewInt(1_000_000),
+		MinPaymentAmount:        sdk.NewInt(1_000_000),
 		MaxPrizeStrategyBatches: 10,
 		MaxPrizeBatchQuantity:   1000,
 		MinDrawScheduleDelta:    1 * time.Hour,
 		MaxDrawScheduleDelta:    366 * 24 * time.Hour, // 366 days
 		PrizeExpirationDelta:    30 * 24 * time.Hour,  // 30 days
-		MinDepositDrawDelta:     5 * time.Minute,
+		MinPaymentDrawDelta:     5 * time.Minute,
 	},
 	NextPoolId:       6,
-	NextDepositId:    6,
+	NextPaymentId:    6,
 	NextPrizeId:      6,
 	NextWithdrawalId: 6,
 	Pools: []millionstypes.Pool{
-		{PoolId: 1, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(510), DepositorsCount: 3, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-1", NativeDenom: "denom-1", NextDrawId: 3,
-			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-1", sdk.ZeroInt()),
+		{PoolId: 1, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(510), PaymentorsCount: 3, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-1", NativeDenom: "denom-1", NextDrawId: 3,
+			ChainId: "c1", Validators: defaultValidators, MinPaymentAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-1", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
 			State: millionstypes.PoolState_Created, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
 		},
-		{PoolId: 2, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(603), DepositorsCount: 2, SponsorshipAmount: sdk.NewInt(401), Denom: "denom-2", NativeDenom: "denom-2", NextDrawId: 2,
-			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-2", sdk.ZeroInt()),
+		{PoolId: 2, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(603), PaymentorsCount: 2, SponsorshipAmount: sdk.NewInt(401), Denom: "denom-2", NativeDenom: "denom-2", NextDrawId: 2,
+			ChainId: "c1", Validators: defaultValidators, MinPaymentAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-2", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
 			State: millionstypes.PoolState_Ready, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
 		},
-		{PoolId: 3, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(601), DepositorsCount: 1, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-3", NativeDenom: "denom-3", NextDrawId: 1,
-			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-3", sdk.ZeroInt()),
+		{PoolId: 3, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(601), PaymentorsCount: 1, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-3", NativeDenom: "denom-3", NextDrawId: 1,
+			ChainId: "c1", Validators: defaultValidators, MinPaymentAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-3", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
 			State: millionstypes.PoolState_Closed, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
 		},
-		{PoolId: 4, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(400), DepositorsCount: 1, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-4", NativeDenom: "denom-4", NextDrawId: 1,
-			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-4", sdk.ZeroInt()),
+		{PoolId: 4, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(400), PaymentorsCount: 1, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-4", NativeDenom: "denom-4", NextDrawId: 1,
+			ChainId: "c1", Validators: defaultValidators, MinPaymentAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-4", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
 			State: millionstypes.PoolState_Created, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
 		},
-		{PoolId: 5, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(0), DepositorsCount: 0, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-5", NativeDenom: "denom-5", NextDrawId: 1,
-			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-5", sdk.ZeroInt()),
+		{PoolId: 5, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(0), PaymentorsCount: 0, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-5", NativeDenom: "denom-5", NextDrawId: 1,
+			ChainId: "c1", Validators: defaultValidators, MinPaymentAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-5", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
 			State: millionstypes.PoolState_Closed, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
 			FeeTakers: []millionstypes.FeeTaker{
@@ -93,18 +93,18 @@ var testGenesis = millionstypes.GenesisState{
 			},
 		},
 	},
-	Deposits: []millionstypes.Deposit{
-		{PoolId: 1, DepositId: 1, DepositorAddress: testAccs[0], WinnerAddress: testAccs[0], Amount: sdk.NewCoin("denom-1", sdk.NewInt(100)), State: millionstypes.DepositState_IbcTransfer},
-		{PoolId: 1, DepositId: 2, DepositorAddress: testAccs[0], WinnerAddress: testAccs[0], Amount: sdk.NewCoin("denom-1", sdk.NewInt(101)), State: millionstypes.DepositState_IcaDelegate},
-		{PoolId: 1, DepositId: 3, DepositorAddress: testAccs[1], WinnerAddress: testAccs[1], Amount: sdk.NewCoin("denom-1", sdk.NewInt(102)), State: millionstypes.DepositState_Success},
-		{PoolId: 1, DepositId: 4, DepositorAddress: testAccs[1], WinnerAddress: testAccs[1], Amount: sdk.NewCoin("denom-1", sdk.NewInt(103)), State: millionstypes.DepositState_Failure},
-		{PoolId: 1, DepositId: 5, DepositorAddress: testAccs[2], WinnerAddress: testAccs[2], Amount: sdk.NewCoin("denom-1", sdk.NewInt(104)), State: millionstypes.DepositState_IbcTransfer},
-		{PoolId: 2, DepositId: 6, DepositorAddress: testAccs[2], WinnerAddress: testAccs[2], Amount: sdk.NewCoin("denom-2", sdk.NewInt(200)), IsSponsor: true, State: millionstypes.DepositState_IbcTransfer},
-		{PoolId: 2, DepositId: 7, DepositorAddress: testAccs[3], WinnerAddress: testAccs[3], Amount: sdk.NewCoin("denom-2", sdk.NewInt(201)), IsSponsor: true, State: millionstypes.DepositState_IbcTransfer},
-		{PoolId: 2, DepositId: 8, DepositorAddress: testAccs[3], WinnerAddress: testAccs[3], Amount: sdk.NewCoin("denom-2", sdk.NewInt(202)), State: millionstypes.DepositState_IbcTransfer},
-		{PoolId: 3, DepositId: 9, DepositorAddress: testAccs[4], WinnerAddress: testAccs[4], Amount: sdk.NewCoin("denom-3", sdk.NewInt(300)), State: millionstypes.DepositState_Success},
-		{PoolId: 3, DepositId: 10, DepositorAddress: testAccs[4], WinnerAddress: testAccs[4], Amount: sdk.NewCoin("denom-3", sdk.NewInt(301)), State: millionstypes.DepositState_Success},
-		{PoolId: 4, DepositId: 11, DepositorAddress: testAccs[5], WinnerAddress: testAccs[5], Amount: sdk.NewCoin("denom-4", sdk.NewInt(400)), State: millionstypes.DepositState_Success},
+	Payments: []millionstypes.Payment{
+		{PoolId: 1, PaymentId: 1, PaymentorAddress: testAccs[0], WinnerAddress: testAccs[0], Amount: sdk.NewCoin("denom-1", sdk.NewInt(100)), State: millionstypes.PaymentState_IbcTransfer},
+		{PoolId: 1, PaymentId: 2, PaymentorAddress: testAccs[0], WinnerAddress: testAccs[0], Amount: sdk.NewCoin("denom-1", sdk.NewInt(101)), State: millionstypes.PaymentState_IcaDelegate},
+		{PoolId: 1, PaymentId: 3, PaymentorAddress: testAccs[1], WinnerAddress: testAccs[1], Amount: sdk.NewCoin("denom-1", sdk.NewInt(102)), State: millionstypes.PaymentState_Success},
+		{PoolId: 1, PaymentId: 4, PaymentorAddress: testAccs[1], WinnerAddress: testAccs[1], Amount: sdk.NewCoin("denom-1", sdk.NewInt(103)), State: millionstypes.PaymentState_Failure},
+		{PoolId: 1, PaymentId: 5, PaymentorAddress: testAccs[2], WinnerAddress: testAccs[2], Amount: sdk.NewCoin("denom-1", sdk.NewInt(104)), State: millionstypes.PaymentState_IbcTransfer},
+		{PoolId: 2, PaymentId: 6, PaymentorAddress: testAccs[2], WinnerAddress: testAccs[2], Amount: sdk.NewCoin("denom-2", sdk.NewInt(200)), IsSponsor: true, State: millionstypes.PaymentState_IbcTransfer},
+		{PoolId: 2, PaymentId: 7, PaymentorAddress: testAccs[3], WinnerAddress: testAccs[3], Amount: sdk.NewCoin("denom-2", sdk.NewInt(201)), IsSponsor: true, State: millionstypes.PaymentState_IbcTransfer},
+		{PoolId: 2, PaymentId: 8, PaymentorAddress: testAccs[3], WinnerAddress: testAccs[3], Amount: sdk.NewCoin("denom-2", sdk.NewInt(202)), State: millionstypes.PaymentState_IbcTransfer},
+		{PoolId: 3, PaymentId: 9, PaymentorAddress: testAccs[4], WinnerAddress: testAccs[4], Amount: sdk.NewCoin("denom-3", sdk.NewInt(300)), State: millionstypes.PaymentState_Success},
+		{PoolId: 3, PaymentId: 10, PaymentorAddress: testAccs[4], WinnerAddress: testAccs[4], Amount: sdk.NewCoin("denom-3", sdk.NewInt(301)), State: millionstypes.PaymentState_Success},
+		{PoolId: 4, PaymentId: 11, PaymentorAddress: testAccs[5], WinnerAddress: testAccs[5], Amount: sdk.NewCoin("denom-4", sdk.NewInt(400)), State: millionstypes.PaymentState_Success},
 	},
 	Draws: []millionstypes.Draw{
 		{PoolId: 1, DrawId: 1, RandSeed: 10, TotalWinCount: 100, TotalWinAmount: sdk.NewInt(1000)},
@@ -117,10 +117,10 @@ var testGenesis = millionstypes.GenesisState{
 		{PoolId: 2, DrawId: 1, PrizeId: 3, State: millionstypes.PrizeState_Pending, WinnerAddress: testAccs[2], Amount: sdk.NewCoin("denom-2", sdk.NewInt(1)), ExpiresAt: now},
 	},
 	Withdrawals: []millionstypes.Withdrawal{
-		{PoolId: 1, DepositId: 3, WithdrawalId: 1, DepositorAddress: testAccs[1], ToAddress: testAccs[1], Amount: sdk.NewCoin("denom-1", sdk.NewInt(102)), State: millionstypes.WithdrawalState_IcaUnbonding, UnbondingEndsAt: &now},
-		{PoolId: 3, DepositId: 9, WithdrawalId: 2, DepositorAddress: testAccs[4], ToAddress: testAccs[4], Amount: sdk.NewCoin("denom-3", sdk.NewInt(300)), State: millionstypes.WithdrawalState_IcaUnbonding, UnbondingEndsAt: &future},
-		{PoolId: 3, DepositId: 10, WithdrawalId: 3, DepositorAddress: testAccs[4], ToAddress: testAccs[4], Amount: sdk.NewCoin("denom-3", sdk.NewInt(301)), State: millionstypes.WithdrawalState_IcaUnbonding, UnbondingEndsAt: &future},
-		{PoolId: 4, DepositId: 11, WithdrawalId: 4, DepositorAddress: testAccs[5], ToAddress: testAccs[5], Amount: sdk.NewCoin("denom-4", sdk.NewInt(400)), State: millionstypes.WithdrawalState_IcaUnbonding, UnbondingEndsAt: &now},
+		{PoolId: 1, PaymentId: 3, WithdrawalId: 1, PaymentorAddress: testAccs[1], ToAddress: testAccs[1], Amount: sdk.NewCoin("denom-1", sdk.NewInt(102)), State: millionstypes.WithdrawalState_IcaUnbonding, UnbondingEndsAt: &now},
+		{PoolId: 3, PaymentId: 9, WithdrawalId: 2, PaymentorAddress: testAccs[4], ToAddress: testAccs[4], Amount: sdk.NewCoin("denom-3", sdk.NewInt(300)), State: millionstypes.WithdrawalState_IcaUnbonding, UnbondingEndsAt: &future},
+		{PoolId: 3, PaymentId: 10, WithdrawalId: 3, PaymentorAddress: testAccs[4], ToAddress: testAccs[4], Amount: sdk.NewCoin("denom-3", sdk.NewInt(301)), State: millionstypes.WithdrawalState_IcaUnbonding, UnbondingEndsAt: &future},
+		{PoolId: 4, PaymentId: 11, WithdrawalId: 4, PaymentorAddress: testAccs[5], ToAddress: testAccs[5], Amount: sdk.NewCoin("denom-4", sdk.NewInt(400)), State: millionstypes.WithdrawalState_IcaUnbonding, UnbondingEndsAt: &now},
 	},
 	EpochTrackers: []millionstypes.EpochTracker{
 		{EpochTrackerType: epochstypes.DAY_EPOCH, EpochIdentifier: epochstypes.DAY_EPOCH, NextEpochNumber: uint64(2), PreviousEpochNumber: uint64(0), NextEpochStartTime: future},
@@ -141,21 +141,21 @@ func TestInitGenesis(t *testing.T) {
 	// Make sure params match
 	params := app.MillionsKeeper.GetParams(ctx)
 	require.Equal(t, testGenesis.Params, params)
-	require.Equal(t, testGenesis.Params.MinDepositAmount, params.MinDepositAmount)
+	require.Equal(t, testGenesis.Params.MinPaymentAmount, params.MinPaymentAmount)
 	require.Equal(t, testGenesis.Params.MaxPrizeStrategyBatches, params.MaxPrizeStrategyBatches)
 	require.Equal(t, testGenesis.Params.MaxPrizeBatchQuantity, params.MaxPrizeBatchQuantity)
 	require.Equal(t, testGenesis.Params.MinDrawScheduleDelta, params.MinDrawScheduleDelta)
 	require.Equal(t, testGenesis.Params.MaxDrawScheduleDelta, params.MaxDrawScheduleDelta)
 	require.Equal(t, testGenesis.Params.PrizeExpirationDelta, params.PrizeExpirationDelta)
-	require.Equal(t, testGenesis.Params.MinDepositDrawDelta, params.MinDepositDrawDelta)
+	require.Equal(t, testGenesis.Params.MinPaymentDrawDelta, params.MinPaymentDrawDelta)
 
 	// Make sure genesis next poolID matches
 	nextPoolID := app.MillionsKeeper.GetNextPoolID(ctx)
 	require.Equal(t, testGenesis.NextPoolId, nextPoolID)
 
-	// Make sure genesis next depositID matches
-	nextDepositID := app.MillionsKeeper.GetNextDepositID(ctx)
-	require.Equal(t, testGenesis.NextDepositId, nextDepositID)
+	// Make sure genesis next paymentID matches
+	nextPaymentID := app.MillionsKeeper.GetNextPaymentID(ctx)
+	require.Equal(t, testGenesis.NextPaymentId, nextPaymentID)
 
 	// Make sure genesis next prizeID matches
 	nextPrizeID := app.MillionsKeeper.GetNextPrizeID(ctx)
@@ -172,49 +172,49 @@ func TestInitGenesis(t *testing.T) {
 		require.Equal(t, testGenesis.Pools[i].PoolId, p.PoolId)
 		require.Equal(t, testGenesis.Pools[i].PoolType, p.PoolType)
 		require.Equal(t, testGenesis.Pools[i].TvlAmount.Int64(), p.TvlAmount.Int64())
-		require.Equal(t, testGenesis.Pools[i].DepositorsCount, p.DepositorsCount)
+		require.Equal(t, testGenesis.Pools[i].PaymentorsCount, p.PaymentorsCount)
 		require.Equal(t, testGenesis.Pools[i].SponsorshipAmount.Int64(), p.SponsorshipAmount.Int64())
 		require.Equal(t, testGenesis.Pools[i].Denom, p.Denom)
 		require.Equal(t, testGenesis.Pools[i].NextDrawId, p.NextDrawId)
-		// Pool deposits should all have been imported
-		deposits := app.MillionsKeeper.ListPoolDeposits(ctx, p.PoolId)
+		// Pool payments should all have been imported
+		payments := app.MillionsKeeper.ListPoolPayments(ctx, p.PoolId)
 		if p.PoolId == 1 {
-			require.Len(t, deposits, 5)
+			require.Len(t, payments, 5)
 		} else if p.PoolId == 2 {
-			require.Len(t, deposits, 3)
+			require.Len(t, payments, 3)
 		} else if p.PoolId == 3 {
-			require.Len(t, deposits, 2)
+			require.Len(t, payments, 2)
 		} else if p.PoolId == 4 {
-			require.Len(t, deposits, 1)
+			require.Len(t, payments, 1)
 		} else if p.PoolId == 5 {
-			require.Len(t, deposits, 0)
+			require.Len(t, payments, 0)
 		}
 	}
 
-	// Deposits should all have been imported
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
-	require.Len(t, deposits, len(testGenesis.Deposits))
-	sort.SliceStable(deposits, func(i, j int) bool {
-		return deposits[i].DepositId < deposits[j].DepositId
+	// Payments should all have been imported
+	payments := app.MillionsKeeper.ListPayments(ctx)
+	require.Len(t, payments, len(testGenesis.Payments))
+	sort.SliceStable(payments, func(i, j int) bool {
+		return payments[i].PaymentId < payments[j].PaymentId
 	})
-	for i, d := range deposits {
-		require.Equal(t, testGenesis.Deposits[i].PoolId, d.PoolId)
-		require.Equal(t, testGenesis.Deposits[i].DepositId, d.DepositId)
-		require.Equal(t, testGenesis.Deposits[i].DepositorAddress, d.DepositorAddress)
-		require.Equal(t, testGenesis.Deposits[i].WinnerAddress, d.WinnerAddress)
-		require.Equal(t, testGenesis.Deposits[i].Amount, d.Amount)
-		require.Equal(t, testGenesis.Deposits[i].IsSponsor, d.IsSponsor)
-		require.Equal(t, testGenesis.Deposits[i].State, d.State)
+	for i, d := range payments {
+		require.Equal(t, testGenesis.Payments[i].PoolId, d.PoolId)
+		require.Equal(t, testGenesis.Payments[i].PaymentId, d.PaymentId)
+		require.Equal(t, testGenesis.Payments[i].PaymentorAddress, d.PaymentorAddress)
+		require.Equal(t, testGenesis.Payments[i].WinnerAddress, d.WinnerAddress)
+		require.Equal(t, testGenesis.Payments[i].Amount, d.Amount)
+		require.Equal(t, testGenesis.Payments[i].IsSponsor, d.IsSponsor)
+		require.Equal(t, testGenesis.Payments[i].State, d.State)
 	}
 
-	// Account deposits should all have been imported
+	// Account payments should all have been imported
 	for i := 0; i < len(testAccs); i++ {
 		addr := sdk.MustAccAddressFromBech32(testAccs[i])
-		deposits := app.MillionsKeeper.ListAccountDeposits(ctx, addr)
+		payments := app.MillionsKeeper.ListAccountPayments(ctx, addr)
 		if i == len(testAccs)-1 {
-			require.Len(t, deposits, 1)
+			require.Len(t, payments, 1)
 		} else {
-			require.Len(t, deposits, 2)
+			require.Len(t, payments, 2)
 		}
 	}
 
@@ -274,10 +274,10 @@ func TestInitGenesis(t *testing.T) {
 	require.Len(t, withdrawals, len(testGenesis.Withdrawals))
 	for i, w := range withdrawals {
 		require.Equal(t, testGenesis.Withdrawals[i].PoolId, w.PoolId)
-		require.Equal(t, testGenesis.Withdrawals[i].DepositId, w.DepositId)
+		require.Equal(t, testGenesis.Withdrawals[i].PaymentId, w.PaymentId)
 		require.Equal(t, testGenesis.Withdrawals[i].WithdrawalId, w.WithdrawalId)
 		require.Equal(t, testGenesis.Withdrawals[i].WithdrawalId, w.WithdrawalId)
-		require.Equal(t, testGenesis.Withdrawals[i].DepositorAddress, w.DepositorAddress)
+		require.Equal(t, testGenesis.Withdrawals[i].PaymentorAddress, w.PaymentorAddress)
 		require.Equal(t, testGenesis.Withdrawals[i].ToAddress, w.ToAddress)
 		require.Equal(t, testGenesis.Withdrawals[i].Amount, w.Amount)
 		require.Equal(t, testGenesis.Withdrawals[i].State, w.State)
@@ -285,7 +285,7 @@ func TestInitGenesis(t *testing.T) {
 
 	// Account withdrawals should have been imported
 	for _, aw := range testGenesis.Withdrawals {
-		addr := sdk.MustAccAddressFromBech32(aw.DepositorAddress)
+		addr := sdk.MustAccAddressFromBech32(aw.PaymentorAddress)
 		accWithdrawals := app.MillionsKeeper.ListAccountWithdrawals(ctx, addr)
 		if aw.PoolId == 1 {
 			require.Len(t, accWithdrawals, 1)
@@ -338,17 +338,17 @@ func TestExportGenesis(t *testing.T) {
 
 	// Test params export
 	require.Equal(t, exportGenesis.Params, testGenesis.Params)
-	require.Equal(t, exportGenesis.Params.MinDepositAmount, testGenesis.Params.MinDepositAmount)
+	require.Equal(t, exportGenesis.Params.MinPaymentAmount, testGenesis.Params.MinPaymentAmount)
 	require.Equal(t, exportGenesis.Params.MaxPrizeStrategyBatches, testGenesis.Params.MaxPrizeStrategyBatches)
 	require.Equal(t, exportGenesis.Params.MaxPrizeBatchQuantity, testGenesis.Params.MaxPrizeBatchQuantity)
 	require.Equal(t, exportGenesis.Params.MinDrawScheduleDelta, testGenesis.Params.MinDrawScheduleDelta)
 	require.Equal(t, exportGenesis.Params.MaxDrawScheduleDelta, testGenesis.Params.MaxDrawScheduleDelta)
 	require.Equal(t, exportGenesis.Params.PrizeExpirationDelta, testGenesis.Params.PrizeExpirationDelta)
-	require.Equal(t, exportGenesis.Params.MinDepositDrawDelta, testGenesis.Params.MinDepositDrawDelta)
+	require.Equal(t, exportGenesis.Params.MinPaymentDrawDelta, testGenesis.Params.MinPaymentDrawDelta)
 
 	// Test IDs export
 	require.Equal(t, exportGenesis.NextPoolId, testGenesis.NextPoolId)
-	require.Equal(t, exportGenesis.NextDepositId, testGenesis.NextDepositId)
+	require.Equal(t, exportGenesis.NextPaymentId, testGenesis.NextPaymentId)
 	require.Equal(t, exportGenesis.NextPrizeId, testGenesis.NextPrizeId)
 	require.Equal(t, exportGenesis.NextWithdrawalId, testGenesis.NextWithdrawalId)
 
@@ -358,38 +358,38 @@ func TestExportGenesis(t *testing.T) {
 		require.Equal(t, exportGenesis.Pools[i].PoolId, p.PoolId)
 		require.Equal(t, exportGenesis.Pools[i].PoolType, p.PoolType)
 		require.Equal(t, exportGenesis.Pools[i].TvlAmount.Int64(), p.TvlAmount.Int64())
-		require.Equal(t, exportGenesis.Pools[i].DepositorsCount, p.DepositorsCount)
+		require.Equal(t, exportGenesis.Pools[i].PaymentorsCount, p.PaymentorsCount)
 		require.Equal(t, exportGenesis.Pools[i].SponsorshipAmount.Int64(), p.SponsorshipAmount.Int64())
 		require.Equal(t, exportGenesis.Pools[i].Denom, p.Denom)
 		require.Equal(t, exportGenesis.Pools[i].NextDrawId, p.NextDrawId)
-		// Pool deposits should all have been exported
-		deposits := app.MillionsKeeper.ListPoolDeposits(ctx, p.PoolId)
+		// Pool payments should all have been exported
+		payments := app.MillionsKeeper.ListPoolPayments(ctx, p.PoolId)
 		if p.PoolId == 1 {
-			require.Len(t, deposits, 5)
+			require.Len(t, payments, 5)
 		} else if p.PoolId == 2 {
-			require.Len(t, deposits, 3)
+			require.Len(t, payments, 3)
 		} else if p.PoolId == 3 {
-			require.Len(t, deposits, 2)
+			require.Len(t, payments, 2)
 		} else if p.PoolId == 4 {
-			require.Len(t, deposits, 1)
+			require.Len(t, payments, 1)
 		} else if p.PoolId == 5 {
-			require.Len(t, deposits, 0)
+			require.Len(t, payments, 0)
 		}
 	}
 
-	// Test deposits export
-	require.Len(t, exportGenesis.Deposits, len(testGenesis.Deposits))
-	sort.SliceStable(exportGenesis.Deposits, func(i, j int) bool {
-		return exportGenesis.Deposits[i].DepositId < exportGenesis.Deposits[j].DepositId
+	// Test payments export
+	require.Len(t, exportGenesis.Payments, len(testGenesis.Payments))
+	sort.SliceStable(exportGenesis.Payments, func(i, j int) bool {
+		return exportGenesis.Payments[i].PaymentId < exportGenesis.Payments[j].PaymentId
 	})
-	for i, d := range testGenesis.Deposits {
-		require.Equal(t, exportGenesis.Deposits[i].PoolId, d.PoolId)
-		require.Equal(t, exportGenesis.Deposits[i].DepositId, d.DepositId)
-		require.Equal(t, exportGenesis.Deposits[i].DepositorAddress, d.DepositorAddress)
-		require.Equal(t, exportGenesis.Deposits[i].WinnerAddress, d.WinnerAddress)
-		require.Equal(t, exportGenesis.Deposits[i].Amount, d.Amount)
-		require.Equal(t, exportGenesis.Deposits[i].IsSponsor, d.IsSponsor)
-		require.Equal(t, exportGenesis.Deposits[i].State, d.State)
+	for i, d := range testGenesis.Payments {
+		require.Equal(t, exportGenesis.Payments[i].PoolId, d.PoolId)
+		require.Equal(t, exportGenesis.Payments[i].PaymentId, d.PaymentId)
+		require.Equal(t, exportGenesis.Payments[i].PaymentorAddress, d.PaymentorAddress)
+		require.Equal(t, exportGenesis.Payments[i].WinnerAddress, d.WinnerAddress)
+		require.Equal(t, exportGenesis.Payments[i].Amount, d.Amount)
+		require.Equal(t, exportGenesis.Payments[i].IsSponsor, d.IsSponsor)
+		require.Equal(t, exportGenesis.Payments[i].State, d.State)
 	}
 
 	// Test draws export
@@ -417,10 +417,10 @@ func TestExportGenesis(t *testing.T) {
 	require.Len(t, exportGenesis.Withdrawals, len(testGenesis.Withdrawals))
 	for i, w := range testGenesis.Withdrawals {
 		require.Equal(t, exportGenesis.Withdrawals[i].PoolId, w.PoolId)
-		require.Equal(t, exportGenesis.Withdrawals[i].DepositId, w.DepositId)
+		require.Equal(t, exportGenesis.Withdrawals[i].PaymentId, w.PaymentId)
 		require.Equal(t, exportGenesis.Withdrawals[i].WithdrawalId, w.WithdrawalId)
 		require.Equal(t, exportGenesis.Withdrawals[i].WithdrawalId, w.WithdrawalId)
-		require.Equal(t, exportGenesis.Withdrawals[i].DepositorAddress, w.DepositorAddress)
+		require.Equal(t, exportGenesis.Withdrawals[i].PaymentorAddress, w.PaymentorAddress)
 		require.Equal(t, exportGenesis.Withdrawals[i].ToAddress, w.ToAddress)
 		require.Equal(t, exportGenesis.Withdrawals[i].Amount, w.Amount)
 		require.Equal(t, exportGenesis.Withdrawals[i].State, w.State)

@@ -69,11 +69,11 @@ func (WithdrawalState) EnumDescriptor() ([]byte, []int) {
 
 type Withdrawal struct {
 	PoolId           uint64          `protobuf:"varint,1,opt,name=pool_id,json=poolId,proto3" json:"pool_id,omitempty"`
-	DepositId        uint64          `protobuf:"varint,2,opt,name=deposit_id,json=depositId,proto3" json:"deposit_id,omitempty"`
+	PaymentId        uint64          `protobuf:"varint,2,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`
 	WithdrawalId     uint64          `protobuf:"varint,3,opt,name=withdrawal_id,json=withdrawalId,proto3" json:"withdrawal_id,omitempty"`
 	State            WithdrawalState `protobuf:"varint,4,opt,name=state,proto3,enum=furya.millions.WithdrawalState" json:"state,omitempty"`
 	ErrorState       WithdrawalState `protobuf:"varint,5,opt,name=error_state,json=errorState,proto3,enum=furya.millions.WithdrawalState" json:"error_state,omitempty"`
-	DepositorAddress string          `protobuf:"bytes,6,opt,name=depositor_address,json=depositorAddress,proto3" json:"depositor_address,omitempty"`
+	PaymentorAddress string          `protobuf:"bytes,6,opt,name=paymentor_address,json=paymentorAddress,proto3" json:"paymentor_address,omitempty"`
 	ToAddress        string          `protobuf:"bytes,7,opt,name=to_address,json=toAddress,proto3" json:"to_address,omitempty"`
 	Amount           types.Coin      `protobuf:"bytes,8,opt,name=amount,proto3" json:"amount"`
 	CreatedAtHeight  int64           `protobuf:"varint,9,opt,name=created_at_height,json=createdAtHeight,proto3" json:"created_at_height,omitempty"`
@@ -123,9 +123,9 @@ func (m *Withdrawal) GetPoolId() uint64 {
 	return 0
 }
 
-func (m *Withdrawal) GetDepositId() uint64 {
+func (m *Withdrawal) GetPaymentId() uint64 {
 	if m != nil {
-		return m.DepositId
+		return m.PaymentId
 	}
 	return 0
 }
@@ -151,9 +151,9 @@ func (m *Withdrawal) GetErrorState() WithdrawalState {
 	return WithdrawalState_Unspecified
 }
 
-func (m *Withdrawal) GetDepositorAddress() string {
+func (m *Withdrawal) GetPaymentorAddress() string {
 	if m != nil {
-		return m.DepositorAddress
+		return m.PaymentorAddress
 	}
 	return ""
 }
@@ -440,10 +440,10 @@ func (m *Withdrawal) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x3a
 	}
-	if len(m.DepositorAddress) > 0 {
-		i -= len(m.DepositorAddress)
-		copy(dAtA[i:], m.DepositorAddress)
-		i = encodeVarintWithdrawal(dAtA, i, uint64(len(m.DepositorAddress)))
+	if len(m.PaymentorAddress) > 0 {
+		i -= len(m.PaymentorAddress)
+		copy(dAtA[i:], m.PaymentorAddress)
+		i = encodeVarintWithdrawal(dAtA, i, uint64(len(m.PaymentorAddress)))
 		i--
 		dAtA[i] = 0x32
 	}
@@ -462,8 +462,8 @@ func (m *Withdrawal) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x18
 	}
-	if m.DepositId != 0 {
-		i = encodeVarintWithdrawal(dAtA, i, uint64(m.DepositId))
+	if m.PaymentId != 0 {
+		i = encodeVarintWithdrawal(dAtA, i, uint64(m.PaymentId))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -565,8 +565,8 @@ func (m *Withdrawal) Size() (n int) {
 	if m.PoolId != 0 {
 		n += 1 + sovWithdrawal(uint64(m.PoolId))
 	}
-	if m.DepositId != 0 {
-		n += 1 + sovWithdrawal(uint64(m.DepositId))
+	if m.PaymentId != 0 {
+		n += 1 + sovWithdrawal(uint64(m.PaymentId))
 	}
 	if m.WithdrawalId != 0 {
 		n += 1 + sovWithdrawal(uint64(m.WithdrawalId))
@@ -577,7 +577,7 @@ func (m *Withdrawal) Size() (n int) {
 	if m.ErrorState != 0 {
 		n += 1 + sovWithdrawal(uint64(m.ErrorState))
 	}
-	l = len(m.DepositorAddress)
+	l = len(m.PaymentorAddress)
 	if l > 0 {
 		n += 1 + l + sovWithdrawal(uint64(l))
 	}
@@ -690,9 +690,9 @@ func (m *Withdrawal) Unmarshal(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PaymentId", wireType)
 			}
-			m.DepositId = 0
+			m.PaymentId = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowWithdrawal
@@ -702,7 +702,7 @@ func (m *Withdrawal) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.DepositId |= uint64(b&0x7F) << shift
+				m.PaymentId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -766,7 +766,7 @@ func (m *Withdrawal) Unmarshal(dAtA []byte) error {
 			}
 		case 6:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositorAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PaymentorAddress", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -794,7 +794,7 @@ func (m *Withdrawal) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DepositorAddress = string(dAtA[iNdEx:postIndex])
+			m.PaymentorAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {

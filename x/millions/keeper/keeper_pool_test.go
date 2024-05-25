@@ -72,7 +72,7 @@ func (suite *KeeperTestSuite) TestPool_Helpers() {
 	}{
 		{address: "", isLocalAddress: false, expectError: true},
 		{address: "not-an-address", isLocalAddress: false, expectError: true},
-		{address: cosmosIcaDepositAddress, isLocalAddress: true, expectError: true},
+		{address: cosmosIcaPaymentAddress, isLocalAddress: true, expectError: true},
 		{address: suite.valAddrs[0].String(), isLocalAddress: false, expectError: true},
 		{address: suite.addrs[0].String(), isLocalAddress: true, expectError: false},
 		{address: suite.moduleAddrs[0].String(), isLocalAddress: true, expectError: false},
@@ -98,7 +98,7 @@ func (suite *KeeperTestSuite) TestPool_Helpers() {
 		{address: "not-an-address", isLocalAddress: false, expectError: true},
 		{address: suite.valAddrs[0].String(), isLocalAddress: false, expectError: true},
 		{address: "osmo1clpqr4nrk4khgkxj78fcwwh6dl3uw4epasmvnj", isLocalAddress: false, expectError: true},
-		{address: cosmosIcaDepositAddress, isLocalAddress: false, expectError: false},
+		{address: cosmosIcaPaymentAddress, isLocalAddress: false, expectError: false},
 		{address: suite.addrs[0].String(), isLocalAddress: true, expectError: false},
 		{address: suite.moduleAddrs[0].String(), isLocalAddress: true, expectError: false},
 	}
@@ -286,7 +286,7 @@ func (suite *KeeperTestSuite) TestPool_PrizeStrategiesBasics() {
 	suite.Require().Error(err)
 }
 
-func (suite *KeeperTestSuite) TestPool_DepositorsCountAndTVL() {
+func (suite *KeeperTestSuite) TestPool_PaymentorsCountAndTVL() {
 	app := suite.app
 	ctx := suite.ctx
 	goCtx := sdk.WrapSDKContext(ctx)
@@ -303,7 +303,7 @@ func (suite *KeeperTestSuite) TestPool_DepositorsCountAndTVL() {
 		[]string{suite.valAddrs[0].String()},
 		"furya",
 		"furyavaloper",
-		app.MillionsKeeper.GetParams(ctx).MinDepositAmount,
+		app.MillionsKeeper.GetParams(ctx).MinPaymentAmount,
 		time.Duration(millionstypes.DefaultUnbondingDuration),
 		sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries),
 		millionstypes.DrawSchedule{DrawDelta: 24 * time.Hour, InitialDrawAt: ctx.BlockTime().Add(24 * time.Hour)},
@@ -316,10 +316,10 @@ func (suite *KeeperTestSuite) TestPool_DepositorsCountAndTVL() {
 	pool, err := app.MillionsKeeper.GetPool(ctx, poolID)
 	suite.Require().NoError(err)
 
-	// Deposit with 3 accounts
+	// Payment with 3 accounts
 	for i := 0; i < 5; i++ {
-		_, err := msgServer.Deposit(goCtx, &millionstypes.MsgDeposit{
-			DepositorAddress: suite.addrs[0].String(),
+		_, err := msgServer.Payment(goCtx, &millionstypes.MsgPayment{
+			PaymentorAddress: suite.addrs[0].String(),
 			PoolId:           pool.PoolId,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
@@ -327,12 +327,12 @@ func (suite *KeeperTestSuite) TestPool_DepositorsCountAndTVL() {
 	}
 	pool, err = app.MillionsKeeper.GetPool(ctx, pool.PoolId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(uint64(1), pool.DepositorsCount)
+	suite.Require().Equal(uint64(1), pool.PaymentorsCount)
 	suite.Require().Equal(sdk.NewInt(5_000_000), pool.TvlAmount)
 
 	for i := 0; i < 10; i++ {
-		_, err := msgServer.Deposit(goCtx, &millionstypes.MsgDeposit{
-			DepositorAddress: suite.addrs[1].String(),
+		_, err := msgServer.Payment(goCtx, &millionstypes.MsgPayment{
+			PaymentorAddress: suite.addrs[1].String(),
 			PoolId:           pool.PoolId,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(2_000_000)),
 		})
@@ -340,12 +340,12 @@ func (suite *KeeperTestSuite) TestPool_DepositorsCountAndTVL() {
 	}
 	pool, err = app.MillionsKeeper.GetPool(ctx, pool.PoolId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(uint64(2), pool.DepositorsCount)
+	suite.Require().Equal(uint64(2), pool.PaymentorsCount)
 	suite.Require().Equal(sdk.NewInt(5_000_000+20_000_000), pool.TvlAmount)
 
 	for i := 0; i < 20; i++ {
-		_, err := msgServer.Deposit(goCtx, &millionstypes.MsgDeposit{
-			DepositorAddress: suite.addrs[2].String(),
+		_, err := msgServer.Payment(goCtx, &millionstypes.MsgPayment{
+			PaymentorAddress: suite.addrs[2].String(),
 			PoolId:           pool.PoolId,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(4_000_000)),
 		})
@@ -353,45 +353,45 @@ func (suite *KeeperTestSuite) TestPool_DepositorsCountAndTVL() {
 	}
 	pool, err = app.MillionsKeeper.GetPool(ctx, pool.PoolId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(uint64(3), pool.DepositorsCount)
+	suite.Require().Equal(uint64(3), pool.PaymentorsCount)
 	suite.Require().Equal(sdk.NewInt(5_000_000+20_000_000+80_000_000), pool.TvlAmount)
 
-	// Remove all deposits from all accounts
-	deposits := app.MillionsKeeper.ListAccountPoolDeposits(ctx, suite.addrs[0], pool.PoolId)
-	for i, d := range deposits {
-		app.MillionsKeeper.RemoveDeposit(ctx, &d)
+	// Remove all payments from all accounts
+	payments := app.MillionsKeeper.ListAccountPoolPayments(ctx, suite.addrs[0], pool.PoolId)
+	for i, d := range payments {
+		app.MillionsKeeper.RemovePayment(ctx, &d)
 		pool, err = app.MillionsKeeper.GetPool(ctx, pool.PoolId)
 		suite.Require().NoError(err)
-		if i == len(deposits)-1 {
-			suite.Require().Equal(uint64(2), pool.DepositorsCount)
+		if i == len(payments)-1 {
+			suite.Require().Equal(uint64(2), pool.PaymentorsCount)
 		} else {
-			suite.Require().Equal(uint64(3), pool.DepositorsCount)
+			suite.Require().Equal(uint64(3), pool.PaymentorsCount)
 		}
 		suite.Require().Equal(sdk.NewInt(1_000_000*int64(5-i-1)+20_000_000+80_000_000), pool.TvlAmount)
 	}
 
-	deposits = app.MillionsKeeper.ListAccountPoolDeposits(ctx, suite.addrs[1], pool.PoolId)
-	for i, d := range deposits {
-		app.MillionsKeeper.RemoveDeposit(ctx, &d)
+	payments = app.MillionsKeeper.ListAccountPoolPayments(ctx, suite.addrs[1], pool.PoolId)
+	for i, d := range payments {
+		app.MillionsKeeper.RemovePayment(ctx, &d)
 		pool, err = app.MillionsKeeper.GetPool(ctx, pool.PoolId)
 		suite.Require().NoError(err)
-		if i == len(deposits)-1 {
-			suite.Require().Equal(uint64(1), pool.DepositorsCount)
+		if i == len(payments)-1 {
+			suite.Require().Equal(uint64(1), pool.PaymentorsCount)
 		} else {
-			suite.Require().Equal(uint64(2), pool.DepositorsCount)
+			suite.Require().Equal(uint64(2), pool.PaymentorsCount)
 		}
 		suite.Require().Equal(sdk.NewInt(2_000_000*int64(10-i-1)+80_000_000), pool.TvlAmount)
 	}
 
-	deposits = app.MillionsKeeper.ListAccountPoolDeposits(ctx, suite.addrs[1], pool.PoolId)
-	for i, d := range deposits {
-		app.MillionsKeeper.RemoveDeposit(ctx, &d)
+	payments = app.MillionsKeeper.ListAccountPoolPayments(ctx, suite.addrs[1], pool.PoolId)
+	for i, d := range payments {
+		app.MillionsKeeper.RemovePayment(ctx, &d)
 		pool, err = app.MillionsKeeper.GetPool(ctx, pool.PoolId)
 		suite.Require().NoError(err)
-		if i == len(deposits)-1 {
-			suite.Require().Equal(uint64(0), pool.DepositorsCount)
+		if i == len(payments)-1 {
+			suite.Require().Equal(uint64(0), pool.PaymentorsCount)
 		} else {
-			suite.Require().Equal(uint64(1), pool.DepositorsCount)
+			suite.Require().Equal(uint64(1), pool.PaymentorsCount)
 		}
 		suite.Require().Equal(sdk.NewInt(4_000_000*int64(20-i-1)), pool.TvlAmount)
 	}
@@ -492,7 +492,7 @@ func (suite *KeeperTestSuite) TestPool_ValidatorsSplitDelegate() {
 		ConnectionId:        "connection-id",
 		TransferChannelId:   "transferChannel-id",
 		Validators:          valSet1,
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaPaymentAddress:   cosmosIcaPaymentAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		State:               millionstypes.PoolState_Ready,
 	})
@@ -639,7 +639,7 @@ func (suite *KeeperTestSuite) TestPool_ValidatorsSplitUndelegate() {
 		ConnectionId:        "connection-id",
 		TransferChannelId:   "transferChannel-id",
 		Validators:          valSet1,
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaPaymentAddress:   cosmosIcaPaymentAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		State:               millionstypes.PoolState_Ready,
 	})
@@ -805,39 +805,39 @@ func (suite *KeeperTestSuite) TestPool_ValidatorsSplitConsistency() {
 			BondedAmount:    sdk.NewInt(0),
 			IsEnabled:       true,
 		}},
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaPaymentAddress:   cosmosIcaPaymentAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		State:               millionstypes.PoolState_Ready,
 	}))
 
-	// Start deposit d1, d2 and d3
-	d1 := millionstypes.Deposit{
+	// Start payment d1, d2 and d3
+	d1 := millionstypes.Payment{
 		PoolId:           poolID,
-		DepositId:        app.MillionsKeeper.GetNextDepositIdAndIncrement(ctx),
-		State:            millionstypes.DepositState_IbcTransfer,
-		DepositorAddress: suite.addrs[0].String(),
+		PaymentId:        app.MillionsKeeper.GetNextPaymentIdAndIncrement(ctx),
+		State:            millionstypes.PaymentState_IbcTransfer,
+		PaymentorAddress: suite.addrs[0].String(),
 		WinnerAddress:    suite.addrs[0].String(),
 		Amount:           sdk.NewCoin("uatom", sdk.NewInt(111)),
 	}
-	app.MillionsKeeper.AddDeposit(ctx, &d1)
-	d2 := millionstypes.Deposit{
+	app.MillionsKeeper.AddPayment(ctx, &d1)
+	d2 := millionstypes.Payment{
 		PoolId:           poolID,
-		DepositId:        app.MillionsKeeper.GetNextDepositIdAndIncrement(ctx),
-		State:            millionstypes.DepositState_IbcTransfer,
-		DepositorAddress: suite.addrs[1].String(),
+		PaymentId:        app.MillionsKeeper.GetNextPaymentIdAndIncrement(ctx),
+		State:            millionstypes.PaymentState_IbcTransfer,
+		PaymentorAddress: suite.addrs[1].String(),
 		WinnerAddress:    suite.addrs[1].String(),
 		Amount:           sdk.NewCoin("uatom", sdk.NewInt(222)),
 	}
-	app.MillionsKeeper.AddDeposit(ctx, &d2)
-	d3 := millionstypes.Deposit{
+	app.MillionsKeeper.AddPayment(ctx, &d2)
+	d3 := millionstypes.Payment{
 		PoolId:           poolID,
-		DepositId:        app.MillionsKeeper.GetNextDepositIdAndIncrement(ctx),
-		State:            millionstypes.DepositState_IbcTransfer,
-		DepositorAddress: suite.addrs[2].String(),
+		PaymentId:        app.MillionsKeeper.GetNextPaymentIdAndIncrement(ctx),
+		State:            millionstypes.PaymentState_IbcTransfer,
+		PaymentorAddress: suite.addrs[2].String(),
 		WinnerAddress:    suite.addrs[2].String(),
 		Amount:           sdk.NewCoin("uatom", sdk.NewInt(333)),
 	}
-	app.MillionsKeeper.AddDeposit(ctx, &d3)
+	app.MillionsKeeper.AddPayment(ctx, &d3)
 
 	// Validators bounded amount should still be 0 (not delegated yet)
 	pool, err := app.MillionsKeeper.GetPool(ctx, poolID)
@@ -845,26 +845,26 @@ func (suite *KeeperTestSuite) TestPool_ValidatorsSplitConsistency() {
 	suite.Require().Equal(sdk.ZeroInt(), pool.Validators[0].BondedAmount)
 
 	// Simulate coin transfer for d1 and d2 + failure on d3
-	err = app.MillionsKeeper.OnTransferDepositToRemoteZoneCompleted(ctx, poolID, d1.DepositId, false)
+	err = app.MillionsKeeper.OnTransferPaymentToRemoteZoneCompleted(ctx, poolID, d1.PaymentId, false)
 	suite.Require().NoError(err)
-	err = app.MillionsKeeper.OnTransferDepositToRemoteZoneCompleted(ctx, poolID, d2.DepositId, false)
+	err = app.MillionsKeeper.OnTransferPaymentToRemoteZoneCompleted(ctx, poolID, d2.PaymentId, false)
 	suite.Require().NoError(err)
-	err = app.MillionsKeeper.OnTransferDepositToRemoteZoneCompleted(ctx, poolID, d3.DepositId, true)
+	err = app.MillionsKeeper.OnTransferPaymentToRemoteZoneCompleted(ctx, poolID, d3.PaymentId, true)
 	suite.Require().NoError(err)
 
-	// Force fix deposits statuses since they will fail due to missing remote chain
-	app.MillionsKeeper.UpdateDepositStatus(ctx, poolID, d1.DepositId, millionstypes.DepositState_IcaDelegate, false)
-	app.MillionsKeeper.UpdateDepositStatus(ctx, poolID, d2.DepositId, millionstypes.DepositState_IcaDelegate, false)
-	app.MillionsKeeper.UpdateDepositStatus(ctx, poolID, d3.DepositId, millionstypes.DepositState_IcaDelegate, false)
+	// Force fix payments statuses since they will fail due to missing remote chain
+	app.MillionsKeeper.UpdatePaymentStatus(ctx, poolID, d1.PaymentId, millionstypes.PaymentState_IcaDelegate, false)
+	app.MillionsKeeper.UpdatePaymentStatus(ctx, poolID, d2.PaymentId, millionstypes.PaymentState_IcaDelegate, false)
+	app.MillionsKeeper.UpdatePaymentStatus(ctx, poolID, d3.PaymentId, millionstypes.PaymentState_IcaDelegate, false)
 
 	// Simulate delegate success for d1 + failure on d2
 	sd := pool.ComputeSplitDelegations(ctx, d1.Amount.Amount)
 	suite.Require().Len(sd, 1)
-	err = app.MillionsKeeper.OnDelegateDepositOnRemoteZoneCompleted(ctx, poolID, d1.DepositId, sd, false)
+	err = app.MillionsKeeper.OnDelegatePaymentOnRemoteZoneCompleted(ctx, poolID, d1.PaymentId, sd, false)
 	suite.Require().NoError(err)
 	sd = pool.ComputeSplitDelegations(ctx, d2.Amount.Amount)
 	suite.Require().Len(sd, 1)
-	err = app.MillionsKeeper.OnDelegateDepositOnRemoteZoneCompleted(ctx, poolID, d2.DepositId, sd, true)
+	err = app.MillionsKeeper.OnDelegatePaymentOnRemoteZoneCompleted(ctx, poolID, d2.PaymentId, sd, true)
 	suite.Require().NoError(err)
 
 	// Validators bounded amount should be d1 amount now
@@ -875,8 +875,8 @@ func (suite *KeeperTestSuite) TestPool_ValidatorsSplitConsistency() {
 	// Simulate delegate success for d2
 	sd = pool.ComputeSplitDelegations(ctx, d2.Amount.Amount)
 	suite.Require().Len(sd, 1)
-	app.MillionsKeeper.UpdateDepositStatus(ctx, poolID, d2.DepositId, millionstypes.DepositState_IcaDelegate, false)
-	err = app.MillionsKeeper.OnDelegateDepositOnRemoteZoneCompleted(ctx, poolID, d2.DepositId, sd, false)
+	app.MillionsKeeper.UpdatePaymentStatus(ctx, poolID, d2.PaymentId, millionstypes.PaymentState_IcaDelegate, false)
+	err = app.MillionsKeeper.OnDelegatePaymentOnRemoteZoneCompleted(ctx, poolID, d2.PaymentId, sd, false)
 	suite.Require().NoError(err)
 
 	// Validators bounded amount should be d1+d2 amount now
@@ -887,11 +887,11 @@ func (suite *KeeperTestSuite) TestPool_ValidatorsSplitConsistency() {
 	// Start withdrawal d1 and d2
 	w1 := millionstypes.Withdrawal{
 		PoolId:           poolID,
-		DepositId:        d1.DepositId,
+		PaymentId:        d1.PaymentId,
 		WithdrawalId:     app.MillionsKeeper.GetNextWithdrawalIdAndIncrement(ctx),
 		State:            millionstypes.WithdrawalState_Pending,
-		DepositorAddress: d1.DepositorAddress,
-		ToAddress:        d1.DepositorAddress,
+		PaymentorAddress: d1.PaymentorAddress,
+		ToAddress:        d1.PaymentorAddress,
 		Amount:           d1.Amount,
 	}
 	app.MillionsKeeper.AddWithdrawal(ctx, w1)
@@ -905,11 +905,11 @@ func (suite *KeeperTestSuite) TestPool_ValidatorsSplitConsistency() {
 
 	w2 := millionstypes.Withdrawal{
 		PoolId:           poolID,
-		DepositId:        d2.DepositId,
+		PaymentId:        d2.PaymentId,
 		WithdrawalId:     app.MillionsKeeper.GetNextWithdrawalIdAndIncrement(ctx),
 		State:            millionstypes.WithdrawalState_Pending,
-		DepositorAddress: d2.DepositorAddress,
-		ToAddress:        d2.DepositorAddress,
+		PaymentorAddress: d2.PaymentorAddress,
+		ToAddress:        d2.PaymentorAddress,
 		Amount:           d2.Amount,
 	}
 	app.MillionsKeeper.AddWithdrawal(ctx, w2)
@@ -973,7 +973,7 @@ func (suite *KeeperTestSuite) TestPool_ClosePool() {
 		[]string{suite.valAddrs[0].String()},
 		"furya",
 		"furyavaloper",
-		app.MillionsKeeper.GetParams(ctx).MinDepositAmount,
+		app.MillionsKeeper.GetParams(ctx).MinPaymentAmount,
 		time.Duration(millionstypes.DefaultUnbondingDuration),
 		sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries),
 		millionstypes.DrawSchedule{DrawDelta: 24 * time.Hour, InitialDrawAt: ctx.BlockTime().Add(24 * time.Hour)},
@@ -997,24 +997,24 @@ func (suite *KeeperTestSuite) TestPool_ClosePool() {
 	withdrawals := app.MillionsKeeper.ListAccountWithdrawals(ctx, suite.addrs[0])
 	suite.Require().Len(withdrawals, 0)
 
-	// Add 3 deposits
+	// Add 3 payments
 	for i := 0; i < 3; i++ {
-		// Create a new deposit and add it to the state
-		_, err := msgServer.Deposit(goCtx, &millionstypes.MsgDeposit{
+		// Create a new payment and add it to the state
+		_, err := msgServer.Payment(goCtx, &millionstypes.MsgPayment{
 			PoolId:           poolID,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_100_000_000)),
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
 			IsSponsor:        false,
 		})
 		suite.Require().NoError(err)
 	}
 
-	// Pool should have 3 active deposits
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
-	suite.Require().Len(deposits, 3)
-	for _, d := range deposits {
-		suite.Require().Equal(millionstypes.DepositState_Success, d.State)
+	// Pool should have 3 active payments
+	payments := app.MillionsKeeper.ListPayments(ctx)
+	suite.Require().Len(payments, 3)
+	for _, d := range payments {
+		suite.Require().Equal(millionstypes.PaymentState_Success, d.State)
 	}
 
 	// Pool should have no withdrawals for now
@@ -1031,14 +1031,14 @@ func (suite *KeeperTestSuite) TestPool_ClosePool() {
 	suite.Require().Equal(millionstypes.PoolState_Closing, pool.State)
 	suite.Require().Equal(millionstypes.DrawState_Success, pool.LastDrawState)
 
-	// Pool should have 3 withdrawals, and no deposits
+	// Pool should have 3 withdrawals, and no payments
 	withdrawals = app.MillionsKeeper.ListWithdrawals(ctx)
 	suite.Require().Len(withdrawals, 3)
 	for _, w := range withdrawals {
 		suite.Require().Equal(millionstypes.WithdrawalState_Pending, w.State)
 	}
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
-	suite.Require().Len(deposits, 0)
+	payments = app.MillionsKeeper.ListPayments(ctx)
+	suite.Require().Len(payments, 0)
 
 	// Calling ClosePool should have no effect untill withdrawals finish their unbonding
 	err = app.MillionsKeeper.ClosePool(ctx, poolID)
@@ -1074,7 +1074,7 @@ func (suite *KeeperTestSuite) TestPool_ClosePool() {
 	suite.Require().Equal(balanceBefore.Amount.Int64()-3_300_000_000, balance.Amount.Int64())
 
 	ctx = ctx.WithBlockTime(now.Add(21 * 24 * time.Hour))
-	_, err = app.StakingKeeper.CompleteUnbonding(ctx, sdk.MustAccAddressFromBech32(pool.IcaDepositAddress), suite.valAddrs[0])
+	_, err = app.StakingKeeper.CompleteUnbonding(ctx, sdk.MustAccAddressFromBech32(pool.IcaPaymentAddress), suite.valAddrs[0])
 	suite.Require().NoError(err)
 
 	// Dequeue matured withdrawals and trigger the transfer to the local chain
@@ -1087,7 +1087,7 @@ func (suite *KeeperTestSuite) TestPool_ClosePool() {
 	suite.Require().Equal(0, s)
 	suite.Require().Equal(0, e)
 
-	// Test that the balance should compensate 3 deposits transfered back
+	// Test that the balance should compensate 3 payments transfered back
 	balance = app.BankKeeper.GetBalance(ctx, suite.addrs[0], localPoolDenom)
 	suite.Require().Equal(balanceBefore.Amount.Int64(), balance.Amount.Int64())
 
@@ -1100,11 +1100,11 @@ func (suite *KeeperTestSuite) TestPool_ClosePool() {
 	err = app.MillionsKeeper.ClosePool(ctx, poolID)
 	suite.Require().Error(err, millionstypes.ErrPoolStateChangeNotAllowed)
 
-	// Try to make a deposit - It shouldn't work
-	_, err = msgServer.Deposit(goCtx, &millionstypes.MsgDeposit{
+	// Try to make a payment - It shouldn't work
+	_, err = msgServer.Payment(goCtx, &millionstypes.MsgPayment{
 		PoolId:           poolID,
 		Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_100_000_000)),
-		DepositorAddress: suite.addrs[0].String(),
+		PaymentorAddress: suite.addrs[0].String(),
 		WinnerAddress:    suite.addrs[0].String(),
 		IsSponsor:        false,
 	})
@@ -1138,7 +1138,7 @@ func (suite *KeeperTestSuite) TestPool_UpdatePool() {
 		InitialDrawAt: ctx.BlockTime().Add(2 * time.Hour),
 		DrawDelta:     drawDelta1,
 	}
-	newDepositAmount := sdk.NewInt(2_000_000)
+	newPaymentAmount := sdk.NewInt(2_000_000)
 	newPrizeStrategy := millionstypes.PrizeStrategy{
 		PrizeBatches: []millionstypes.PrizeBatch{
 			{PoolPercent: 90, DrawProbability: sdk.NewDec(1), Quantity: 10},
@@ -1201,17 +1201,17 @@ func (suite *KeeperTestSuite) TestPool_UpdatePool() {
 	pool, err := app.MillionsKeeper.GetPool(ctx, 1)
 	suite.Require().NoError(err)
 
-	// Deposit to trigger delegation for local pool
-	_, err = msgServer.Deposit(goCtx, &millionstypes.MsgDeposit{
-		DepositorAddress: suite.addrs[0].String(),
+	// Payment to trigger delegation for local pool
+	_, err = msgServer.Payment(goCtx, &millionstypes.MsgPayment{
+		PaymentorAddress: suite.addrs[0].String(),
 		PoolId:           pool.PoolId,
 		Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(9_000_000)),
 	})
 	suite.Require().NoError(err)
 
-	deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, uint64(1), uint64(1))
+	payment, err := app.MillionsKeeper.GetPoolPayment(ctx, uint64(1), uint64(1))
 	suite.Require().NoError(err)
-	suite.Require().Equal(millionstypes.DepositState_Success, deposit.State)
+	suite.Require().Equal(millionstypes.PaymentState_Success, payment.State)
 	pool, err = app.MillionsKeeper.GetPool(ctx, 1)
 	suite.Require().NoError(err)
 
@@ -1242,12 +1242,12 @@ func (suite *KeeperTestSuite) TestPool_UpdatePool() {
 	suite.Require().Equal(true, pool.Validators[4].IsEnabled)
 
 	// UpdatePool with new params
-	err = app.MillionsKeeper.UpdatePool(ctx, pool.PoolId, nil, &newDepositAmount, &UnbondingDuration, &maxUnbondingEntries, &newDrawSchedule, &newPrizeStrategy, millionstypes.PoolState_Paused, newFees)
+	err = app.MillionsKeeper.UpdatePool(ctx, pool.PoolId, nil, &newPaymentAmount, &UnbondingDuration, &maxUnbondingEntries, &newDrawSchedule, &newPrizeStrategy, millionstypes.PoolState_Paused, newFees)
 	suite.Require().NoError(err)
 	pool, err = app.MillionsKeeper.GetPool(ctx, 1)
 	suite.Require().NoError(err)
-	// New Deposit amount should be 2_000_000
-	suite.Require().Equal(newDepositAmount, pool.MinDepositAmount)
+	// New Payment amount should be 2_000_000
+	suite.Require().Equal(newPaymentAmount, pool.MinPaymentAmount)
 	// New UnbondingDuration
 	suite.Require().Equal(UnbondingDuration, pool.UnbondingDuration)
 	// New maxUnbondingEntries
@@ -1262,7 +1262,7 @@ func (suite *KeeperTestSuite) TestPool_UpdatePool() {
 	suite.Require().Equal(len(newFees), len(pool.FeeTakers))
 
 	// UpdatePool with invalid pool_state -> PoolState_Killed
-	err = app.MillionsKeeper.UpdatePool(ctx, pool.PoolId, nil, &newDepositAmount, &UnbondingDuration, &maxUnbondingEntries, &newDrawSchedule, &newPrizeStrategy, millionstypes.PoolState_Closed, newFees)
+	err = app.MillionsKeeper.UpdatePool(ctx, pool.PoolId, nil, &newPaymentAmount, &UnbondingDuration, &maxUnbondingEntries, &newDrawSchedule, &newPrizeStrategy, millionstypes.PoolState_Closed, newFees)
 	suite.Require().ErrorIs(err, millionstypes.ErrPoolStateChangeNotAllowed)
 	// Grab fresh pool instance
 	pool, err = app.MillionsKeeper.GetPool(ctx, 1)
@@ -1271,7 +1271,7 @@ func (suite *KeeperTestSuite) TestPool_UpdatePool() {
 
 	// UpdatePool with invalid pool_state -> PoolState_Unspecified
 	// Should remain with the current poolState
-	err = app.MillionsKeeper.UpdatePool(ctx, pool.PoolId, nil, &newDepositAmount, &UnbondingDuration, &maxUnbondingEntries, &newDrawSchedule, &newPrizeStrategy, millionstypes.PoolState_Unspecified, nil)
+	err = app.MillionsKeeper.UpdatePool(ctx, pool.PoolId, nil, &newPaymentAmount, &UnbondingDuration, &maxUnbondingEntries, &newDrawSchedule, &newPrizeStrategy, millionstypes.PoolState_Unspecified, nil)
 	suite.Require().NoError(err)
 	// Grab fresh pool instance
 	pool, err = app.MillionsKeeper.GetPool(ctx, 1)
@@ -1279,7 +1279,7 @@ func (suite *KeeperTestSuite) TestPool_UpdatePool() {
 	suite.Require().Equal(millionstypes.PoolState_Paused, pool.State)
 
 	// UpdatePool with valid pool_state -> PoolState_Ready
-	err = app.MillionsKeeper.UpdatePool(ctx, pool.PoolId, nil, &newDepositAmount, &UnbondingDuration, &maxUnbondingEntries, &newDrawSchedule, &newPrizeStrategy, millionstypes.PoolState_Ready, newFees)
+	err = app.MillionsKeeper.UpdatePool(ctx, pool.PoolId, nil, &newPaymentAmount, &UnbondingDuration, &maxUnbondingEntries, &newDrawSchedule, &newPrizeStrategy, millionstypes.PoolState_Ready, newFees)
 	suite.Require().NoError(err)
 	// Grab fresh pool instance
 	pool, err = app.MillionsKeeper.GetPool(ctx, 1)
@@ -1330,29 +1330,29 @@ func (suite *KeeperTestSuite) TestPool_UpdatePool() {
 				IsEnabled:       true,
 			},
 		},
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaPaymentAddress:   cosmosIcaPaymentAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		State:               millionstypes.PoolState_Ready,
 	}))
-	// Add new deposit to pool
-	app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
-		DepositId:        1,
+	// Add new payment to pool
+	app.MillionsKeeper.AddPayment(ctx, &millionstypes.Payment{
+		PaymentId:        1,
 		PoolId:           2,
-		State:            millionstypes.DepositState_IcaDelegate,
+		State:            millionstypes.PaymentState_IcaDelegate,
 		Amount:           sdk.NewCoin(remotePoolDenom, sdk.NewInt(5_000_000)),
-		DepositorAddress: suite.addrs[0].String(),
+		PaymentorAddress: suite.addrs[0].String(),
 		WinnerAddress:    suite.addrs[0].String(),
 	})
 	pool, err = app.MillionsKeeper.GetPool(ctx, 2)
 	suite.Require().NoError(err)
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, uint64(2), uint64(1))
+	payment, err = app.MillionsKeeper.GetPoolPayment(ctx, uint64(2), uint64(1))
 	suite.Require().NoError(err)
 
-	// ComputeSplitDelegations to ease the simulation of DelegateDeposit for remote pool
-	splits := pool.ComputeSplitDelegations(ctx, deposit.Amount.Amount)
+	// ComputeSplitDelegations to ease the simulation of DelegatePayment for remote pool
+	splits := pool.ComputeSplitDelegations(ctx, payment.Amount.Amount)
 	suite.Require().Len(splits, 5)
 	// Simulate successful delegation
-	err = app.MillionsKeeper.OnDelegateDepositOnRemoteZoneCompleted(ctx, pool.PoolId, deposit.DepositId, splits, false)
+	err = app.MillionsKeeper.OnDelegatePaymentOnRemoteZoneCompleted(ctx, pool.PoolId, payment.PaymentId, splits, false)
 	suite.Require().NoError(err)
 	pool, err = app.MillionsKeeper.GetPool(ctx, 2)
 	suite.Require().NoError(err)

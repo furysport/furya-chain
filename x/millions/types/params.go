@@ -8,37 +8,37 @@ import (
 )
 
 const (
-	MinAcceptableDepositAmount        = 1_000
+	MinAcceptablePaymentAmount        = 1_000
 	MinAcceptableDrawDelta            = 1 * time.Hour
-	MinAcceptableDepositDrawDelta     = 1 * time.Minute
+	MinAcceptablePaymentDrawDelta     = 1 * time.Minute
 	MinAcceptablePrizeExpirationDelta = 1 * time.Hour
 
-	defaultMinDepositAmount        = 100_000
+	defaultMinPaymentAmount        = 100_000
 	defaultMaxPrizeStrategyBatches = 10
 	defaultMaxPrizeBatchQuantity   = 1000
 	defaultMinDrawScheduleDelta    = 1 * time.Hour
 	defaultMaxDrawScheduleDelta    = 366 * 24 * time.Hour // 366 days
 	defaultPrizeExpirationDelta    = 30 * 24 * time.Hour  // 30 days
-	defaultMinDepositDrawDelta     = 5 * time.Minute
+	defaultMinPaymentDrawDelta     = 5 * time.Minute
 )
 
 func DefaultParams() Params {
 	return Params{
-		MinDepositAmount:        sdk.NewInt(defaultMinDepositAmount),
+		MinPaymentAmount:        sdk.NewInt(defaultMinPaymentAmount),
 		MaxPrizeStrategyBatches: defaultMaxPrizeStrategyBatches,
 		MaxPrizeBatchQuantity:   defaultMaxPrizeBatchQuantity,
 		MinDrawScheduleDelta:    defaultMinDrawScheduleDelta,
 		MaxDrawScheduleDelta:    defaultMaxDrawScheduleDelta,
 		PrizeExpirationDelta:    defaultPrizeExpirationDelta,
-		MinDepositDrawDelta:     defaultMinDepositDrawDelta,
+		MinPaymentDrawDelta:     defaultMinPaymentDrawDelta,
 	}
 }
 
 func (p *Params) ValidateBasics() error {
-	if p.MinDepositAmount.IsNil() {
-		return errorsmod.Wrapf(ErrInvalidParams, "min deposit amount required")
-	} else if p.MinDepositAmount.LT(sdk.NewInt(MinAcceptableDepositAmount)) {
-		return errorsmod.Wrapf(ErrInvalidParams, "min deposit amount must be gte %d, got: %d", MinAcceptableDepositAmount, p.MinDepositAmount.Int64())
+	if p.MinPaymentAmount.IsNil() {
+		return errorsmod.Wrapf(ErrInvalidParams, "min payment amount required")
+	} else if p.MinPaymentAmount.LT(sdk.NewInt(MinAcceptablePaymentAmount)) {
+		return errorsmod.Wrapf(ErrInvalidParams, "min payment amount must be gte %d, got: %d", MinAcceptablePaymentAmount, p.MinPaymentAmount.Int64())
 	}
 	if p.MaxPrizeStrategyBatches <= 0 {
 		return errorsmod.Wrapf(ErrInvalidParams, "max prize strategy batches must be gt 0, got: %d", p.MaxPrizeStrategyBatches)
@@ -58,8 +58,8 @@ func (p *Params) ValidateBasics() error {
 	if p.PrizeExpirationDelta < MinAcceptablePrizeExpirationDelta {
 		return errorsmod.Wrapf(ErrInvalidParams, "prize clawback delta must be gte %s, got: %s", MinAcceptablePrizeExpirationDelta.String(), p.PrizeExpirationDelta.String())
 	}
-	if p.MinDepositDrawDelta < MinAcceptableDepositDrawDelta {
-		return errorsmod.Wrapf(ErrInvalidParams, "min deposit draw delta must be gte %s, got: %s", MinAcceptableDepositDrawDelta.String(), p.MinDepositDrawDelta.String())
+	if p.MinPaymentDrawDelta < MinAcceptablePaymentDrawDelta {
+		return errorsmod.Wrapf(ErrInvalidParams, "min payment draw delta must be gte %s, got: %s", MinAcceptablePaymentDrawDelta.String(), p.MinPaymentDrawDelta.String())
 	}
 	return nil
 }

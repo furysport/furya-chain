@@ -89,7 +89,7 @@ func (suite *KeeperTestSuite) TestPrize_AddPrize() {
 		prizesPoolDrawBefore = app.MillionsKeeper.ListPoolDrawPrizes(ctx, pool.PoolId, pool.NextDrawId)
 		prizesPoolBefore = app.MillionsKeeper.ListPoolPrizes(ctx, pool.PoolId)
 
-		// Create a new deposit and add it to the state
+		// Create a new payment and add it to the state
 		app.MillionsKeeper.AddPrize(ctx, millionstypes.Prize{
 			PoolId:        pool.PoolId,
 			DrawId:        pool.NextDrawId,
@@ -238,7 +238,7 @@ func (suite *KeeperTestSuite) TestPrize_RemovePrize() {
 		prizesPoolDrawBefore = app.MillionsKeeper.ListPoolDrawPrizes(ctx, pool.PoolId, pool.NextDrawId)
 		prizesPoolBefore = app.MillionsKeeper.ListPoolPrizes(ctx, pool.PoolId)
 
-		// Create a new deposit and add it to the state
+		// Create a new payment and add it to the state
 		app.MillionsKeeper.AddPrize(ctx, millionstypes.Prize{
 			PoolId:        pool.PoolId,
 			DrawId:        pool.NextDrawId,

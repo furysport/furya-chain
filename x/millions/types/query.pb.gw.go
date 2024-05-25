@@ -142,47 +142,47 @@ func local_request_Query_Pool_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 var (
-	filter_Query_Deposits_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_Query_Payments_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_Query_Deposits_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDepositsRequest
+func request_Query_Payments_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryPaymentsRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_Deposits_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_Payments_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.Deposits(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Payments(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Query_Deposits_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDepositsRequest
+func local_request_Query_Payments_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryPaymentsRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_Deposits_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_Payments_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.Deposits(ctx, &protoReq)
+	msg, err := server.Payments(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Query_PoolDeposits_0 = &utilities.DoubleArray{Encoding: map[string]int{"pool_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_PoolPayments_0 = &utilities.DoubleArray{Encoding: map[string]int{"pool_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
-func request_Query_PoolDeposits_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPoolDepositsRequest
+func request_Query_PoolPayments_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryPoolPaymentsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -206,17 +206,17 @@ func request_Query_PoolDeposits_0(ctx context.Context, marshaler runtime.Marshal
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_PoolDeposits_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_PoolPayments_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.PoolDeposits(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.PoolPayments(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Query_PoolDeposits_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPoolDepositsRequest
+func local_request_Query_PoolPayments_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryPoolPaymentsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -240,17 +240,17 @@ func local_request_Query_PoolDeposits_0(ctx context.Context, marshaler runtime.M
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_PoolDeposits_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_PoolPayments_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.PoolDeposits(ctx, &protoReq)
+	msg, err := server.PoolPayments(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_Query_PoolDeposit_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPoolDepositRequest
+func request_Query_PoolPayment_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryPoolPaymentRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -271,24 +271,24 @@ func request_Query_PoolDeposit_0(ctx context.Context, marshaler runtime.Marshale
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "pool_id", err)
 	}
 
-	val, ok = pathParams["deposit_id"]
+	val, ok = pathParams["payment_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "deposit_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "payment_id")
 	}
 
-	protoReq.DepositId, err = runtime.Uint64(val)
+	protoReq.PaymentId, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "deposit_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "payment_id", err)
 	}
 
-	msg, err := client.PoolDeposit(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.PoolPayment(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Query_PoolDeposit_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryPoolDepositRequest
+func local_request_Query_PoolPayment_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryPoolPaymentRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -309,28 +309,28 @@ func local_request_Query_PoolDeposit_0(ctx context.Context, marshaler runtime.Ma
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "pool_id", err)
 	}
 
-	val, ok = pathParams["deposit_id"]
+	val, ok = pathParams["payment_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "deposit_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "payment_id")
 	}
 
-	protoReq.DepositId, err = runtime.Uint64(val)
+	protoReq.PaymentId, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "deposit_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "payment_id", err)
 	}
 
-	msg, err := server.PoolDeposit(ctx, &protoReq)
+	msg, err := server.PoolPayment(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Query_AccountDeposits_0 = &utilities.DoubleArray{Encoding: map[string]int{"depositor_address": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_AccountPayments_0 = &utilities.DoubleArray{Encoding: map[string]int{"paymentor_address": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
-func request_Query_AccountDeposits_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAccountDepositsRequest
+func request_Query_AccountPayments_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryAccountPaymentsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -340,31 +340,31 @@ func request_Query_AccountDeposits_0(ctx context.Context, marshaler runtime.Mars
 		_   = err
 	)
 
-	val, ok = pathParams["depositor_address"]
+	val, ok = pathParams["paymentor_address"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "depositor_address")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "paymentor_address")
 	}
 
-	protoReq.DepositorAddress, err = runtime.String(val)
+	protoReq.PaymentorAddress, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "depositor_address", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "paymentor_address", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_AccountDeposits_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_AccountPayments_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.AccountDeposits(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AccountPayments(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Query_AccountDeposits_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAccountDepositsRequest
+func local_request_Query_AccountPayments_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryAccountPaymentsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -374,35 +374,35 @@ func local_request_Query_AccountDeposits_0(ctx context.Context, marshaler runtim
 		_   = err
 	)
 
-	val, ok = pathParams["depositor_address"]
+	val, ok = pathParams["paymentor_address"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "depositor_address")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "paymentor_address")
 	}
 
-	protoReq.DepositorAddress, err = runtime.String(val)
+	protoReq.PaymentorAddress, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "depositor_address", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "paymentor_address", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_AccountDeposits_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_AccountPayments_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.AccountDeposits(ctx, &protoReq)
+	msg, err := server.AccountPayments(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Query_AccountPoolDeposits_0 = &utilities.DoubleArray{Encoding: map[string]int{"depositor_address": 0, "pool_id": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
+	filter_Query_AccountPoolPayments_0 = &utilities.DoubleArray{Encoding: map[string]int{"paymentor_address": 0, "pool_id": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
-func request_Query_AccountPoolDeposits_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAccountPoolDepositsRequest
+func request_Query_AccountPoolPayments_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryAccountPoolPaymentsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -412,15 +412,15 @@ func request_Query_AccountPoolDeposits_0(ctx context.Context, marshaler runtime.
 		_   = err
 	)
 
-	val, ok = pathParams["depositor_address"]
+	val, ok = pathParams["paymentor_address"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "depositor_address")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "paymentor_address")
 	}
 
-	protoReq.DepositorAddress, err = runtime.String(val)
+	protoReq.PaymentorAddress, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "depositor_address", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "paymentor_address", err)
 	}
 
 	val, ok = pathParams["pool_id"]
@@ -437,17 +437,17 @@ func request_Query_AccountPoolDeposits_0(ctx context.Context, marshaler runtime.
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_AccountPoolDeposits_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_AccountPoolPayments_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.AccountPoolDeposits(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AccountPoolPayments(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Query_AccountPoolDeposits_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAccountPoolDepositsRequest
+func local_request_Query_AccountPoolPayments_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq QueryAccountPoolPaymentsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -457,15 +457,15 @@ func local_request_Query_AccountPoolDeposits_0(ctx context.Context, marshaler ru
 		_   = err
 	)
 
-	val, ok = pathParams["depositor_address"]
+	val, ok = pathParams["paymentor_address"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "depositor_address")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "paymentor_address")
 	}
 
-	protoReq.DepositorAddress, err = runtime.String(val)
+	protoReq.PaymentorAddress, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "depositor_address", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "paymentor_address", err)
 	}
 
 	val, ok = pathParams["pool_id"]
@@ -482,11 +482,11 @@ func local_request_Query_AccountPoolDeposits_0(ctx context.Context, marshaler ru
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_AccountPoolDeposits_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_AccountPoolPayments_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.AccountPoolDeposits(ctx, &protoReq)
+	msg, err := server.AccountPoolPayments(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -1442,7 +1442,7 @@ func local_request_Query_PoolWithdrawal_0(ctx context.Context, marshaler runtime
 }
 
 var (
-	filter_Query_AccountWithdrawals_0 = &utilities.DoubleArray{Encoding: map[string]int{"depositor_address": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_AccountWithdrawals_0 = &utilities.DoubleArray{Encoding: map[string]int{"paymentor_address": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_Query_AccountWithdrawals_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -1456,15 +1456,15 @@ func request_Query_AccountWithdrawals_0(ctx context.Context, marshaler runtime.M
 		_   = err
 	)
 
-	val, ok = pathParams["depositor_address"]
+	val, ok = pathParams["paymentor_address"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "depositor_address")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "paymentor_address")
 	}
 
-	protoReq.DepositorAddress, err = runtime.String(val)
+	protoReq.PaymentorAddress, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "depositor_address", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "paymentor_address", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -1490,15 +1490,15 @@ func local_request_Query_AccountWithdrawals_0(ctx context.Context, marshaler run
 		_   = err
 	)
 
-	val, ok = pathParams["depositor_address"]
+	val, ok = pathParams["paymentor_address"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "depositor_address")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "paymentor_address")
 	}
 
-	protoReq.DepositorAddress, err = runtime.String(val)
+	protoReq.PaymentorAddress, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "depositor_address", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "paymentor_address", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -1514,7 +1514,7 @@ func local_request_Query_AccountWithdrawals_0(ctx context.Context, marshaler run
 }
 
 var (
-	filter_Query_AccountPoolWithdrawals_0 = &utilities.DoubleArray{Encoding: map[string]int{"depositor_address": 0, "pool_id": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
+	filter_Query_AccountPoolWithdrawals_0 = &utilities.DoubleArray{Encoding: map[string]int{"paymentor_address": 0, "pool_id": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_Query_AccountPoolWithdrawals_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -1528,15 +1528,15 @@ func request_Query_AccountPoolWithdrawals_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["depositor_address"]
+	val, ok = pathParams["paymentor_address"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "depositor_address")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "paymentor_address")
 	}
 
-	protoReq.DepositorAddress, err = runtime.String(val)
+	protoReq.PaymentorAddress, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "depositor_address", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "paymentor_address", err)
 	}
 
 	val, ok = pathParams["pool_id"]
@@ -1573,15 +1573,15 @@ func local_request_Query_AccountPoolWithdrawals_0(ctx context.Context, marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["depositor_address"]
+	val, ok = pathParams["paymentor_address"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "depositor_address")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "paymentor_address")
 	}
 
-	protoReq.DepositorAddress, err = runtime.String(val)
+	protoReq.PaymentorAddress, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "depositor_address", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "paymentor_address", err)
 	}
 
 	val, ok = pathParams["pool_id"]
@@ -1682,7 +1682,7 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 
 	})
 
-	mux.Handle("GET", pattern_Query_Deposits_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_Payments_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1693,7 +1693,7 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Query_Deposits_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Query_Payments_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1701,11 +1701,11 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			return
 		}
 
-		forward_Query_Deposits_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_Payments_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Query_PoolDeposits_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_PoolPayments_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1716,7 +1716,7 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Query_PoolDeposits_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Query_PoolPayments_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1724,11 +1724,11 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			return
 		}
 
-		forward_Query_PoolDeposits_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_PoolPayments_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Query_PoolDeposit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_PoolPayment_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1739,7 +1739,7 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Query_PoolDeposit_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Query_PoolPayment_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1747,11 +1747,11 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			return
 		}
 
-		forward_Query_PoolDeposit_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_PoolPayment_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Query_AccountDeposits_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_AccountPayments_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1762,7 +1762,7 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Query_AccountDeposits_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Query_AccountPayments_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1770,11 +1770,11 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			return
 		}
 
-		forward_Query_AccountDeposits_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_AccountPayments_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Query_AccountPoolDeposits_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_AccountPoolPayments_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1785,7 +1785,7 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Query_AccountPoolDeposits_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Query_AccountPoolPayments_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1793,7 +1793,7 @@ func RegisterQueryHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			return
 		}
 
-		forward_Query_AccountPoolDeposits_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_AccountPoolPayments_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -2243,7 +2243,7 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 
 	})
 
-	mux.Handle("GET", pattern_Query_Deposits_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_Payments_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -2252,18 +2252,18 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Query_Deposits_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Query_Payments_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Query_Deposits_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_Payments_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Query_PoolDeposits_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_PoolPayments_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -2272,18 +2272,18 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Query_PoolDeposits_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Query_PoolPayments_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Query_PoolDeposits_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_PoolPayments_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Query_PoolDeposit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_PoolPayment_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -2292,18 +2292,18 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Query_PoolDeposit_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Query_PoolPayment_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Query_PoolDeposit_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_PoolPayment_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Query_AccountDeposits_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_AccountPayments_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -2312,18 +2312,18 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Query_AccountDeposits_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Query_AccountPayments_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Query_AccountDeposits_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_AccountPayments_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Query_AccountPoolDeposits_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Query_AccountPoolPayments_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -2332,14 +2332,14 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Query_AccountPoolDeposits_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Query_AccountPoolPayments_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Query_AccountPoolDeposits_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Query_AccountPoolPayments_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -2653,15 +2653,15 @@ var (
 
 	pattern_Query_Pool_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"furya", "millions", "pools", "pool_id"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Deposits_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"furya", "millions", "deposits"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Payments_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"furya", "millions", "payments"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_PoolDeposits_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"furya", "millions", "deposits", "pool_id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_PoolPayments_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"furya", "millions", "payments", "pool_id"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_PoolDeposit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"furya", "millions", "deposits", "pool_id", "deposit_id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_PoolPayment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"furya", "millions", "payments", "pool_id", "payment_id"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_AccountDeposits_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"furya", "millions", "account", "depositor_address", "deposits"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_AccountPayments_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"furya", "millions", "account", "paymentor_address", "payments"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_AccountPoolDeposits_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"furya", "millions", "account", "depositor_address", "deposits", "pool_id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_AccountPoolPayments_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"furya", "millions", "account", "paymentor_address", "payments", "pool_id"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_Draws_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"furya", "millions", "draws"}, "", runtime.AssumeColonVerbOpt(false)))
 
@@ -2689,9 +2689,9 @@ var (
 
 	pattern_Query_PoolWithdrawal_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"furya", "millions", "withdrawals", "pool_id", "withdrawal_id"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_AccountWithdrawals_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"furya", "millions", "account", "depositor_address", "withdrawals"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_AccountWithdrawals_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"furya", "millions", "account", "paymentor_address", "withdrawals"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_AccountPoolWithdrawals_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"furya", "millions", "account", "depositor_address", "withdrawals", "pool_id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_AccountPoolWithdrawals_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"furya", "millions", "account", "paymentor_address", "withdrawals", "pool_id"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (
@@ -2701,15 +2701,15 @@ var (
 
 	forward_Query_Pool_0 = runtime.ForwardResponseMessage
 
-	forward_Query_Deposits_0 = runtime.ForwardResponseMessage
+	forward_Query_Payments_0 = runtime.ForwardResponseMessage
 
-	forward_Query_PoolDeposits_0 = runtime.ForwardResponseMessage
+	forward_Query_PoolPayments_0 = runtime.ForwardResponseMessage
 
-	forward_Query_PoolDeposit_0 = runtime.ForwardResponseMessage
+	forward_Query_PoolPayment_0 = runtime.ForwardResponseMessage
 
-	forward_Query_AccountDeposits_0 = runtime.ForwardResponseMessage
+	forward_Query_AccountPayments_0 = runtime.ForwardResponseMessage
 
-	forward_Query_AccountPoolDeposits_0 = runtime.ForwardResponseMessage
+	forward_Query_AccountPoolPayments_0 = runtime.ForwardResponseMessage
 
 	forward_Query_Draws_0 = runtime.ForwardResponseMessage
 

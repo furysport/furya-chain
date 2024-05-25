@@ -390,7 +390,7 @@ func BuildOperationInput(
 	simAccount simtypes.Account,
 	ak types.AccountKeeper,
 	bk BankKeeper,
-	deposit sdk.Coins,
+	payment sdk.Coins,
 ) simulation.OperationInput {
 	return simulation.OperationInput{
 		R:               r,
@@ -404,6 +404,6 @@ func BuildOperationInput(
 		AccountKeeper:   ak,
 		Bankkeeper:      bk,
 		ModuleName:      types.ModuleName,
-		CoinsSpentInMsg: deposit,
+		CoinsSpentInMsg: payment,
 	}
 }

@@ -27,35 +27,35 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		CmdTxDeposit(),
-		CmdTxDepositRetry(),
+		CmdTxPayment(),
+		CmdTxPaymentRetry(),
 		CmdTxClaimPrize(),
 		CmdTxDrawRetry(),
-		CmdTxWithdrawDeposit(),
-		CmdTxWithdrawDepositRetry(),
+		CmdTxWithdrawPayment(),
+		CmdTxWithdrawPaymentRetry(),
 		CmdTxRestoreInterchainAccounts(),
-		CmdTxDepositEdit(),
+		CmdTxPaymentEdit(),
 		CmdTxGenerateSeed(),
 	)
 	return cmd
 }
 
-func CmdTxDeposit() *cobra.Command {
+func CmdTxPayment() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "deposit <pool_id> <amount>",
-		Short: "Deposit funds into a millions pool",
+		Use:   "payment <pool_id> <amount>",
+		Short: "Payment funds into a millions pool",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Deposit funds into a millions pool.
+			fmt.Sprintf(`Payment funds into a millions pool.
 
 Examples:
-To create a classic deposit
-$ %s tx %s deposit <pool_id> <amount>
+To create a classic payment
+$ %s tx %s payment <pool_id> <amount>
 
-To create a delegated deposit (delegate drawing chances to another address)
-$ %s tx %s deposit <pool_id> <amount> --winner_address=<address>
+To create a delegated payment (delegate drawing chances to another address)
+$ %s tx %s payment <pool_id> <amount> --winner_address=<address>
 
-To create a sponsorship deposit (no drawing chances at all)
-$ %s tx %s deposit <pool_id> <amount> --sponsor=true`,
+To create a sponsorship payment (no drawing chances at all)
+$ %s tx %s payment <pool_id> <amount> --sponsor=true`,
 				version.AppName, types.ModuleName, version.AppName, types.ModuleName, version.AppName, types.ModuleName),
 		),
 		Args: cobra.ExactArgs(2),
@@ -93,7 +93,7 @@ $ %s tx %s deposit <pool_id> <amount> --sponsor=true`,
 			}
 
 			// Build the message
-			msg := types.NewMsgDeposit(clientCtx.GetFromAddress().String(), amount, poolId)
+			msg := types.NewMsgPayment(clientCtx.GetFromAddress().String(), amount, poolId)
 			msg.WinnerAddress = winnerAddress
 			msg.IsSponsor = isSponsor
 
@@ -102,21 +102,21 @@ $ %s tx %s deposit <pool_id> <amount> --sponsor=true`,
 		},
 	}
 	cmd.Flags().String("winner_address", "", "(optional) winner address to direct the draw prizes to")
-	cmd.Flags().Bool("sponsor", false, "(optional) active sponsor mode and waive this deposit draw chances")
+	cmd.Flags().Bool("sponsor", false, "(optional) active sponsor mode and waive this payment draw chances")
 	flags.AddTxFlagsToCmd(cmd)
 	_ = cmd.MarkFlagRequired(flags.FlagFrom)
 	return cmd
 }
 
-func CmdTxDepositRetry() *cobra.Command {
+func CmdTxPaymentRetry() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "deposit-retry <pool_id> <deposit_id>",
-		Short: "Retry a failed deposit",
+		Use:   "payment-retry <pool_id> <payment_id>",
+		Short: "Retry a failed payment",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Retry a deposit stuck in a faulty state (ex: interchain tx issues).
+			fmt.Sprintf(`Retry a payment stuck in a faulty state (ex: interchain tx issues).
 
 Example:
-$ %s tx %s deposit-retry <pool_id> <deposit_id>`,
+$ %s tx %s payment-retry <pool_id> <payment_id>`,
 				version.AppName, types.ModuleName),
 		),
 		Args: cobra.ExactArgs(2),
@@ -139,13 +139,13 @@ $ %s tx %s deposit-retry <pool_id> <deposit_id>`,
 				return err
 			}
 
-			depositID, err := strconv.ParseUint(args[1], 10, 64)
+			paymentID, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			// Build the message
-			msg := types.NewMsgDepositRetry(clientCtx.GetFromAddress().String(), poolID, depositID)
+			msg := types.NewMsgPaymentRetry(clientCtx.GetFromAddress().String(), poolID, paymentID)
 
 			// Generate the transaction
 			return tx.GenerateOrBroadcastTxWithFactory(clientCtx, txf, msg)
@@ -156,19 +156,19 @@ $ %s tx %s deposit-retry <pool_id> <deposit_id>`,
 	return cmd
 }
 
-func CmdTxDepositEdit() *cobra.Command {
+func CmdTxPaymentEdit() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "deposit-edit <pool_id> <deposit_id> [winner_address] [sponsor]",
-		Short: "Edit a deposit",
+		Use:   "payment-edit <pool_id> <payment_id> [winner_address] [sponsor]",
+		Short: "Edit a payment",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Edit a deposit's winnerAddress to redirect the draw prize and/or sponsor mode that waives this deposit draw chances.
+			fmt.Sprintf(`Edit a payment's winnerAddress to redirect the draw prize and/or sponsor mode that waives this payment draw chances.
 Example:
-To edit a delegated deposit (delegate drawing chances to another address)
-$ %s tx %s deposit-edit <pool_id> <deposit_id> --winner_address=<address>
-To edit a sponsorship deposit (no drawing chances at all)
-$ %s tx %s deposit-edit <pool_id> <deposit_id> --sponsor=true
-To edit a delegated deposit and sponsorship
-$ %s tx %s deposit-edit <pool_id> <deposit_id> --winner_address=<address> --sponsor=true`,
+To edit a delegated payment (delegate drawing chances to another address)
+$ %s tx %s payment-edit <pool_id> <payment_id> --winner_address=<address>
+To edit a sponsorship payment (no drawing chances at all)
+$ %s tx %s payment-edit <pool_id> <payment_id> --sponsor=true
+To edit a delegated payment and sponsorship
+$ %s tx %s payment-edit <pool_id> <payment_id> --winner_address=<address> --sponsor=true`,
 				version.AppName, types.ModuleName, version.AppName, types.ModuleName, version.AppName, types.ModuleName),
 		),
 		Args: cobra.ExactArgs(2),
@@ -191,7 +191,7 @@ $ %s tx %s deposit-edit <pool_id> <deposit_id> --winner_address=<address> --spon
 				return err
 			}
 
-			depositID, err := strconv.ParseUint(args[1], 10, 64)
+			paymentID, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
@@ -220,7 +220,7 @@ $ %s tx %s deposit-edit <pool_id> <deposit_id> --winner_address=<address> --spon
 			}
 
 			// Build the message
-			msg := types.NewMsgDepositEdit(clientCtx.GetFromAddress().String(), poolID, depositID)
+			msg := types.NewMsgPaymentEdit(clientCtx.GetFromAddress().String(), poolID, paymentID)
 			msg.WinnerAddress = winnerAddress
 			msg.IsSponsor = isSponsorWrapper
 
@@ -230,7 +230,7 @@ $ %s tx %s deposit-edit <pool_id> <deposit_id> --winner_address=<address> --spon
 	}
 
 	cmd.Flags().String("winner_address", "", "(optional) winner address to direct the draw prizes to")
-	cmd.Flags().String("sponsor", "", "(optional) active sponsor mode and waive this deposit draw chances")
+	cmd.Flags().String("sponsor", "", "(optional) active sponsor mode and waive this payment draw chances")
 	flags.AddTxFlagsToCmd(cmd)
 	_ = cmd.MarkFlagRequired(flags.FlagFrom)
 	return cmd
@@ -287,20 +287,20 @@ $ %s tx %s claim-prize <pool_id> <draw_id> <prize_id>`,
 	return cmd
 }
 
-func CmdTxWithdrawDeposit() *cobra.Command {
+func CmdTxWithdrawPayment() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw-deposit <pool_id> <deposit_id>",
-		Short: "Withdraw a deposit",
+		Use:   "withdraw-payment <pool_id> <payment_id>",
+		Short: "Withdraw a payment",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Withdraw a deposit.
-Launches the unbonding of the deposit and wait for its completion in order to send the funds to the specified withdrawal address.
+			fmt.Sprintf(`Withdraw a payment.
+Launches the unbonding of the payment and wait for its completion in order to send the funds to the specified withdrawal address.
 
 Examples:
-To withdraw a deposit to the depositor address
-$ %s tx %s withdraw-deposit <pool_id> <deposit_id>
+To withdraw a payment to the paymentor address
+$ %s tx %s withdraw-payment <pool_id> <payment_id>
 
-To withdraw a deposit to another address
-$ %s tx %s withdraw-deposit <pool_id> <deposit_id> --to_address=<address>`,
+To withdraw a payment to another address
+$ %s tx %s withdraw-payment <pool_id> <payment_id> --to_address=<address>`,
 				version.AppName, types.ModuleName, version.AppName, types.ModuleName),
 		),
 		Args: cobra.ExactArgs(2),
@@ -323,7 +323,7 @@ $ %s tx %s withdraw-deposit <pool_id> <deposit_id> --to_address=<address>`,
 				return err
 			}
 
-			depositID, err := strconv.ParseUint(args[1], 10, 64)
+			paymentID, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
@@ -337,28 +337,28 @@ $ %s tx %s withdraw-deposit <pool_id> <deposit_id> --to_address=<address>`,
 			}
 
 			// Build the message
-			msg := types.NewMsgWithdrawDeposit(clientCtx.GetFromAddress().String(), destAddr, poolID, depositID)
+			msg := types.NewMsgWithdrawPayment(clientCtx.GetFromAddress().String(), destAddr, poolID, paymentID)
 			msg.ToAddress = destAddr
 
 			// Generate the transaction
 			return tx.GenerateOrBroadcastTxWithFactory(clientCtx, txf, msg)
 		},
 	}
-	cmd.Flags().String("to_address", "", "(optional) address to send the deposit back")
+	cmd.Flags().String("to_address", "", "(optional) address to send the payment back")
 	flags.AddTxFlagsToCmd(cmd)
 	_ = cmd.MarkFlagRequired(flags.FlagFrom)
 	return cmd
 }
 
-func CmdTxWithdrawDepositRetry() *cobra.Command {
+func CmdTxWithdrawPaymentRetry() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw-deposit-retry <pool_id> <withdrawal_id>",
+		Use:   "withdraw-payment-retry <pool_id> <withdrawal_id>",
 		Short: "Retry a failed withdrawal",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Retry a withdrawal stuck in a faulty state (ex: interchain tx issues).
 
 Example:
-$ %s tx %s withdraw-deposit-retry <pool_id> <withdrawal_id>`,
+$ %s tx %s withdraw-payment-retry <pool_id> <withdrawal_id>`,
 				version.AppName, types.ModuleName),
 		),
 		Args: cobra.ExactArgs(2),
@@ -386,7 +386,7 @@ $ %s tx %s withdraw-deposit-retry <pool_id> <withdrawal_id>`,
 			}
 
 			// Build the message
-			msg := types.NewMsgWithdrawDepositRetry(clientCtx.GetFromAddress().String(), poolID, withdrawalID)
+			msg := types.NewMsgWithdrawPaymentRetry(clientCtx.GetFromAddress().String(), poolID, withdrawalID)
 
 			// Generate the transaction
 			return tx.GenerateOrBroadcastTxWithFactory(clientCtx, txf, msg)

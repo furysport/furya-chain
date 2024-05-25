@@ -30,9 +30,9 @@ var _ = time.Kitchen
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Params struct {
-	// min_deposit_amount the minimum deposit amount accepted by pool
+	// min_payment_amount the minimum payment amount accepted by pool
 	// configurations
-	MinDepositAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=min_deposit_amount,json=minDepositAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_deposit_amount"`
+	MinPaymentAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=min_payment_amount,json=minPaymentAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_payment_amount"`
 	// max_prize_strategy_batches the maximum prize strategy batches accepted by
 	// pool configurations
 	MaxPrizeStrategyBatches uint64 `protobuf:"varint,2,opt,name=max_prize_strategy_batches,json=maxPrizeStrategyBatches,proto3" json:"max_prize_strategy_batches,omitempty"`
@@ -48,9 +48,9 @@ type Params struct {
 	// prize_expiration_delta the prize clawback expiration delta (common to all
 	// pools)
 	PrizeExpirationDelta time.Duration `protobuf:"bytes,6,opt,name=prize_expiration_delta,json=prizeExpirationDelta,proto3,stdduration" json:"prize_expiration_delta"`
-	// min_deposit_draw_delta the minimum delta before a draw for a deposit to be
+	// min_payment_draw_delta the minimum delta before a draw for a payment to be
 	// accepted during the time weighted balance computation for a draw
-	MinDepositDrawDelta time.Duration `protobuf:"bytes,8,opt,name=min_deposit_draw_delta,json=minDepositDrawDelta,proto3,stdduration" json:"min_deposit_draw_delta"`
+	MinPaymentDrawDelta time.Duration `protobuf:"bytes,8,opt,name=min_payment_draw_delta,json=minPaymentDrawDelta,proto3,stdduration" json:"min_payment_draw_delta"`
 }
 
 func (m *Params) Reset()         { *m = Params{} }
@@ -121,9 +121,9 @@ func (m *Params) GetPrizeExpirationDelta() time.Duration {
 	return 0
 }
 
-func (m *Params) GetMinDepositDrawDelta() time.Duration {
+func (m *Params) GetMinPaymentDrawDelta() time.Duration {
 	if m != nil {
-		return m.MinDepositDrawDelta
+		return m.MinPaymentDrawDelta
 	}
 	return 0
 }
@@ -186,7 +186,7 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	n1, err1 := github_com_cosmos_gogoproto_types.StdDurationMarshalTo(m.MinDepositDrawDelta, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.MinDepositDrawDelta):])
+	n1, err1 := github_com_cosmos_gogoproto_types.StdDurationMarshalTo(m.MinPaymentDrawDelta, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.MinPaymentDrawDelta):])
 	if err1 != nil {
 		return 0, err1
 	}
@@ -229,9 +229,9 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		dAtA[i] = 0x10
 	}
 	{
-		size := m.MinDepositAmount.Size()
+		size := m.MinPaymentAmount.Size()
 		i -= size
-		if _, err := m.MinDepositAmount.MarshalTo(dAtA[i:]); err != nil {
+		if _, err := m.MinPaymentAmount.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
 		i = encodeVarintParams(dAtA, i, uint64(size))
@@ -258,7 +258,7 @@ func (m *Params) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.MinDepositAmount.Size()
+	l = m.MinPaymentAmount.Size()
 	n += 1 + l + sovParams(uint64(l))
 	if m.MaxPrizeStrategyBatches != 0 {
 		n += 1 + sovParams(uint64(m.MaxPrizeStrategyBatches))
@@ -272,7 +272,7 @@ func (m *Params) Size() (n int) {
 	n += 1 + l + sovParams(uint64(l))
 	l = github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.PrizeExpirationDelta)
 	n += 1 + l + sovParams(uint64(l))
-	l = github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.MinDepositDrawDelta)
+	l = github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.MinPaymentDrawDelta)
 	n += 1 + l + sovParams(uint64(l))
 	return n
 }
@@ -314,7 +314,7 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinDepositAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinPaymentAmount", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -342,7 +342,7 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.MinDepositAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.MinPaymentAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -485,7 +485,7 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 8:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinDepositDrawDelta", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinPaymentDrawDelta", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -512,7 +512,7 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := github_com_cosmos_gogoproto_types.StdDurationUnmarshal(&m.MinDepositDrawDelta, dAtA[iNdEx:postIndex]); err != nil {
+			if err := github_com_cosmos_gogoproto_types.StdDurationUnmarshal(&m.MinPaymentDrawDelta, dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

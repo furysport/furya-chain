@@ -10,8 +10,8 @@ import (
 	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
-// WithdrawDeposit withdraw a deposit from the transaction message
-func (k msgServer) WithdrawDeposit(goCtx context.Context, msg *types.MsgWithdrawDeposit) (*types.MsgWithdrawDepositResponse, error) {
+// WithdrawPayment withdraw a payment from the transaction message
+func (k msgServer) WithdrawPayment(goCtx context.Context, msg *types.MsgWithdrawPayment) (*types.MsgWithdrawPaymentResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	pool, err := k.GetPool(ctx, msg.PoolId)
@@ -19,16 +19,16 @@ func (k msgServer) WithdrawDeposit(goCtx context.Context, msg *types.MsgWithdraw
 		return nil, types.ErrPoolNotFound
 	}
 
-	// Get the pool deposit
-	deposit, err := k.GetPoolDeposit(ctx, msg.PoolId, msg.DepositId)
+	// Get the pool payment
+	payment, err := k.GetPoolPayment(ctx, msg.PoolId, msg.PaymentId)
 	if err != nil {
-		return nil, types.ErrDepositNotFound
+		return nil, types.ErrPaymentNotFound
 	}
 
 	// Verify addresses
-	depositorAddr, err := sdk.AccAddressFromBech32(msg.DepositorAddress)
+	paymentorAddr, err := sdk.AccAddressFromBech32(msg.PaymentorAddress)
 	if err != nil {
-		return nil, types.ErrInvalidDepositorAddress
+		return nil, types.ErrInvalidPaymentorAddress
 	}
 
 	_, toAddr, err := pool.AccAddressFromBech32(msg.ToAddress)
@@ -36,34 +36,34 @@ func (k msgServer) WithdrawDeposit(goCtx context.Context, msg *types.MsgWithdraw
 		return nil, errorsmod.Wrapf(types.ErrInvalidDestinationAddress, err.Error())
 	}
 
-	// Verify that the incoming message withdrawAddr matches the deposit depositor_address
-	if depositorAddr.String() != deposit.DepositorAddress {
-		return nil, types.ErrInvalidWithdrawalDepositorAddress
+	// Verify that the incoming message withdrawAddr matches the payment paymentor_address
+	if paymentorAddr.String() != payment.PaymentorAddress {
+		return nil, types.ErrInvalidWithdrawalPaymentorAddress
 	}
 
-	// Verify that the deposit can be withdrawn
-	if deposit.State != types.DepositState_Success {
-		return nil, types.ErrInvalidDepositState
+	// Verify that the payment can be withdrawn
+	if payment.State != types.PaymentState_Success {
+		return nil, types.ErrInvalidPaymentState
 	}
 
 	// Prepare the withdrawal instance
 	withdrawal := types.Withdrawal{
 		PoolId:           msg.PoolId,
-		DepositId:        msg.DepositId,
+		PaymentId:        msg.PaymentId,
 		WithdrawalId:     k.GetNextWithdrawalIdAndIncrement(ctx),
 		State:            types.WithdrawalState_Pending,
-		DepositorAddress: deposit.DepositorAddress,
+		PaymentorAddress: payment.PaymentorAddress,
 		ToAddress:        toAddr.String(),
-		Amount:           deposit.Amount,
+		Amount:           payment.Amount,
 		CreatedAtHeight:  ctx.BlockHeight(),
 		UpdatedAtHeight:  ctx.BlockHeight(),
 		CreatedAt:        ctx.BlockTime(),
 		UpdatedAt:        ctx.BlockTime(),
 	}
 
-	// Adds the withdrawal and remove the deposit
+	// Adds the withdrawal and remove the payment
 	k.AddWithdrawal(ctx, withdrawal)
-	k.RemoveDeposit(ctx, &deposit)
+	k.RemovePayment(ctx, &payment)
 
 	// Emit event
 	ctx.EventManager().EmitEvents(sdk.Events{
@@ -72,11 +72,11 @@ func (k msgServer) WithdrawDeposit(goCtx context.Context, msg *types.MsgWithdraw
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
 		),
 		sdk.NewEvent(
-			types.EventTypeWithdrawDeposit,
+			types.EventTypeWithdrawPayment,
 			sdk.NewAttribute(types.AttributeKeyPoolID, strconv.FormatUint(withdrawal.PoolId, 10)),
 			sdk.NewAttribute(types.AttributeKeyWithdrawalID, strconv.FormatUint(withdrawal.WithdrawalId, 10)),
-			sdk.NewAttribute(types.AttributeKeyDepositID, strconv.FormatUint(deposit.DepositId, 10)),
-			sdk.NewAttribute(types.AttributeKeyDepositor, withdrawal.DepositorAddress),
+			sdk.NewAttribute(types.AttributeKeyPaymentID, strconv.FormatUint(payment.PaymentId, 10)),
+			sdk.NewAttribute(types.AttributeKeyPaymentor, withdrawal.PaymentorAddress),
 			sdk.NewAttribute(types.AttributeKeyRecipient, withdrawal.ToAddress),
 			sdk.NewAttribute(sdk.AttributeKeyAmount, withdrawal.Amount.String()),
 		),
@@ -87,11 +87,11 @@ func (k msgServer) WithdrawDeposit(goCtx context.Context, msg *types.MsgWithdraw
 		return nil, err
 	}
 
-	return &types.MsgWithdrawDepositResponse{WithdrawalId: withdrawal.WithdrawalId}, err
+	return &types.MsgWithdrawPaymentResponse{WithdrawalId: withdrawal.WithdrawalId}, err
 }
 
-// WithdrawDepositRetry allows the user to manually trigger the withdrawal of their deposit in case of failure
-func (k msgServer) WithdrawDepositRetry(goCtx context.Context, msg *types.MsgWithdrawDepositRetry) (*types.MsgWithdrawDepositRetryResponse, error) {
+// WithdrawPaymentRetry allows the user to manually trigger the withdrawal of their payment in case of failure
+func (k msgServer) WithdrawPaymentRetry(goCtx context.Context, msg *types.MsgWithdrawPaymentRetry) (*types.MsgWithdrawPaymentRetryResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Ensure msg received is valid
@@ -104,14 +104,14 @@ func (k msgServer) WithdrawDepositRetry(goCtx context.Context, msg *types.MsgWit
 		return nil, err
 	}
 
-	depositorAddr, err := sdk.AccAddressFromBech32(msg.DepositorAddress)
+	paymentorAddr, err := sdk.AccAddressFromBech32(msg.PaymentorAddress)
 	if err != nil {
-		return nil, types.ErrInvalidDepositorAddress
+		return nil, types.ErrInvalidPaymentorAddress
 	}
 
-	// Verify that the depositorAddress msg is the same as the entity pool withdrawal depositor
-	if depositorAddr.String() != withdrawal.DepositorAddress {
-		return nil, types.ErrInvalidDepositorAddress
+	// Verify that the paymentorAddress msg is the same as the entity pool withdrawal paymentor
+	if paymentorAddr.String() != withdrawal.PaymentorAddress {
+		return nil, types.ErrInvalidPaymentorAddress
 	}
 
 	// State should be set to failure in order to retry something
@@ -152,15 +152,15 @@ func (k msgServer) WithdrawDepositRetry(goCtx context.Context, msg *types.MsgWit
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
 		),
 		sdk.NewEvent(
-			types.EventTypeWithdrawDepositRetry,
+			types.EventTypeWithdrawPaymentRetry,
 			sdk.NewAttribute(types.AttributeKeyState, newState.String()),
 			sdk.NewAttribute(types.AttributeKeyPoolID, strconv.FormatUint(withdrawal.PoolId, 10)),
 			sdk.NewAttribute(types.AttributeKeyWithdrawalID, strconv.FormatUint(withdrawal.WithdrawalId, 10)),
-			sdk.NewAttribute(types.AttributeKeyDepositor, withdrawal.DepositorAddress),
+			sdk.NewAttribute(types.AttributeKeyPaymentor, withdrawal.PaymentorAddress),
 			sdk.NewAttribute(types.AttributeKeyRecipient, withdrawal.ToAddress),
 			sdk.NewAttribute(sdk.AttributeKeyAmount, withdrawal.Amount.String()),
 		),
 	})
 
-	return &types.MsgWithdrawDepositRetryResponse{}, nil
+	return &types.MsgWithdrawPaymentRetryResponse{}, nil
 }

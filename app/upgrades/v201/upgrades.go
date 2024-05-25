@@ -31,8 +31,8 @@ func CreateUpgradeHandler(
 		}
 		icaHostParams.AllowMessages = append(icaHostParams.AllowMessages,
 			// Change: added millions messages
-			sdk.MsgTypeURL(&millionstypes.MsgDeposit{}),
-			sdk.MsgTypeURL(&millionstypes.MsgDepositRetry{}),
+			sdk.MsgTypeURL(&millionstypes.MsgPayment{}),
+			sdk.MsgTypeURL(&millionstypes.MsgPaymentRetry{}),
 			sdk.MsgTypeURL(&millionstypes.MsgClaimPrize{}),
 			sdk.MsgTypeURL(&millionstypes.MsgWithdrawDeposit{}),
 			sdk.MsgTypeURL(&millionstypes.MsgWithdrawDepositRetry{}),

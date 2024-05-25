@@ -13,10 +13,10 @@ import (
 
 func MigratePoolPortIdsToPortOwnerName(ctx sdk.Context, k millionskeeper.Keeper) error {
 	k.IteratePools(ctx, func(pool millionstypes.Pool) bool {
-		// Migrate the deposit port id only if required
-		var updatedDepositPortId = pool.GetIcaDepositPortId()
-		if strings.HasPrefix(pool.GetIcaDepositPortId(), icatypes.ControllerPortPrefix) {
-			updatedDepositPortId = strings.TrimPrefix(pool.GetIcaDepositPortId(), icatypes.ControllerPortPrefix)
+		// Migrate the payment port id only if required
+		var updatedPaymentPortId = pool.GetIcaPaymentPortId()
+		if strings.HasPrefix(pool.GetIcaPaymentPortId(), icatypes.ControllerPortPrefix) {
+			updatedPaymentPortId = strings.TrimPrefix(pool.GetIcaPaymentPortId(), icatypes.ControllerPortPrefix)
 		}
 
 		// Migrate the prizepool port id only if required
@@ -26,10 +26,10 @@ func MigratePoolPortIdsToPortOwnerName(ctx sdk.Context, k millionskeeper.Keeper)
 		}
 
 		// Patch our entity
-		if _, err := k.UnsafeUpdatePoolPortIds(ctx, pool.GetPoolId(), updatedDepositPortId, updatedPrizePoolPortId); err != nil {
+		if _, err := k.UnsafeUpdatePoolPortIds(ctx, pool.GetPoolId(), updatedPaymentPortId, updatedPrizePoolPortId); err != nil {
 			panic(err)
 		}
-		ctx.Logger().Info(fmt.Sprintf("Migrated pool %d port ids | old %s / %s | new %s / %s", pool.GetPoolId(), pool.GetIcaDepositPortId(), pool.GetIcaPrizepoolPortId(), updatedDepositPortId, updatedPrizePoolPortId))
+		ctx.Logger().Info(fmt.Sprintf("Migrated pool %d port ids | old %s / %s | new %s / %s", pool.GetPoolId(), pool.GetIcaPaymentPortId(), pool.GetIcaPrizepoolPortId(), updatedPaymentPortId, updatedPrizePoolPortId))
 		return false
 	})
 	return nil

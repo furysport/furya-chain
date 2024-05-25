@@ -45,7 +45,7 @@ func (suite *HandlerTestSuite) SetupTest() {
 	suite.handler = millions.NewMillionsProposalHandler(*app.MillionsKeeper)
 	suite.addrs = apptesting.AddTestAddrsWithDenom(app, ctx, 2, sdk.NewInt(300000000), "ufury")
 
-	// Initialize module accounts for IcaDeposits
+	// Initialize module accounts for IcaPayments
 	suite.addrs = apptesting.AddTestAddrsWithDenom(app, ctx, 3, sdk.NewInt(1_000_0000_000), app.StakingKeeper.BondDenom(ctx))
 	for i := 0; i < 3; i++ {
 		poolAddress := millionstypes.NewPoolAddress(uint64(i+1), "unused-in-test")
@@ -108,8 +108,8 @@ func (suite *HandlerTestSuite) SetupTest() {
 				IsEnabled:       true,
 			},
 		},
-		IcaDepositAddress:   suite.moduleAddrs[0].String(),
-		MinDepositAmount:    sdk.NewInt(1000000),
+		IcaPaymentAddress:   suite.moduleAddrs[0].String(),
+		MinPaymentAmount:    sdk.NewInt(1000000),
 		UnbondingDuration:   time.Duration(millionstypes.DefaultUnbondingDuration),
 		MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries),
 		State:               millionstypes.PoolState_Ready,
@@ -238,8 +238,8 @@ func (suite *HandlerTestSuite) TestProposal_RegisterPool() {
 			true,
 		},
 		{
-			"Min deposit amount cannot be less than min acceptable amount",
-			millionstypes.NewRegisterPoolProposal("Test", "Test", millionstypes.PoolType_Staking, "furya-devnet", "ufury", "ufury", "connection-0", "furya", "furyavaloper", validValidatorSet, sdk.NewInt(millionstypes.MinAcceptableDepositAmount-1), validPrizeStrategy, validDrawSchedule, UnbondingDuration, maxUnbondingEntries, validFees),
+			"Min payment amount cannot be less than min acceptable amount",
+			millionstypes.NewRegisterPoolProposal("Test", "Test", millionstypes.PoolType_Staking, "furya-devnet", "ufury", "ufury", "connection-0", "furya", "furyavaloper", validValidatorSet, sdk.NewInt(millionstypes.MinAcceptablePaymentAmount-1), validPrizeStrategy, validDrawSchedule, UnbondingDuration, maxUnbondingEntries, validFees),
 			true,
 			true,
 		},
@@ -322,9 +322,9 @@ func (suite *HandlerTestSuite) TestProposal_UpdatePool() {
 	msgServer := millionskeeper.NewMsgServerImpl(*suite.app.MillionsKeeper)
 	goCtx := sdk.WrapSDKContext(suite.ctx)
 
-	// Initialize a deposit to trigger delegation to validators
-	_, err := msgServer.Deposit(goCtx, &millionstypes.MsgDeposit{
-		DepositorAddress: suite.addrs[0].String(),
+	// Initialize a payment to trigger delegation to validators
+	_, err := msgServer.Payment(goCtx, &millionstypes.MsgPayment{
+		PaymentorAddress: suite.addrs[0].String(),
 		PoolId:           suite.pool.PoolId,
 		Amount:           sdk.NewCoin("ufury", sdk.NewInt(10_000_000)),
 	})
@@ -364,8 +364,8 @@ func (suite *HandlerTestSuite) TestProposal_UpdatePool() {
 	poolStateReady := millionstypes.PoolState_Ready
 	poolStateUnspecified := millionstypes.PoolState_Unspecified
 
-	validMinDepositAmount := millionstypes.DefaultParams().MinDepositAmount
-	invalidMinDepositAmount := sdk.NewInt(millionstypes.MinAcceptableDepositAmount - 1)
+	validMinPaymentAmount := millionstypes.DefaultParams().MinPaymentAmount
+	invalidMinPaymentAmount := sdk.NewInt(millionstypes.MinAcceptablePaymentAmount - 1)
 
 	UnbondingDuration := time.Duration(millionstypes.DefaultUnbondingDuration)
 	maxUnbondingEntries := sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries)
@@ -397,61 +397,61 @@ func (suite *HandlerTestSuite) TestProposal_UpdatePool() {
 	}{
 		{
 			"Title cannot be empty",
-			millionstypes.NewUpdatePoolProposal("", "Test", suite.pool.GetPoolId(), nil, &validMinDepositAmount, &validPrizeStrategy, &validDrawSchedule, poolStateUnspecified, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			millionstypes.NewUpdatePoolProposal("", "Test", suite.pool.GetPoolId(), nil, &validMinPaymentAmount, &validPrizeStrategy, &validDrawSchedule, poolStateUnspecified, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			true,
 			false,
 		},
 		{
 			"Description cannot be empty",
-			millionstypes.NewUpdatePoolProposal("Test", "", suite.pool.GetPoolId(), nil, &validMinDepositAmount, &validPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			millionstypes.NewUpdatePoolProposal("Test", "", suite.pool.GetPoolId(), nil, &validMinPaymentAmount, &validPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			true,
 			false,
 		},
 		{
 			"Validators list can be empty",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &validMinDepositAmount, &validPrizeStrategy, &validDrawSchedule, poolStateReady, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &validMinPaymentAmount, &validPrizeStrategy, &validDrawSchedule, poolStateReady, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			false,
 			false,
 		},
 		{
 			"Validators list cannot be invalid",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), invalidValidatorSet, &validMinDepositAmount, &validPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), invalidValidatorSet, &validMinPaymentAmount, &validPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			false,
 			true,
 		},
 		{
-			"Min deposit amount cannot be less than 1000000 (default params)",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &invalidMinDepositAmount, &validPrizeStrategy, &validDrawSchedule, poolStateReady, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			"Min payment amount cannot be less than 1000000 (default params)",
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &invalidMinPaymentAmount, &validPrizeStrategy, &validDrawSchedule, poolStateReady, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			true,
 			true,
 		},
 		{
 			"Prize strategy cannot be empty",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &validMinDepositAmount, &emptyPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &validMinPaymentAmount, &emptyPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			true,
 			true,
 		},
 		{
 			"Prize strategy cannot be invalid",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &validMinDepositAmount, &invalidPrizeStrategy, &validDrawSchedule, poolStateReady, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &validMinPaymentAmount, &invalidPrizeStrategy, &validDrawSchedule, poolStateReady, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			false,
 			true,
 		},
 		{
 			"Draw Schedule cannot be invalid",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &validMinDepositAmount, &validPrizeStrategy, &invalidDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), nil, &validMinPaymentAmount, &validPrizeStrategy, &invalidDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			true,
 			true,
 		},
 		{
 			"Fees Stakers cannot be invalid",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), validValidatorSet, &validMinDepositAmount, &validPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, invalidFees),
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), validValidatorSet, &validMinPaymentAmount, &validPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, invalidFees),
 			true,
 			true,
 		},
 		{
 			"Fees Stakers cannot exceed maximum allowed amount",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), validValidatorSet, &validMinDepositAmount, &validPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, invalidExcessiveFees),
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), validValidatorSet, &validMinPaymentAmount, &validPrizeStrategy, &validDrawSchedule, poolStatePaused, &UnbondingDuration, &maxUnbondingEntries, invalidExcessiveFees),
 			true,
 			true,
 		},
@@ -463,7 +463,7 @@ func (suite *HandlerTestSuite) TestProposal_UpdatePool() {
 		},
 		{
 			"Fine should be fine",
-			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), validValidatorSet, &validMinDepositAmount, &validPrizeStrategy, &validDrawSchedule, poolStateUnspecified, &UnbondingDuration, &maxUnbondingEntries, validFees),
+			millionstypes.NewUpdatePoolProposal("Test", "Test", suite.pool.GetPoolId(), validValidatorSet, &validMinPaymentAmount, &validPrizeStrategy, &validDrawSchedule, poolStateUnspecified, &UnbondingDuration, &maxUnbondingEntries, validFees),
 			false,
 			false,
 		},
@@ -489,10 +489,10 @@ func (suite *HandlerTestSuite) TestProposal_UpdatePool() {
 }
 
 func (suite *HandlerTestSuite) TestProposal_UpdateParams() {
-	validMinDepositAmount := sdk.NewInt(millionstypes.MinAcceptableDepositAmount)
+	validMinPaymentAmount := sdk.NewInt(millionstypes.MinAcceptablePaymentAmount)
 
 	prizeDelta := 5 * time.Hour
-	depositDelta := 2 * time.Hour
+	paymentDelta := 2 * time.Hour
 	minDrawDelta := 1 * time.Hour
 	maxDrawDelta := 10 * time.Hour
 	maxBatchQuantity := sdk.NewInt(100)
@@ -506,7 +506,7 @@ func (suite *HandlerTestSuite) TestProposal_UpdateParams() {
 	}{
 		{
 			"Full update should be fine",
-			millionstypes.NewUpdateParamsProposal("Test", "Test", &validMinDepositAmount, &prizeDelta, &depositDelta, &minDrawDelta, &maxDrawDelta, &maxBatchQuantity, &maxStrategyBatches),
+			millionstypes.NewUpdateParamsProposal("Test", "Test", &validMinPaymentAmount, &prizeDelta, &paymentDelta, &minDrawDelta, &maxDrawDelta, &maxBatchQuantity, &maxStrategyBatches),
 			false,
 			false,
 		},

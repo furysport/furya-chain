@@ -70,7 +70,7 @@ func CmdProposalRegisterPool() *cobra.Command {
 		Use:   "millions-register-pool [proposal-file]",
 		Short: "Submit a millions register pool proposal",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Submit a RegisterPool proposal along with an initial deposit.
+			fmt.Sprintf(`Submit a RegisterPool proposal along with an initial payment.
 The proposal details must be supplied via a JSON file.
 
 Example:
@@ -85,7 +85,7 @@ Where proposal.json contains:
     "native_denom": "ufury",
     "connection_id": "",
     "validators": ["furyavaloper1wf6alkrpjn4zhcnag3afqz34mlanplzwx6v8qz"],
-    "min_deposit_amount": "1000000",
+    "min_payment_amount": "1000000",
     "draw_schedule": {
         "draw_delta": "3600s",
         "initial_draw_at": "2023-04-19T00:23:41.242670441Z" 
@@ -126,18 +126,18 @@ Where proposal.json contains:
 			// Grab the parameters
 			from := clientCtx.GetFromAddress()
 
-			// Grab the deposit
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			// Grab the payment
+			paymentStr, err := cmd.Flags().GetString(govcli.FlagPayment)
 			if err != nil {
 				return err
 			}
 
-			deposit, err := sdk.ParseCoinsNormalized(depositStr)
+			payment, err := sdk.ParseCoinsNormalized(paymentStr)
 			if err != nil {
 				return err
 			}
 
-			msg, err := govtypes.NewMsgSubmitProposal(&proposal, deposit, from)
+			msg, err := govtypes.NewMsgSubmitProposal(&proposal, payment, from)
 			if err != nil {
 				return err
 			}
@@ -151,8 +151,8 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
-	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
+	cmd.Flags().String(govcli.FlagPayment, "1ufury", "payment of proposal")
+	if err := cmd.MarkFlagRequired(govcli.FlagPayment); err != nil {
 		panic(err)
 	}
 	return cmd
@@ -163,7 +163,7 @@ func CmdProposalUpdatePool() *cobra.Command {
 		Use:   "millions-update-pool [proposal-file]",
 		Short: "Submit a millions update pool proposal",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Submit an UpdatePool proposal along with an initial deposit.
+			fmt.Sprintf(`Submit an UpdatePool proposal along with an initial payment.
 The proposal details must be supplied via a JSON file.
 
 Example:
@@ -176,7 +176,7 @@ Where proposal.json contains:
     "pool_id": 1,
     "pool_type": 1,
     "validators": ["furyavaloper1wf6alkrpjn4zhcnag3afqz34mlanplzwx6v8qz"],
-    "min_deposit_amount": "2000000",
+    "min_payment_amount": "2000000",
     "draw_schedule": {
         "draw_delta": "3600s",
         "initial_draw_at": "2023-04-19T00:23:41.242670441Z" 
@@ -215,18 +215,18 @@ Where proposal.json contains:
 			// Grab the parameters
 			from := clientCtx.GetFromAddress()
 
-			// Grab the deposit
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			// Grab the payment
+			paymentStr, err := cmd.Flags().GetString(govcli.FlagPayment)
 			if err != nil {
 				return err
 			}
 
-			deposit, err := sdk.ParseCoinsNormalized(depositStr)
+			payment, err := sdk.ParseCoinsNormalized(paymentStr)
 			if err != nil {
 				return err
 			}
 
-			msg, err := govtypes.NewMsgSubmitProposal(&proposal, deposit, from)
+			msg, err := govtypes.NewMsgSubmitProposal(&proposal, payment, from)
 			if err != nil {
 				return err
 			}
@@ -240,8 +240,8 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
-	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
+	cmd.Flags().String(govcli.FlagPayment, "1ufury", "payment of proposal")
+	if err := cmd.MarkFlagRequired(govcli.FlagPayment); err != nil {
 		panic(err)
 	}
 	return cmd
@@ -252,7 +252,7 @@ func CmdProposalClosePool() *cobra.Command {
 		Use:   "millions-close-pool [proposal-file]",
 		Short: "Submit a millions close pool proposal",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Submit a ClosePool proposal along with an initial deposit.
+			fmt.Sprintf(`Submit a ClosePool proposal along with an initial payment.
 The proposal details must be supplied via a JSON file.
 
 Example:
@@ -287,18 +287,18 @@ Where proposal.json contains:
 			// Grab the parameters
 			from := clientCtx.GetFromAddress()
 
-			// Grab the deposit
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			// Grab the payment
+			paymentStr, err := cmd.Flags().GetString(govcli.FlagPayment)
 			if err != nil {
 				return err
 			}
 
-			deposit, err := sdk.ParseCoinsNormalized(depositStr)
+			payment, err := sdk.ParseCoinsNormalized(paymentStr)
 			if err != nil {
 				return err
 			}
 
-			msg, err := govtypes.NewMsgSubmitProposal(&proposal, deposit, from)
+			msg, err := govtypes.NewMsgSubmitProposal(&proposal, payment, from)
 			if err != nil {
 				return err
 			}
@@ -312,8 +312,8 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
-	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
+	cmd.Flags().String(govcli.FlagPayment, "1ufury", "payment of proposal")
+	if err := cmd.MarkFlagRequired(govcli.FlagPayment); err != nil {
 		panic(err)
 	}
 	return cmd
@@ -324,7 +324,7 @@ func CmdProposalUpdateParams() *cobra.Command {
 		Use:   "millions-update-params [proposal-file]",
 		Short: "Submit a millions update params proposal",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Submit an UpdateParams proposal along with an initial deposit.
+			fmt.Sprintf(`Submit an UpdateParams proposal along with an initial payment.
 The proposal details must be supplied via a JSON file.
 
 Example:
@@ -334,8 +334,8 @@ Where proposal.json contains:
 {
     "title": "Update my params",
     "description": "This is my updated params",
-    "min_deposit_amount": "1",
-    "min_deposit_draw_delta": "60s",
+    "min_payment_amount": "1",
+    "min_payment_draw_delta": "60s",
     "max_prize_strategy_batches": "100",
     "max_prize_batch_quantity": "1000",
     "min_draw_schedule_delta": "3600s",
@@ -366,18 +366,18 @@ Where proposal.json contains:
 			// Grab the parameters
 			from := clientCtx.GetFromAddress()
 
-			// Grab the deposit
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			// Grab the payment
+			paymentStr, err := cmd.Flags().GetString(govcli.FlagPayment)
 			if err != nil {
 				return err
 			}
 
-			deposit, err := sdk.ParseCoinsNormalized(depositStr)
+			payment, err := sdk.ParseCoinsNormalized(paymentStr)
 			if err != nil {
 				return err
 			}
 
-			msg, err := govtypes.NewMsgSubmitProposal(&proposal, deposit, from)
+			msg, err := govtypes.NewMsgSubmitProposal(&proposal, payment, from)
 			if err != nil {
 				return err
 			}
@@ -391,8 +391,8 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
-	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
+	cmd.Flags().String(govcli.FlagPayment, "1ufury", "payment of proposal")
+	if err := cmd.MarkFlagRequired(govcli.FlagPayment); err != nil {
 		panic(err)
 	}
 	return cmd

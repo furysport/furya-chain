@@ -59,33 +59,33 @@ func (suite *KeeperTestSuite) TestEpoch_BeforeEpochStartHook() {
 	suite.Require().Equal(sdk.NewInt(1_000_000), pools[0].Validators[0].BondedAmount)
 
 	for i := 0; i < 5; i++ {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddPayment(ctx, &millionstypes.Payment{
 			PoolId:           pools[0].PoolId,
-			DepositorAddress: suite.addrs[i].String(),
+			PaymentorAddress: suite.addrs[i].String(),
 			WinnerAddress:    suite.addrs[i].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.PaymentState_IbcTransfer,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_0)),
 		})
 	}
 
-	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000))})
+	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaPaymentAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
 
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
-	suite.Require().Len(deposits, 5)
+	payments := app.MillionsKeeper.ListPayments(ctx)
+	suite.Require().Len(payments, 5)
 
 	// Simulate the transfer to native chain
 	for i := 0; i < 5; i++ {
-		err = app.MillionsKeeper.TransferDepositToRemoteZone(ctx, deposits[i].PoolId, deposits[i].DepositId)
+		err = app.MillionsKeeper.TransferPaymentToRemoteZone(ctx, payments[i].PoolId, payments[i].PaymentId)
 		suite.Require().NoError(err)
 	}
 
 	// Add 2 withdrawals for the first epoch
 	for i := 0; i < 5; i++ {
 		app.MillionsKeeper.AddWithdrawal(ctx, millionstypes.Withdrawal{
-			PoolId:           deposits[i].PoolId,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[i].String(),
+			PoolId:           payments[i].PoolId,
+			PaymentId:        payments[i].PaymentId,
+			PaymentorAddress: suite.addrs[i].String(),
 			ToAddress:        suite.addrs[i].String(),
 			State:            millionstypes.WithdrawalState_Pending,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_0)),
@@ -191,7 +191,7 @@ func (suite *KeeperTestSuite) TestEpoch_AddEpochUnbonding() {
 			BondedAmount:    sdk.NewInt(1_000_000),
 			IsEnabled:       true,
 		}},
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaPaymentAddress:   cosmosIcaPaymentAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		PrizeStrategy: millionstypes.PrizeStrategy{
 			PrizeBatches: []millionstypes.PrizeBatch{
@@ -208,31 +208,31 @@ func (suite *KeeperTestSuite) TestEpoch_AddEpochUnbonding() {
 	pools := app.MillionsKeeper.ListPools(ctx)
 
 	for i := 0; i < 2; i++ {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddPayment(ctx, &millionstypes.Payment{
 			PoolId:           pools[0].PoolId,
-			DepositorAddress: suite.addrs[i].String(),
+			PaymentorAddress: suite.addrs[i].String(),
 			WinnerAddress:    suite.addrs[i].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.PaymentState_IbcTransfer,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_0)),
 		})
 	}
 
-	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000))})
+	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaPaymentAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
 
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
+	payments := app.MillionsKeeper.ListPayments(ctx)
 	// Simulate the transfer to native chain
 	for i := 0; i < 2; i++ {
-		err = app.MillionsKeeper.TransferDepositToRemoteZone(ctx, deposits[i].PoolId, deposits[i].DepositId)
+		err = app.MillionsKeeper.TransferPaymentToRemoteZone(ctx, payments[i].PoolId, payments[i].PaymentId)
 		suite.Require().NoError(err)
 	}
 
 	// Add 2 withdrawals for the first epoch
 	for i := 0; i < 2; i++ {
 		app.MillionsKeeper.AddWithdrawal(ctx, millionstypes.Withdrawal{
-			PoolId:           deposits[i].PoolId,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[i].String(),
+			PoolId:           payments[i].PoolId,
+			PaymentId:        payments[i].PaymentId,
+			PaymentorAddress: suite.addrs[i].String(),
 			ToAddress:        suite.addrs[i].String(),
 			State:            millionstypes.WithdrawalState_Pending,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_0)),
@@ -262,24 +262,24 @@ func (suite *KeeperTestSuite) TestEpoch_AddEpochUnbonding() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(epochUnbondingPool.WithdrawalIds, epochUnbondingPoolAfter.WithdrawalIds)
 
-	// Trigger new deposits for new pool
+	// Trigger new payments for new pool
 	for i := 0; i < 3; i++ {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddPayment(ctx, &millionstypes.Payment{
 			PoolId:           pools[1].PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.PaymentState_IbcTransfer,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_0)),
 		})
 	}
 
-	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000))})
+	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaPaymentAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
 
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
+	payments = app.MillionsKeeper.ListPayments(ctx)
 	// Simulate the transfer to native chain
 	for i := 2; i < 5; i++ {
-		err = app.MillionsKeeper.TransferDepositToRemoteZone(ctx, deposits[i].PoolId, deposits[i].DepositId)
+		err = app.MillionsKeeper.TransferPaymentToRemoteZone(ctx, payments[i].PoolId, payments[i].PaymentId)
 		suite.Require().Error(err)
 	}
 
@@ -287,8 +287,8 @@ func (suite *KeeperTestSuite) TestEpoch_AddEpochUnbonding() {
 	for i := 2; i < 5; i++ {
 		app.MillionsKeeper.AddWithdrawal(ctx, millionstypes.Withdrawal{
 			PoolId:           2,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[i].String(),
+			PaymentId:        payments[i].PaymentId,
+			PaymentorAddress: suite.addrs[i].String(),
 			ToAddress:        suite.addrs[i].String(),
 			State:            millionstypes.WithdrawalState_Pending,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000_0)),
@@ -349,25 +349,25 @@ func (suite *KeeperTestSuite) TestEpoch_AddWithdrawalsToNextAvailableEpoch() {
 	pools := app.MillionsKeeper.ListPools(ctx)
 
 	for i := 0; i < 305; i++ {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddPayment(ctx, &millionstypes.Payment{
 			PoolId:           1,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.PaymentState_IbcTransfer,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000)),
 		})
 	}
 
-	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(30_000_000))})
+	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaPaymentAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(30_000_000))})
 	suite.Require().NoError(err)
 
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
+	payments := app.MillionsKeeper.ListPayments(ctx)
 	// Add 30k+ withdrawals for the first epoch
 	for i := 0; i < 305; i++ {
 		app.MillionsKeeper.AddWithdrawal(ctx, millionstypes.Withdrawal{
 			PoolId:           1,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentId:        payments[i].PaymentId,
+			PaymentorAddress: suite.addrs[0].String(),
 			ToAddress:        suite.addrs[0].String(),
 			State:            millionstypes.WithdrawalState_Pending,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000)),
@@ -428,25 +428,25 @@ func (suite *KeeperTestSuite) TestEpoch_AddWithdrawalsToNextAvailableEpoch() {
 
 	// Add 30k+ withdrawals for the second pool
 	for i := 0; i < 305; i++ {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddPayment(ctx, &millionstypes.Payment{
 			PoolId:           2,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.PaymentState_IbcTransfer,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000)),
 		})
 	}
 
-	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(30_000_000))})
+	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[1].IcaPaymentAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(30_000_000))})
 	suite.Require().NoError(err)
 
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
+	payments = app.MillionsKeeper.ListPayments(ctx)
 	// Add 30k+ withdrawals for the second pool
 	for i := 305; i < 610; i++ {
 		app.MillionsKeeper.AddWithdrawal(ctx, millionstypes.Withdrawal{
 			PoolId:           2,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentId:        payments[i].PaymentId,
+			PaymentorAddress: suite.addrs[0].String(),
 			ToAddress:        suite.addrs[0].String(),
 			State:            millionstypes.WithdrawalState_Pending,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000)),
@@ -517,30 +517,30 @@ func (suite *KeeperTestSuite) TestEpoch_AddFailedIcaUndelegationsToEpochUnbondin
 	pools := app.MillionsKeeper.ListPools(ctx)
 
 	for i := 0; i < 50; i++ {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddPayment(ctx, &millionstypes.Payment{
 			PoolId:           1,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.PaymentState_IbcTransfer,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000)),
 		})
 	}
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
+	payments := app.MillionsKeeper.ListPayments(ctx)
 
-	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(30_000_000))})
+	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaPaymentAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(30_000_000))})
 	suite.Require().NoError(err)
 
 	for i := 0; i < 50; i++ {
-		err := app.MillionsKeeper.TransferDepositToRemoteZone(ctx, deposits[i].PoolId, deposits[i].DepositId)
+		err := app.MillionsKeeper.TransferPaymentToRemoteZone(ctx, payments[i].PoolId, payments[i].PaymentId)
 		suite.Require().NoError(err)
 	}
 
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
+	payments = app.MillionsKeeper.ListPayments(ctx)
 	for i := 0; i < 50; i++ {
 		app.MillionsKeeper.AddWithdrawal(ctx, millionstypes.Withdrawal{
 			PoolId:           1,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentId:        payments[i].PaymentId,
+			PaymentorAddress: suite.addrs[0].String(),
 			ToAddress:        suite.addrs[0].String(),
 			State:            millionstypes.WithdrawalState_Failure,
 			ErrorState:       millionstypes.WithdrawalState_IcaUndelegate,
@@ -613,30 +613,30 @@ func (suite *KeeperTestSuite) TestEpoch_RemoveEpochUnbonding() {
 	pools := app.MillionsKeeper.ListPools(ctx)
 
 	for i := 0; i < 50; i++ {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddPayment(ctx, &millionstypes.Payment{
 			PoolId:           1,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.PaymentState_IbcTransfer,
 			Amount:           sdk.NewCoin(localPoolDenom, sdk.NewInt(1_000)),
 		})
 	}
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
+	payments := app.MillionsKeeper.ListPayments(ctx)
 
 	for i := 0; i < 50; i++ {
-		err := app.MillionsKeeper.TransferDepositToRemoteZone(ctx, deposits[i].PoolId, deposits[i].DepositId)
+		err := app.MillionsKeeper.TransferPaymentToRemoteZone(ctx, payments[i].PoolId, payments[i].PaymentId)
 		suite.Require().NoError(err)
 	}
 
-	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(30_000_000))})
+	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaPaymentAddress), sdk.Coins{sdk.NewCoin(localPoolDenom, sdk.NewInt(30_000_000))})
 	suite.Require().NoError(err)
 
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
+	payments = app.MillionsKeeper.ListPayments(ctx)
 	for i := 0; i < 50; i++ {
 		app.MillionsKeeper.AddWithdrawal(ctx, millionstypes.Withdrawal{
 			PoolId:           1,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[0].String(),
+			PaymentId:        payments[i].PaymentId,
+			PaymentorAddress: suite.addrs[0].String(),
 			ToAddress:        suite.addrs[0].String(),
 			State:            millionstypes.WithdrawalState_Pending,
 			ErrorState:       millionstypes.WithdrawalState_Unspecified,

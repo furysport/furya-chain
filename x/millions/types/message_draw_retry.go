@@ -23,8 +23,8 @@ func (msg MsgDrawRetry) Type() string {
 }
 
 func (msg *MsgDrawRetry) GetSigners() []sdk.AccAddress {
-	depositor := sdk.MustAccAddressFromBech32(msg.GetDrawRetryAddress())
-	return []sdk.AccAddress{depositor}
+	paymentor := sdk.MustAccAddressFromBech32(msg.GetDrawRetryAddress())
+	return []sdk.AccAddress{paymentor}
 }
 
 func (msg *MsgDrawRetry) GetSignBytes() []byte {

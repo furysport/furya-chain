@@ -68,8 +68,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.Bech32PrefixValAddr == "" {
 		pool.Bech32PrefixValAddr = sdk.GetConfig().GetBech32ValidatorAddrPrefix()
 	}
-	if pool.MinDepositAmount.IsNil() {
-		pool.MinDepositAmount = params.MinDepositAmount
+	if pool.MinPaymentAmount.IsNil() {
+		pool.MinPaymentAmount = params.MinPaymentAmount
 	}
 	if err := pool.DrawSchedule.ValidateBasic(params); err != nil {
 		pool.DrawSchedule = millionstypes.DrawSchedule{DrawDelta: 1 * time.Hour, InitialDrawAt: time.Now().UTC()}
@@ -80,8 +80,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.LocalAddress == "" {
 		pool.LocalAddress = suite.moduleAddrs[0].String()
 	}
-	if pool.IcaDepositAddress == "" {
-		pool.IcaDepositAddress = suite.moduleAddrs[1].String()
+	if pool.IcaPaymentAddress == "" {
+		pool.IcaPaymentAddress = suite.moduleAddrs[1].String()
 	}
 	if pool.IcaPrizepoolAddress == "" {
 		pool.IcaPrizepoolAddress = suite.moduleAddrs[2].String()
@@ -107,8 +107,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.UpdatedAt.IsZero() {
 		pool.UpdatedAt = suite.ctx.BlockTime()
 	}
-	if pool.IcaDepositPortId == "" {
-		pool.IcaDepositPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypeDeposit))
+	if pool.IcaPaymentPortId == "" {
+		pool.IcaPaymentPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypePayment))
 	}
 	if pool.IcaPrizepoolPortId == "" {
 		pool.IcaPrizepoolPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypePrizePool))
@@ -143,13 +143,13 @@ func (suite *StoreMigrationTestSuite) SetupTest() {
 
 	// Setup test params
 	suite.app.MillionsKeeper.SetParams(ctx, millionstypes.Params{
-		MinDepositAmount:        sdk.NewInt(millionstypes.MinAcceptableDepositAmount),
+		MinPaymentAmount:        sdk.NewInt(millionstypes.MinAcceptablePaymentAmount),
 		MaxPrizeStrategyBatches: 1_000,
 		MaxPrizeBatchQuantity:   1_000_000,
 		MinDrawScheduleDelta:    1 * time.Hour,
 		MaxDrawScheduleDelta:    366 * 24 * time.Hour,
 		PrizeExpirationDelta:    30 * 24 * time.Hour,
-		MinDepositDrawDelta:     millionstypes.MinAcceptableDepositDrawDelta,
+		MinPaymentDrawDelta:     millionstypes.MinAcceptablePaymentDrawDelta,
 	})
 }
 
@@ -162,22 +162,22 @@ func (suite *StoreMigrationTestSuite) TestMigrateUndelegations() {
 	suite.Require().NoError(err)
 
 	for i := 0; i < 5; i++ {
-		suite.app.MillionsKeeper.AddDeposit(suite.ctx, &millionstypes.Deposit{
+		suite.app.MillionsKeeper.AddPayment(suite.ctx, &millionstypes.Payment{
 			PoolId:           pool.PoolId,
-			DepositorAddress: suite.addrs[i].String(),
+			PaymentorAddress: suite.addrs[i].String(),
 			WinnerAddress:    suite.addrs[i].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.PaymentState_IbcTransfer,
 			Amount:           sdk.NewCoin("ufury", sdk.NewInt(1_000_0)),
 		})
 	}
 
-	deposits := suite.app.MillionsKeeper.ListDeposits(suite.ctx)
+	payments := suite.app.MillionsKeeper.ListPayments(suite.ctx)
 
 	for i := 0; i < 5; i++ {
 		suite.app.MillionsKeeper.AddWithdrawal(suite.ctx, millionstypes.Withdrawal{
 			PoolId:           pool.PoolId,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[i].String(),
+			PaymentId:        payments[i].PaymentId,
+			PaymentorAddress: suite.addrs[i].String(),
 			ToAddress:        suite.addrs[i].String(),
 			State:            millionstypes.WithdrawalState_Failure,
 			ErrorState:       millionstypes.WithdrawalState_IcaUndelegate,
