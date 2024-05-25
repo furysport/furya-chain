@@ -47,7 +47,7 @@ type ChainResponse struct {
 	Data []byte `json:"data"`
 }
 
-func queryCustom(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp, contract sdk.AccAddress, request bindings.TokenFactoryQuery, response interface{}) {
+func queryCustom(t *testing.T, ctx sdk.Context, customApp *app.FuryaApp, contract sdk.AccAddress, request bindings.TokenFactoryQuery, response interface{}) {
 	t.Helper()
 
 	msgBz, err := json.Marshal(request)
