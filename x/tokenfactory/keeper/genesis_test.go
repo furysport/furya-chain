@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	"github.com/furysport/furya-chain/v2/x/tokenfactory/types"
+	"github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/types"
 )
 
 func (suite *KeeperTestSuite) TestGenesis() {
@@ -43,7 +43,7 @@ func (suite *KeeperTestSuite) TestGenesis() {
 		}
 	}
 
-	if err := app.AppKeepers.TokenFactoryKeeper.SetParams(suite.Ctx, types.Params{DenomCreationFee: sdk.Coins{sdk.NewInt64Coin("ufury", 100)}}); err != nil {
+	if err := app.AppKeepers.TokenFactoryKeeper.SetParams(suite.Ctx, types.Params{DenomCreationFee: sdk.Coins{sdk.NewInt64Coin("uflix", 100)}}); err != nil {
 		panic(err)
 	}
 	app.AppKeepers.TokenFactoryKeeper.InitGenesis(suite.Ctx, genesisState)

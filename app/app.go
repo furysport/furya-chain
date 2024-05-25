@@ -132,6 +132,7 @@ import (
 	tokenfactory "github.com/furysport/furya-chain/v2/x/tokenfactory"
 	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
+	tfbindings "github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/bindings"
 	
 	bank "github.com/terra-money/alliance/custom/bank"
 	bankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
@@ -609,17 +610,32 @@ func NewFuryaApp(
 	)
 
 	wasmDir := filepath.Join(homePath, "data")
-
+	
 	wasmConfig, err := wasm.ReadWasmConfig(appOpts)
 	if err != nil {
 		panic("error while reading wasm config: " + err.Error())
 	}
-
+	
 	app.setupUpgradeStoreLoaders()
+	
+	// custom tokenfactory messages
+	tfOpts := tfbindings.RegisterCustomPlugins(app.BankKeeper, &app.TokenFactoryKeeper)
+	wasmOpts = append(wasmOpts, tfOpts...)
+
+	querierOpts := wasmkeeper.WithQueryPlugins(
+		&wasmkeeper.QueryPlugins{
+			Stargate: wasmkeeper.AcceptListStargateQuerier(
+				AcceptedStargateQueries(),
+				bApp.GRPCQueryRouter(),
+				appCodec,
+			),
+		})
+
+	wasmOpts = append(wasmOpts, querierOpts)
 
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
-	availableCapabilities := "iterator,staking,stargate,cosmwasm_1_1,cosmwasm_1_2,tokenfactory"
+	availableCapabilities := "iterator,staking,stargate,cosmwasm_1_1,cosmwasm_1_2,cosmwasm_1_3,cosmwasm_1_4,cosmwasm_1_5,tokenfactory"
 	wasmOpts := GetWasmOpts(appOpts)
 	app.WasmKeeper = wasmkeeper.NewKeeper(
 		appCodec,
@@ -1099,7 +1115,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(airdroptypes.ModuleName)
-	paramsKeeper.Subspace(tokenfactorytypes.ModuleName).WithKeyTable(tokenfactorytypes.ParamKeyTable())
+	paramsKeeper.Subspace(tokenfactorytypes.ModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName).WithKeyTable(alliancemoduletypes.ParamKeyTable())
 
 	return paramsKeeper

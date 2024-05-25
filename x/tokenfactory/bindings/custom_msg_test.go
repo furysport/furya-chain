@@ -11,9 +11,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/v2/app"
-	bindings "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings/types"
-	"github.com/furysport/furya-chain/v2/x/tokenfactory/types"
+	"github.com/OmniFlix/omniflixhub/v3/app"
+	bindings "github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/bindings/types"
+	"github.com/OmniFlix/omniflixhub/v3/x/tokenfactory/types"
 )
 
 func TestCreateDenomMsg(t *testing.T) {
@@ -302,7 +302,7 @@ type ReflectSubMsgs struct {
 	Msgs []wasmvmtypes.SubMsg `json:"msgs"`
 }
 
-func executeCustom(t *testing.T, ctx sdk.Context, customApp *app.FuryaApp, contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.TokenFactoryMsg, funds sdk.Coin) error { //nolint:unparam // funds is always nil but could change in the future.
+func executeCustom(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp, contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.TokenFactoryMsg, funds sdk.Coin) error { //nolint:unparam // funds is always nil but could change in the future.
 	t.Helper()
 
 	customBz, err := json.Marshal(msg)
