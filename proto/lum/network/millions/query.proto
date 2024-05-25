@@ -1,132 +1,132 @@
 syntax = "proto3";
-package lum.network.millions;
+package furya.millions;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
 import "cosmos/base/query/v1beta1/pagination.proto";
 
-import "lum/network/millions/deposit.proto";
-import "lum/network/millions/draw.proto";
-import "lum/network/millions/params.proto";
-import "lum/network/millions/pool.proto";
-import "lum/network/millions/prize.proto";
-import "lum/network/millions/withdrawal.proto";
+import "furya/millions/deposit.proto";
+import "furya/millions/draw.proto";
+import "furya/millions/params.proto";
+import "furya/millions/pool.proto";
+import "furya/millions/prize.proto";
+import "furya/millions/withdrawal.proto";
 
-option go_package = "github.com/lum-network/chain/x/millions/types";
+option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/lum-network/millions/params";
+    option (google.api.http).get = "/furya/millions/params";
   }
 
   rpc Pools(QueryPoolsRequest) returns (QueryPoolsResponse) {
-    option (google.api.http).get = "/lum-network/millions/pools";
+    option (google.api.http).get = "/furya/millions/pools";
   }
 
   rpc Pool(QueryPoolRequest) returns (QueryPoolResponse) {
-    option (google.api.http).get = "/lum-network/millions/pools/{pool_id}";
+    option (google.api.http).get = "/furya/millions/pools/{pool_id}";
   }
 
   rpc Deposits(QueryDepositsRequest) returns (QueryDepositsResponse) {
-    option (google.api.http).get = "/lum-network/millions/deposits";
+    option (google.api.http).get = "/furya/millions/deposits";
   }
 
   rpc PoolDeposits(QueryPoolDepositsRequest) returns (QueryDepositsResponse) {
-    option (google.api.http).get = "/lum-network/millions/deposits/{pool_id}";
+    option (google.api.http).get = "/furya/millions/deposits/{pool_id}";
   }
 
   rpc PoolDeposit(QueryPoolDepositRequest) returns (QueryDepositResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/deposits/{pool_id}/{deposit_id}";
+        "/furya/millions/deposits/{pool_id}/{deposit_id}";
   }
 
   rpc AccountDeposits(QueryAccountDepositsRequest)
       returns (QueryDepositsResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/account/{depositor_address}/deposits";
+        "/furya/millions/account/{depositor_address}/deposits";
   }
 
   rpc AccountPoolDeposits(QueryAccountPoolDepositsRequest)
       returns (QueryDepositsResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/account/{depositor_address}/deposits/{pool_id}";
+        "/furya/millions/account/{depositor_address}/deposits/{pool_id}";
   }
 
   rpc Draws(QueryDrawsRequest) returns (QueryDrawsResponse) {
-    option (google.api.http).get = "/lum-network/millions/draws";
+    option (google.api.http).get = "/furya/millions/draws";
   }
 
   rpc PoolDraws(QueryPoolDrawsRequest) returns (QueryDrawsResponse) {
-    option (google.api.http).get = "/lum-network/millions/draws/{pool_id}";
+    option (google.api.http).get = "/furya/millions/draws/{pool_id}";
   }
 
   rpc PoolDraw(QueryPoolDrawRequest) returns (QueryDrawResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/draws/{pool_id}/{draw_id}";
+        "/furya/millions/draws/{pool_id}/{draw_id}";
   }
 
   rpc Prizes(QueryPrizesRequest) returns (QueryPrizesResponse) {
-    option (google.api.http).get = "/lum-network/millions/prizes";
+    option (google.api.http).get = "/furya/millions/prizes";
   }
 
   rpc PoolPrizes(QueryPoolPrizesRequest) returns (QueryPrizesResponse) {
-    option (google.api.http).get = "/lum-network/millions/prizes/{pool_id}";
+    option (google.api.http).get = "/furya/millions/prizes/{pool_id}";
   }
 
   rpc PoolDrawPrizes(QueryPoolDrawPrizesRequest) returns (QueryPrizesResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/prizes/{pool_id}/{draw_id}";
+        "/furya/millions/prizes/{pool_id}/{draw_id}";
   }
 
   rpc PoolDrawPrize(QueryPoolDrawPrizeRequest) returns (QueryPrizeResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/prizes/{pool_id}/{draw_id}/{prize_id}";
+        "/furya/millions/prizes/{pool_id}/{draw_id}/{prize_id}";
   }
 
   rpc AccountPrizes(QueryAccountPrizesRequest) returns (QueryPrizesResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/account/{winner_address}/prizes";
+        "/furya/millions/account/{winner_address}/prizes";
   }
 
   rpc AccountPoolPrizes(QueryAccountPoolPrizesRequest)
       returns (QueryPrizesResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/account/{winner_address}/prizes/{pool_id}";
+        "/furya/millions/account/{winner_address}/prizes/{pool_id}";
   }
 
   rpc AccountPoolDrawPrizes(QueryAccountPoolDrawPrizesRequest)
       returns (QueryPrizesResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/account/{winner_address}/prizes/{pool_id}/"
+        "/furya/millions/account/{winner_address}/prizes/{pool_id}/"
         "{draw_id}";
   }
 
   rpc Withdrawals(QueryWithdrawalsRequest) returns (QueryWithdrawalsResponse) {
-    option (google.api.http).get = "/lum-network/millions/withdrawals";
+    option (google.api.http).get = "/furya/millions/withdrawals";
   }
 
   rpc PoolWithdrawals(QueryPoolWithdrawalsRequest)
       returns (QueryWithdrawalsResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/withdrawals/{pool_id}";
+        "/furya/millions/withdrawals/{pool_id}";
   }
 
   rpc PoolWithdrawal(QueryPoolWithdrawalRequest)
       returns (QueryWithdrawalResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/withdrawals/{pool_id}/{withdrawal_id}";
+        "/furya/millions/withdrawals/{pool_id}/{withdrawal_id}";
   }
 
   rpc AccountWithdrawals(QueryAccountWithdrawalsRequest)
       returns (QueryWithdrawalsResponse) {
     option (google.api.http).get =
-        "/lum-network/millions/account/{depositor_address}/withdrawals";
+        "/furya/millions/account/{depositor_address}/withdrawals";
   }
 
   rpc AccountPoolWithdrawals(QueryAccountPoolWithdrawalsRequest)
       returns (QueryWithdrawalsResponse) {
-    option (google.api.http).get = "/lum-network/millions/account/"
+    option (google.api.http).get = "/furya/millions/account/"
                                    "{depositor_address}/withdrawals/{pool_id}";
   }
 }

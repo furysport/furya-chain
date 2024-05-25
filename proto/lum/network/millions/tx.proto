@@ -1,5 +1,5 @@
 syntax = "proto3";
-package lum.network.millions;
+package furya.millions;
 
 import "gogoproto/gogo.proto";
 import "amino/amino.proto";
@@ -10,10 +10,10 @@ import "google/protobuf/wrappers.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 
-import "lum/network/millions/draw_schedule.proto";
-import "lum/network/millions/prize_strategy.proto";
+import "furya/millions/draw_schedule.proto";
+import "furya/millions/prize_strategy.proto";
 
-option go_package = "github.com/lum-network/chain/x/millions/types";
+option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 service Msg {
   rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
@@ -30,7 +30,7 @@ service Msg {
 }
 
 message MsgUpdateParams {
-  option (amino.name) = "lum-network/millions/MsgUpdateParams";
+  option (amino.name) = "furya/millions/MsgUpdateParams";
 
   string min_deposit_amount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
@@ -62,7 +62,7 @@ message MsgUpdateParams {
 message MsgUpdateParamsResponse {}
 
 message MsgRegisterPool {
-  option (amino.name) = "lum-network/millions/MsgRegisterPool";
+  option (amino.name) = "furya/millions/MsgRegisterPool";
 
   string chain_id = 1;
   string denom = 2;
@@ -84,7 +84,7 @@ message MsgRegisterPool {
 message MsgRegisterPoolResponse { uint64 pool_id = 1; }
 
 message MsgUpdatePool {
-  option (amino.name) = "lum-network/millions/MsgUpdatePool";
+  option (amino.name) = "furya/millions/MsgUpdatePool";
 
   uint64 pool_id = 1;
   repeated string validators = 2 [ (gogoproto.nullable) = true ];
@@ -100,7 +100,7 @@ message MsgUpdatePool {
 message MsgUpdatePoolResponse {}
 
 message MsgDeposit {
-  option (amino.name) = "lum-network/millions/MsgDeposit";
+  option (amino.name) = "furya/millions/MsgDeposit";
 
   uint64 pool_id = 1;
   cosmos.base.v1beta1.Coin amount = 2 [ (gogoproto.nullable) = false ];
@@ -113,7 +113,7 @@ message MsgDeposit {
 message MsgDepositResponse { uint64 deposit_id = 1; }
 
 message MsgDepositRetry {
-  option (amino.name) = "lum-network/millions/MsgDepositRetry";
+  option (amino.name) = "furya/millions/MsgDepositRetry";
 
   uint64 pool_id = 1;
   uint64 deposit_id = 2;
@@ -122,7 +122,7 @@ message MsgDepositRetry {
 }
 
 message MsgDepositEdit {
-  option (amino.name) = "lum-network/millions/MsgDepositEdit";
+  option (amino.name) = "furya/millions/MsgDepositEdit";
 
   uint64 pool_id = 1;
   uint64 deposit_id = 2;
@@ -137,7 +137,7 @@ message MsgDepositEditResponse {}
 message MsgDepositRetryResponse {}
 
 message MsgClaimPrize {
-  option (amino.name) = "lum-network/millions/MsgClaimPrize";
+  option (amino.name) = "furya/millions/MsgClaimPrize";
 
   uint64 pool_id = 1;
   uint64 draw_id = 2;
@@ -148,7 +148,7 @@ message MsgClaimPrize {
 message MsgClaimPrizeResponse {}
 
 message MsgWithdrawDeposit {
-  option (amino.name) = "lum-network/millions/MsgWithdrawDeposit";
+  option (amino.name) = "furya/millions/MsgWithdrawDeposit";
 
   uint64 pool_id = 1;
   uint64 deposit_id = 2;
@@ -160,7 +160,7 @@ message MsgWithdrawDeposit {
 message MsgWithdrawDepositResponse { uint64 withdrawal_id = 1; }
 
 message MsgWithdrawDepositRetry {
-  option (amino.name) = "lum-network/millions/MsgWithdrawDepositRetry";
+  option (amino.name) = "furya/millions/MsgWithdrawDepositRetry";
 
   uint64 pool_id = 1;
   uint64 withdrawal_id = 2;
@@ -171,7 +171,7 @@ message MsgWithdrawDepositRetry {
 message MsgWithdrawDepositRetryResponse {}
 
 message MsgDrawRetry {
-  option (amino.name) = "lum-network/millions/MsgDrawRetry";
+  option (amino.name) = "furya/millions/MsgDrawRetry";
 
   uint64 pool_id = 1;
   uint64 draw_id = 2;
@@ -182,7 +182,7 @@ message MsgDrawRetry {
 message MsgDrawRetryResponse {}
 
 message MsgRestoreInterchainAccounts {
-  option (amino.name) = "lum-network/millions/MsgRestoreInterchainAccounts";
+  option (amino.name) = "furya/millions/MsgRestoreInterchainAccounts";
 
   uint64 pool_id = 1;
   string restorer_address = 2
@@ -192,7 +192,7 @@ message MsgRestoreInterchainAccounts {
 message MsgRestoreInterchainAccountsResponse {}
 
 message MsgGenerateSeed {
-  option (amino.name) = "lum-network/millions/MsgGenerateSeed";
+  option (amino.name) = "furya/millions/MsgGenerateSeed";
 
   string requester_address = 1
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];

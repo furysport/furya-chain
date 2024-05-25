@@ -1,32 +1,32 @@
 syntax = "proto3";
-package lum.network.icacallbacks;
+package furya.icacallbacks;
 
-option go_package = "github.com/lum-network/chain/x/icacallbacks/types";
+option go_package = "github.com/furysport/furya-chain/v2/x/icacallbacks/types";
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "lum/network/icacallbacks/params.proto";
-import "lum/network/icacallbacks/callback_data.proto";
+import "furya/icacallbacks/params.proto";
+import "furya/icacallbacks/callback_data.proto";
 // this line is used by starport scaffolding # 1
 
 // Query defines the gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/lum-network/icacallbacks/params";
+    option (google.api.http).get = "/furya/icacallbacks/params";
   }
   // Queries a CallbackData by index.
   rpc CallbackData(QueryGetCallbackDataRequest)
       returns (QueryGetCallbackDataResponse) {
     option (google.api.http).get =
-        "/lum-network/icacallbacks/callback_data/{callback_key}";
+        "/furya/icacallbacks/callback_data/{callback_key}";
   }
 
   // Queries a list of CallbackData items.
   rpc CallbackDataAll(QueryAllCallbackDataRequest)
       returns (QueryAllCallbackDataResponse) {
-    option (google.api.http).get = "/lum-network/icacallbacks/callback_data";
+    option (google.api.http).get = "/furya/icacallbacks/callback_data";
   }
 }
 

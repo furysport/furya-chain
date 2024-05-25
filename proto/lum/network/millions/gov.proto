@@ -1,14 +1,14 @@
 syntax = "proto3";
-package lum.network.millions;
+package furya.millions;
 
 import "gogoproto/gogo.proto";
 import "google/protobuf/duration.proto";
 
-import "lum/network/millions/pool.proto";
-import "lum/network/millions/draw_schedule.proto";
-import "lum/network/millions/prize_strategy.proto";
+import "furya/millions/pool.proto";
+import "furya/millions/draw_schedule.proto";
+import "furya/millions/prize_strategy.proto";
 
-option go_package = "github.com/lum-network/chain/x/millions/types";
+option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 message ProposalRegisterPool {
   option (gogoproto.goproto_stringer) = false;

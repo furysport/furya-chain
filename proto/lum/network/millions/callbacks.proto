@@ -1,10 +1,10 @@
 syntax = "proto3";
-package lum.network.millions;
+package furya.millions;
 
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 
-option go_package = "github.com/lum-network/chain/x/millions/types";
+option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 enum TransferType {
   option (gogoproto.goproto_enum_prefix) = true;

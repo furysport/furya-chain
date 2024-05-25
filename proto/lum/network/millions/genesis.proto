@@ -1,17 +1,17 @@
 syntax = "proto3";
-package lum.network.millions;
+package furya.millions;
 
 import "gogoproto/gogo.proto";
 
-import "lum/network/millions/deposit.proto";
-import "lum/network/millions/draw.proto";
-import "lum/network/millions/params.proto";
-import "lum/network/millions/pool.proto";
-import "lum/network/millions/prize.proto";
-import "lum/network/millions/withdrawal.proto";
-import "lum/network/millions/epoch.proto";
+import "furya/millions/deposit.proto";
+import "furya/millions/draw.proto";
+import "furya/millions/params.proto";
+import "furya/millions/pool.proto";
+import "furya/millions/prize.proto";
+import "furya/millions/withdrawal.proto";
+import "furya/millions/epoch.proto";
 
-option go_package = "github.com/lum-network/chain/x/millions/types";
+option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 message GenesisState {
   Params params = 1 [

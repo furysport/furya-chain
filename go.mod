@@ -3,7 +3,7 @@ module github.com/furysport/furya-chain/v2
 go 1.20
 
 require (
-	github.com/lum-network/chain v1.6.5
+	github.com/furysport/furya-chain/v2 v1.6.5
 	
 	cosmossdk.io/errors v1.0.1
 	cosmossdk.io/math v1.2.0

@@ -1,27 +1,27 @@
 syntax = "proto3";
-package lum.network.epochs;
+package furya.epochs;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "lum/network/epochs/genesis.proto";
+import "furya/epochs/genesis.proto";
 
-option go_package = "github.com/lum-network/chain/x/epochs/types";
+option go_package = "github.com/furysport/furya-chain/v2/x/epochs/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // EpochInfos provide running epochInfos
   rpc EpochInfos(QueryEpochsInfoRequest) returns (QueryEpochsInfoResponse) {
-    option (google.api.http).get = "/lum-network/epochs";
+    option (google.api.http).get = "/furya/epochs";
   }
   // CurrentEpoch provide current epoch of specified identifier
   rpc CurrentEpoch(QueryCurrentEpochRequest)
       returns (QueryCurrentEpochResponse) {
-    option (google.api.http).get = "/lum-network/epochs/current_epoch";
+    option (google.api.http).get = "/furya/epochs/current_epoch";
   }
   // CurrentEpoch provide current epoch of specified identifier
   rpc EpochInfo(QueryEpochInfoRequest) returns (QueryEpochInfoResponse) {
-    option (google.api.http).get = "/lum-network/epochs/epoch_info";
+    option (google.api.http).get = "/furya/epochs/epoch_info";
   }
 }
 

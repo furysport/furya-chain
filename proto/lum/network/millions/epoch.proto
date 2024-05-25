@@ -1,11 +1,11 @@
 syntax = "proto3";
-package lum.network.millions;
+package furya.millions;
 
 import "cosmos/base/v1beta1/coin.proto";
 import "google/protobuf/timestamp.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/lum-network/chain/x/millions/types";
+option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 message EpochUnbonding {
   string epoch_identifier = 1;
