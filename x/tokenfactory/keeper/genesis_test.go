@@ -43,7 +43,7 @@ func (suite *KeeperTestSuite) TestGenesis() {
 		}
 	}
 
-	if err := app.AppKeepers.TokenFactoryKeeper.SetParams(suite.Ctx, types.Params{DenomCreationFee: sdk.Coins{sdk.NewInt64Coin("ufury", 100)}}); err != nil {
+	if err := app.AppKeepers.TokenFactoryKeeper.SetParams(suite.Ctx, types.Params{DenomCreationFee: sdk.Coins{sdk.NewInt64Coin("uflix", 100)}}); err != nil {
 		panic(err)
 	}
 	app.AppKeepers.TokenFactoryKeeper.InitGenesis(suite.Ctx, genesisState)

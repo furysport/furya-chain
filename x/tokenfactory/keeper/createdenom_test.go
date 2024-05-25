@@ -149,10 +149,10 @@ func (suite *KeeperTestSuite) TestCreateDenom() {
 
 			// note balance, create a tokenfactory denom, then note balance again
 			// preCreateBalance := bankKeeper.GetAllBalances(suite.Ctx, suite.TestAccs[0])
-			preCreateBalance := bankKeeper.GetBalance(suite.Ctx, suite.TestAccs[0], "ufury")
+			preCreateBalance := bankKeeper.GetBalance(suite.Ctx, suite.TestAccs[0], "uflix")
 			res, err := suite.msgServer.CreateDenom(sdk.WrapSDKContext(suite.Ctx), types.NewMsgCreateDenom(suite.TestAccs[0].String(), tc.subdenom))
 			// postCreateBalance := bankKeeper.GetAllBalances(suite.Ctx, suite.TestAccs[0])
-			postCreateBalance := bankKeeper.GetBalance(suite.Ctx, suite.TestAccs[0], "ufury")
+			postCreateBalance := bankKeeper.GetBalance(suite.Ctx, suite.TestAccs[0], "uflix")
 			if tc.valid {
 				suite.Require().NoError(err)
 				if denomCreationFee != nil {

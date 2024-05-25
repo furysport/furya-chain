@@ -132,6 +132,7 @@ import (
 	tokenfactory "github.com/furysport/furya-chain/v2/x/tokenfactory"
 	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
+	tfbindings "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings"
 	
 	bank "github.com/terra-money/alliance/custom/bank"
 	bankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
@@ -616,6 +617,10 @@ func NewFuryaApp(
 	}
 
 	app.setupUpgradeStoreLoaders()
+	
+	// custom tokenfactory messages
+	tfOpts := tfbindings.RegisterCustomPlugins(appKeepers.BankKeeper, &appKeepers.TokenFactoryKeeper)
+	wasmOpts = append(wasmOpts, tfOpts...)
 
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
