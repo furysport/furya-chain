@@ -2,8 +2,10 @@ package bindings
 
 import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
+
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+
+	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 )
 
 func RegisterCustomPlugins(

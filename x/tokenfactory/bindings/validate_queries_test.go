@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	wasmbinding "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	wasmbinding "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings"
 )
 
 func TestFullDenom(t *testing.T) {

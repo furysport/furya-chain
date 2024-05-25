@@ -91,7 +91,7 @@ func (suite *KeeperTestSuite) TestBurnDenomMsg() {
 
 // TestCreateDenomMsg tests TypeMsgCreateDenom message is emitted on a successful denom creation
 func (suite *KeeperTestSuite) TestCreateDenomMsg() {
-	defaultDenomCreationFee := types.Params{DenomCreationFee: sdk.NewCoins(sdk.NewCoin("ufury", sdk.NewInt(50000000)))}
+	defaultDenomCreationFee := types.Params{DenomCreationFee: sdk.NewCoins(sdk.NewCoin("stake", sdk.NewInt(50000000)))}
 	for _, tc := range []struct {
 		desc                  string
 		denomCreationFee      types.Params
@@ -123,10 +123,7 @@ func (suite *KeeperTestSuite) TestCreateDenomMsg() {
 				suite.Require().NoError(err)
 			}
 			// Test create denom message
-			denom, err := suite.msgServer.CreateDenom(sdk.WrapSDKContext(ctx), types.NewMsgCreateDenom(suite.TestAccs[0].String(), tc.subdenom)) //nolint:errcheck
-			if err != nil {
-				fmt.Println(denom, err)
-			}
+			suite.msgServer.CreateDenom(sdk.WrapSDKContext(ctx), types.NewMsgCreateDenom(suite.TestAccs[0].String(), tc.subdenom)) //nolint:errcheck
 			// Ensure current number and type of event is emitted
 			suite.AssertEventEmitted(ctx, types.TypeMsgCreateDenom, tc.expectedMessageEvents)
 		})

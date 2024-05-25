@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 
-	errorsmod "cosmossdk.io/errors"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
-	bindingstypes "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings/types"
+
+	errorsmod "cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	bindingstypes "github.com/furysport/furya-chain/v2/x/tokenfactory/bindings/types"
 )
 
 // CustomQuerier dispatches custom CosmWasm bindings queries.

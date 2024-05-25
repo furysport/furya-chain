@@ -81,7 +81,7 @@ message MsgBurn {
 
 **State Modifications:**
 
-- Saftey check the following
+- Safety check the following
   - Check that the denom minting is created via `tokenfactory` module
   - Check that the sender of the message is the admin of the denom
 - Burn designated amount of tokens for the denom via `bank` module
@@ -104,7 +104,7 @@ Setting of metadata for a specific denom is only allowed for the admin of the de
 It allows the overwriting of the denom metadata in the bank module.
 
 ```go
-message MsgSetDenomMetadata {
+message MsgChangeAdmin {
   string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
   cosmos.bank.v1beta1.Metadata metadata = 2 [ (gogoproto.moretags) = "yaml:\"metadata\"", (gogoproto.nullable)   = false ];
 }

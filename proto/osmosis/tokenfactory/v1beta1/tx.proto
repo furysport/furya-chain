@@ -1,37 +1,31 @@
 syntax = "proto3";
 package osmosis.tokenfactory.v1beta1;
-import "cosmos_proto/cosmos.proto";
-import "cosmos/msg/v1/msg.proto";
+
 import "gogoproto/gogo.proto";
-import "amino/amino.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/bank/v1beta1/bank.proto";
 import "osmosis/tokenfactory/v1beta1/params.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
 
-option go_package = "github.com/osmosis-labs/osmosis/v17/x/tokenfactory/types";
+option go_package = "github.com/CosmosContracts/juno/x/tokenfactory/types";
 
 // Msg defines the tokefactory module's gRPC message service.
 service Msg {
-  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
   rpc CreateDenom(MsgCreateDenom) returns (MsgCreateDenomResponse);
   rpc Mint(MsgMint) returns (MsgMintResponse);
   rpc Burn(MsgBurn) returns (MsgBurnResponse);
   rpc ChangeAdmin(MsgChangeAdmin) returns (MsgChangeAdminResponse);
   rpc SetDenomMetadata(MsgSetDenomMetadata)
       returns (MsgSetDenomMetadataResponse);
-  rpc SetBeforeSendHook(MsgSetBeforeSendHook)
-      returns (MsgSetBeforeSendHookResponse);
   rpc ForceTransfer(MsgForceTransfer) returns (MsgForceTransferResponse);
+
+  // UpdateParams defines a governance operation for updating the x/mint module
+  // parameters. The authority is hard-coded to the x/gov module account.
+  //
+  // Since: cosmos-sdk 0.47
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
 }
-
-message MsgUpdateParams {
-  option (cosmos.msg.v1.signer) = "authority";
-
-  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  Params params    = 2 [(gogoproto.nullable) = false];
-}
-
-message MsgUpdateParamsResponse {}
 
 // MsgCreateDenom defines the message structure for the CreateDenom gRPC service
 // method. It allows an account to create a new denom. It requires a sender
@@ -43,8 +37,6 @@ message MsgUpdateParamsResponse {}
 // originally set to be the creator, but this can be changed later. The token
 // denom does not indicate the current admin.
 message MsgCreateDenom {
-  option (amino.name) = "osmosis/tokenfactory/create-denom";
-
   string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
   // subdenom can be up to 44 "alphanumeric" characters long.
   string subdenom = 2 [ (gogoproto.moretags) = "yaml:\"subdenom\"" ];
@@ -60,8 +52,6 @@ message MsgCreateDenomResponse {
 // MsgMint is the sdk.Msg type for allowing an admin account to mint
 // more of a token.  For now, we only support minting to the sender account
 message MsgMint {
-  option (amino.name) = "osmosis/tokenfactory/mint";
-
   string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
   cosmos.base.v1beta1.Coin amount = 2 [
     (gogoproto.moretags) = "yaml:\"amount\"",
@@ -76,8 +66,6 @@ message MsgMintResponse {}
 // MsgBurn is the sdk.Msg type for allowing an admin account to burn
 // a token.  For now, we only support burning from the sender account.
 message MsgBurn {
-  option (amino.name) = "osmosis/tokenfactory/burn";
-
   string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
   cosmos.base.v1beta1.Coin amount = 2 [
     (gogoproto.moretags) = "yaml:\"amount\"",
@@ -92,8 +80,6 @@ message MsgBurnResponse {}
 // MsgChangeAdmin is the sdk.Msg type for allowing an admin account to reassign
 // adminship of a denom to a new account
 message MsgChangeAdmin {
-  option (amino.name) = "osmosis/tokenfactory/change-admin";
-
   string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
   string denom = 2 [ (gogoproto.moretags) = "yaml:\"denom\"" ];
   string new_admin = 3 [ (gogoproto.moretags) = "yaml:\"new_admin\"" ];
@@ -102,21 +88,6 @@ message MsgChangeAdmin {
 // MsgChangeAdminResponse defines the response structure for an executed
 // MsgChangeAdmin message.
 message MsgChangeAdminResponse {}
-
-// MsgSetBeforeSendHook is the sdk.Msg type for allowing an admin account to
-// assign a CosmWasm contract to call with a BeforeSend hook
-message MsgSetBeforeSendHook {
-  option (amino.name) = "osmosis/tokenfactory/set-beforesend-hook";
-
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string denom = 2 [ (gogoproto.moretags) = "yaml:\"denom\"" ];
-  string cosmwasm_address = 3
-      [ (gogoproto.moretags) = "yaml:\"cosmwasm_address\"" ];
-}
-
-// MsgSetBeforeSendHookResponse defines the response structure for an executed
-// MsgSetBeforeSendHook message.
-message MsgSetBeforeSendHookResponse {}
 
 // MsgSetDenomMetadata is the sdk.Msg type for allowing an admin account to set
 // the denom's bank metadata
@@ -133,8 +104,6 @@ message MsgSetDenomMetadata {
 message MsgSetDenomMetadataResponse {}
 
 message MsgForceTransfer {
-  option (amino.name) = "osmosis/tokenfactory/force-transfer";
-
   string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
   cosmos.base.v1beta1.Coin amount = 2 [
     (gogoproto.moretags) = "yaml:\"amount\"",
@@ -147,3 +116,24 @@ message MsgForceTransfer {
 }
 
 message MsgForceTransferResponse {}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address of the governance account.
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // params defines the x/mint parameters to update.
+  //
+  // NOTE: All parameters must be supplied.
+  Params params = 2 [(gogoproto.nullable) = false];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParamsResponse {}

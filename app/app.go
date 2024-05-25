@@ -129,6 +129,7 @@ import (
 	intertxkeeper "github.com/furysport/furya-chain/v2/x/intertx/keeper"
 	intertxtypes "github.com/furysport/furya-chain/v2/x/intertx/types"
 	
+	"github.com/furysport/furya-chain/v2/x/tokenfactory/bindings"
 	tokenfactory "github.com/furysport/furya-chain/v2/x/tokenfactory"
 	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
@@ -600,12 +601,13 @@ func NewFuryaApp(
 	// Create the TokenFactory Keeper
 	app.TokenFactoryKeeper = tokenfactorykeeper.NewKeeper(
 		appCodec,
-		keys[tokenfactorytypes.StoreKey],
-		app.AccountKeeper,
-		app.BankKeeper,
-		app.DistrKeeper,
+		appKeepers.keys[tokenfactorytypes.StoreKey],
+		maccPerms,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.DistrKeeper,
 		tokenFactoryCapabilities,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		govModAddress,
 	)
 
 	wasmDir := filepath.Join(homePath, "data")
@@ -614,6 +616,24 @@ func NewFuryaApp(
 	if err != nil {
 		panic("error while reading wasm config: " + err.Error())
 	}
+	
+	// Move custom query of token factory to stargate, still use custom msg which is tfOpts[1]
+	tfOpts := bindings.RegisterCustomPlugins(appKeepers.BankKeeper, &appKeepers.TokenFactoryKeeper)
+	wasmOpts = append(wasmOpts, tfOpts...)
+
+	// Stargate Queries
+	acceptedStargateQueries := wasmkeeper.AcceptedStargateQueries{
+		// token factory
+		"/osmosis.tokenfactory.v1beta1.Query/Params":                 				&tokenfactorytypes.QueryParamsResponse{},
+		"/osmosis.tokenfactory.v1beta1.Query/DenomAuthorityMetadata": 	&tokenfactorytypes.QueryDenomAuthorityMetadataResponse{},
+		"/osmosis.tokenfactory.v1beta1.Query/DenomsFromCreator":      		&tokenfactorytypes.QueryDenomsFromCreatorResponse{},
+	}
+
+	querierOpts := wasmkeeper.WithQueryPlugins(
+		&wasmkeeper.QueryPlugins{
+			Stargate: wasmkeeper.AcceptListStargateQuerier(acceptedStargateQueries, bApp.GRPCQueryRouter(), appCodec),
+		})
+	wasmOpts = append(wasmOpts, querierOpts)
 
 	app.setupUpgradeStoreLoaders()
 
@@ -703,11 +723,7 @@ func NewFuryaApp(
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		packetforwardModule,
 		interTxModule,
-		tokenfactory.NewAppModule(
-			app.AppKeepers.TokenFactoryKeeper,
-			app.AppKeepers.AccountKeeper,
-			app.AppKeepers.BankKeeper,
-		),
+		tokenfactory.NewAppModule(app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.AccountKeeper, app.AppKeepers.BankKeeper, app.GetSubspace(tokenfactorytypes.ModuleName)),
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry, app.GetSubspace(alliancemoduletypes.ModuleName)),
 	)
 
