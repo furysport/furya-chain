@@ -16,6 +16,7 @@ import (
 	v131 "github.com/furysport/furya-chain/v2/app/upgrades/v131"
 	v140 "github.com/furysport/furya-chain/v2/app/upgrades/v140"
 	v200 "github.com/furysport/furya-chain/v2/app/upgrades/v200"
+	v210 "github.com/furysport/furya-chain/v2/app/upgrades/v210"
 	airdrop "github.com/furysport/furya-chain/v2/x/airdrop"
 	airdropkeeper "github.com/furysport/furya-chain/v2/x/airdrop/keeper"
 	airdroptypes "github.com/furysport/furya-chain/v2/x/airdrop/types"
@@ -204,7 +205,7 @@ var (
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
 
-	Upgrades = []upgrades.Upgrade{v130.Upgrade, v131.Upgrade, v140.Upgrade, v200.Upgrade}
+	Upgrades = []upgrades.Upgrade{v130.Upgrade, v131.Upgrade, v140.Upgrade, v200.Upgrade, v210.Upgrade}
 
 	// ModuleBasics defines the module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -1111,7 +1112,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(airdroptypes.ModuleName)
-	paramsKeeper.Subspace(tokenfactorytypes.ModuleName).WithKeyTable(tokenfactorytypes.ParamKeyTable())
+	paramsKeeper.Subspace(tokenfactorytypes.ModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName).WithKeyTable(alliancemoduletypes.ParamKeyTable())
 
 	return paramsKeeper
