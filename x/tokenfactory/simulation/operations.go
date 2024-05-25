@@ -15,6 +15,8 @@ import (
 )
 
 // Simulation operation weights constants
+//
+//nolint:gosec
 const (
 	OpWeightMsgCreateDenom      = "op_weight_msg_create_denom"
 	OpWeightMsgMint             = "op_weight_msg_mint"

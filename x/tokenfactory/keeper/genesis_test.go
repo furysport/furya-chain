@@ -9,24 +9,23 @@ import (
 
 func (suite *KeeperTestSuite) TestGenesis() {
 	genesisState := types.GenesisState{
-		Params: types.DefaultParams(),
 		FactoryDenoms: []types.GenesisDenom{
 			{
-				Denom: "factory/cosmos1t7egva48prqmzl59x5ngv4zx0dtrwewcdqdjr8/bitcoin",
+				Denom: "factory/furya1t7egva48prqmzl59x5ngv4zx0dtrwewcmjwfym/bitcoin",
 				AuthorityMetadata: types.DenomAuthorityMetadata{
-					Admin: "cosmos1t7egva48prqmzl59x5ngv4zx0dtrwewcdqdjr8",
+					Admin: "furya1t7egva48prqmzl59x5ngv4zx0dtrwewcmjwfym",
 				},
 			},
 			{
-				Denom: "factory/cosmos1t7egva48prqmzl59x5ngv4zx0dtrwewcdqdjr8/diff-admin",
+				Denom: "factory/furya1t7egva48prqmzl59x5ngv4zx0dtrwewcmjwfym/diff-admin",
 				AuthorityMetadata: types.DenomAuthorityMetadata{
-					Admin: "cosmos1t7egva48prqmzl59x5ngv4zx0dtrwewcdqdjr8",
+					Admin: "furya15czt5nhlnvayqq37xun9s9yus0d6y26dsvkcna",
 				},
 			},
 			{
-				Denom: "factory/cosmos1t7egva48prqmzl59x5ngv4zx0dtrwewcdqdjr8/litecoin",
+				Denom: "factory/furya1t7egva48prqmzl59x5ngv4zx0dtrwewcmjwfym/litecoin",
 				AuthorityMetadata: types.DenomAuthorityMetadata{
-					Admin: "cosmos1t7egva48prqmzl59x5ngv4zx0dtrwewcdqdjr8",
+					Admin: "furya1t7egva48prqmzl59x5ngv4zx0dtrwewcmjwfym",
 				},
 			},
 		},
@@ -43,7 +42,7 @@ func (suite *KeeperTestSuite) TestGenesis() {
 		}
 	}
 
-	if err := app.AppKeepers.TokenFactoryKeeper.SetParams(suite.Ctx, types.Params{DenomCreationFee: sdk.Coins{sdk.NewInt64Coin("ufury", 100)}}); err != nil {
+	if err := app.AppKeepers.TokenFactoryKeeper.SetParams(suite.Ctx, types.Params{DenomCreationFee: sdk.Coins{sdk.NewInt64Coin("stake", 100)}}); err != nil {
 		panic(err)
 	}
 	app.AppKeepers.TokenFactoryKeeper.InitGenesis(suite.Ctx, genesisState)

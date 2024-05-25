@@ -15,11 +15,11 @@ import (
 
 func TestCreateDenom(t *testing.T) {
 	actor := RandomAccountAddress()
-	app, ctx := SetupCustomApp(t, actor)
+	furyaapp, ctx := SetupCustomApp(t, actor)
 
 	// Fund actor with 100 base denom creation fees
 	actorAmount := sdk.NewCoins(sdk.NewCoin(types.DefaultParams().DenomCreationFee[0].Denom, types.DefaultParams().DenomCreationFee[0].Amount.MulRaw(100)))
-	fundAccount(t, ctx, app, actor, actorAmount)
+	fundAccount(t, ctx, furyaapp, actor, actorAmount)
 
 	specs := map[string]struct {
 		createDenom *bindings.CreateDenom
@@ -50,7 +50,7 @@ func TestCreateDenom(t *testing.T) {
 	for name, spec := range specs {
 		t.Run(name, func(t *testing.T) {
 			// when
-			_, gotErr := wasmbinding.PerformCreateDenom(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, actor, spec.createDenom)
+			_, gotErr := wasmbinding.PerformCreateDenom(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, actor, spec.createDenom)
 			// then
 			if spec.expErr {
 				t.Logf("validate_msg_test got error: %v", gotErr)
@@ -143,18 +143,18 @@ func TestChangeAdmin(t *testing.T) {
 	for name, spec := range specs {
 		t.Run(name, func(t *testing.T) {
 			// Setup
-			app, ctx := SetupCustomApp(t, tokenCreator)
+			furyaapp, ctx := SetupCustomApp(t, tokenCreator)
 
 			// Fund actor with 100 base denom creation fees
 			actorAmount := sdk.NewCoins(sdk.NewCoin(types.DefaultParams().DenomCreationFee[0].Denom, types.DefaultParams().DenomCreationFee[0].Amount.MulRaw(100)))
-			fundAccount(t, ctx, app, tokenCreator, actorAmount)
+			fundAccount(t, ctx, furyaapp, tokenCreator, actorAmount)
 
-			_, err := wasmbinding.PerformCreateDenom(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, tokenCreator, &bindings.CreateDenom{
+			_, err := wasmbinding.PerformCreateDenom(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, tokenCreator, &bindings.CreateDenom{
 				Subdenom: validDenom,
 			})
 			require.NoError(t, err)
 
-			err = wasmbinding.ChangeAdmin(&app.AppKeepers.TokenFactoryKeeper, ctx, spec.actor, spec.changeAdmin)
+			err = wasmbinding.ChangeAdmin(&furyaapp.AppKeepers.TokenFactoryKeeper, ctx, spec.actor, spec.changeAdmin)
 			if len(spec.expErrMsg) > 0 {
 				require.Error(t, err)
 				actualErrMsg := err.Error()
@@ -168,23 +168,23 @@ func TestChangeAdmin(t *testing.T) {
 
 func TestMint(t *testing.T) {
 	creator := RandomAccountAddress()
-	app, ctx := SetupCustomApp(t, creator)
+	furyaapp, ctx := SetupCustomApp(t, creator)
 
 	// Fund actor with 100 base denom creation fees
 	tokenCreationFeeAmt := sdk.NewCoins(sdk.NewCoin(types.DefaultParams().DenomCreationFee[0].Denom, types.DefaultParams().DenomCreationFee[0].Amount.MulRaw(100)))
-	fundAccount(t, ctx, app, creator, tokenCreationFeeAmt)
+	fundAccount(t, ctx, furyaapp, creator, tokenCreationFeeAmt)
 
 	// Create denoms for valid mint tests
 	validDenom := bindings.CreateDenom{
 		Subdenom: "MOON",
 	}
-	_, err := wasmbinding.PerformCreateDenom(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, creator, &validDenom)
+	_, err := wasmbinding.PerformCreateDenom(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, creator, &validDenom)
 	require.NoError(t, err)
 
 	emptyDenom := bindings.CreateDenom{
 		Subdenom: "",
 	}
-	_, err = wasmbinding.PerformCreateDenom(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, creator, &emptyDenom)
+	_, err = wasmbinding.PerformCreateDenom(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, creator, &emptyDenom)
 	require.NoError(t, err)
 
 	validDenomStr := fmt.Sprintf("factory/%s/%s", creator.String(), validDenom.Subdenom)
@@ -193,7 +193,7 @@ func TestMint(t *testing.T) {
 	lucky := RandomAccountAddress()
 
 	// lucky was broke
-	balances := app.AppKeepers.BankKeeper.GetAllBalances(ctx, lucky)
+	balances := furyaapp.AppKeepers.BankKeeper.GetAllBalances(ctx, lucky)
 	require.Empty(t, balances)
 
 	amount, ok := sdk.NewIntFromString("8080")
@@ -274,7 +274,7 @@ func TestMint(t *testing.T) {
 	for name, spec := range specs {
 		t.Run(name, func(t *testing.T) {
 			// when
-			gotErr := wasmbinding.PerformMint(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, creator, spec.mint)
+			gotErr := wasmbinding.PerformMint(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, creator, spec.mint)
 			// then
 			if spec.expErr {
 				require.Error(t, gotErr)
@@ -287,29 +287,29 @@ func TestMint(t *testing.T) {
 
 func TestBurn(t *testing.T) {
 	creator := RandomAccountAddress()
-	app, ctx := SetupCustomApp(t, creator)
+	furyaapp, ctx := SetupCustomApp(t, creator)
 
 	// Fund actor with 100 base denom creation fees
 	tokenCreationFeeAmt := sdk.NewCoins(sdk.NewCoin(types.DefaultParams().DenomCreationFee[0].Denom, types.DefaultParams().DenomCreationFee[0].Amount.MulRaw(100)))
-	fundAccount(t, ctx, app, creator, tokenCreationFeeAmt)
+	fundAccount(t, ctx, furyaapp, creator, tokenCreationFeeAmt)
 
 	// Create denoms for valid burn tests
 	validDenom := bindings.CreateDenom{
 		Subdenom: "MOON",
 	}
-	_, err := wasmbinding.PerformCreateDenom(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, creator, &validDenom)
+	_, err := wasmbinding.PerformCreateDenom(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, creator, &validDenom)
 	require.NoError(t, err)
 
 	emptyDenom := bindings.CreateDenom{
 		Subdenom: "",
 	}
-	_, err = wasmbinding.PerformCreateDenom(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, creator, &emptyDenom)
+	_, err = wasmbinding.PerformCreateDenom(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, creator, &emptyDenom)
 	require.NoError(t, err)
 
 	lucky := RandomAccountAddress()
 
 	// lucky was broke
-	balances := app.AppKeepers.BankKeeper.GetAllBalances(ctx, lucky)
+	balances := furyaapp.AppKeepers.BankKeeper.GetAllBalances(ctx, lucky)
 	require.Empty(t, balances)
 
 	validDenomStr := fmt.Sprintf("factory/%s/%s", creator.String(), validDenom.Subdenom)
@@ -391,7 +391,7 @@ func TestBurn(t *testing.T) {
 				Amount:        mintAmount,
 				MintToAddress: creator.String(),
 			}
-			err := wasmbinding.PerformMint(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, creator, mintBinding)
+			err := wasmbinding.PerformMint(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, creator, mintBinding)
 			require.NoError(t, err)
 
 			emptyDenomMintBinding := &bindings.MintTokens{
@@ -399,11 +399,11 @@ func TestBurn(t *testing.T) {
 				Amount:        mintAmount,
 				MintToAddress: creator.String(),
 			}
-			err = wasmbinding.PerformMint(&app.AppKeepers.TokenFactoryKeeper, app.AppKeepers.BankKeeper, ctx, creator, emptyDenomMintBinding)
+			err = wasmbinding.PerformMint(&furyaapp.AppKeepers.TokenFactoryKeeper, &furyaapp.AppKeepers.BankKeeper, ctx, creator, emptyDenomMintBinding)
 			require.NoError(t, err)
 
 			// when
-			gotErr := wasmbinding.PerformBurn(&app.AppKeepers.TokenFactoryKeeper, ctx, creator, spec.burn)
+			gotErr := wasmbinding.PerformBurn(&furyaapp.AppKeepers.TokenFactoryKeeper, ctx, creator, spec.burn)
 			// then
 			if spec.expErr {
 				require.Error(t, gotErr)

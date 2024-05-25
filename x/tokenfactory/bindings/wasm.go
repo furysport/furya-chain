@@ -1,13 +1,16 @@
 package bindings
 
 import (
+	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
+
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+
+	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 )
 
 func RegisterCustomPlugins(
-	bank bankkeeper.Keeper,
+	bank *bankkeeper.BaseKeeper,
 	tokenFactory *tokenfactorykeeper.Keeper,
 ) []wasmkeeper.Option {
 	wasmQueryPlugin := NewQueryPlugin(bank, tokenFactory)
@@ -19,7 +22,7 @@ func RegisterCustomPlugins(
 		CustomMessageDecorator(bank, tokenFactory),
 	)
 
-	return []wasmkeeper.Option{
+	return []wasm.Option{
 		queryPluginOpt,
 		messengerDecoratorOpt,
 	}
