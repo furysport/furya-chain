@@ -175,74 +175,35 @@ format: format-tools
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs misspell -w
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "./tests/system/vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gci write --skip-generated -s standard -s default -s "prefix(cosmossdk.io)" -s "prefix(github.com/cosmos/cosmos-sdk)" -s "prefix(github.com/furysport/furyad)" --custom-order
 
-
-###############################################################################
-###                                  Proto                                  ###
-###############################################################################
-
-proto-all: proto-format proto-gen
-
-proto:
-	@echo
-	@echo "=========== Generate Message ============"
-	@echo
-	./scripts/protocgen.sh
-	@echo
-	@echo "=========== Generate Complete ============"
-	@echo
-
-test:
-	@go test -v ./x/...
-
-docs:
-	@echo
-	@echo "Heloo"
-	@echo "=========== Generate Message ============"
-	@echo
-	./scripts/generate-docs.sh
-
-	statik -src=client/docs/static -dest=client/docs -f -m
-	@if [ -n "$(git status --porcelain)" ]; then \
-        echo "\033[91mSwagger docs are out of sync!!!\033[0m";\
-        exit 1;\
-    else \
-        echo "\033[92mSwagger docs are in sync\033[0m";\
-    fi
-	@echo
-	@echo "=========== Generate Complete ============"
-	@echo
-
 ###############################################################################
 ###                                Protobuf                                 ###
 ###############################################################################
 
-containerProtoVer=0.13.0
-containerProtoImage=ghcr.io/cosmos/proto-builder:$(containerProtoVer)
+protoVer=0.13.1
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
+protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
+
+proto-all: proto-format proto-lint proto-gen
 
 proto-gen:
 	@echo "Generating Protobuf files"
-	@$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(containerProtoImage) \
-		sh ./scripts/protocgen.sh;
+	@$(protoImage) sh ./scripts/protocgen.sh
 
 proto-swagger-gen:
 	@echo "Generating Protobuf Swagger"
-	@$(DOCKER) run --rm -v $(CURDIR):/workspace -v $(CURDIR)/proto:/proto --workdir /workspace $(containerProtoImage) \
-		sh ./scripts/protoc-swagger-gen.sh;
-		
-proto-format:
-	@echo "Formatting Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
-		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+	@$(protoImage) sh ./scripts/protoc-swagger-gen.sh
+	$(MAKE) update-swagger-docs
 
-update-swagger-docs:
-	$(BINDIR)/statik -src=client/docs/swagger-ui -dest=client/docs -f -m -ns furya
-	@if [ -n "$(git status --porcelain)" ]; then \
-		echo "\033[91mSwagger docs are out of sync!!!\033[0m";\
-		exit 1;\
-	else \
-		echo "\033[92mSwagger docs are in sync\033[0m";\
-	fi
-.PHONY: update-swagger-docs
+proto-format:
+	@$(protoImage) find ./ -name "*.proto" -exec clang-format -i {} \;
+
+proto-lint:
+	@$(protoImage) buf lint --error-format=json
+
+proto-check-breaking:
+	@$(protoImage) buf breaking --against $(HTTPS_GIT)#branch=main
+
+.PHONY: proto-all proto-gen proto-gen-any proto-swagger-gen proto-format proto-lint proto-check-breaking proto-update-deps docs
 
 
 .PHONY: docker.publish

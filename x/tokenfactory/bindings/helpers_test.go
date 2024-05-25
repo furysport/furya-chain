@@ -15,22 +15,22 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktestutil "github.com/cosmos/cosmos-sdk/x/bank/testutil"
 
-	"github.com/OmniFlix/omniflixhub/v3/app"
+	"github.com/furysport/furya-chain/v2/app"
 )
 
-func CreateTestInput(t *testing.T) (*app.OmniFlixApp, sdk.Context) {
+func CreateTestInput(t *testing.T) (*app.FuryaApp, sdk.Context) {
 	t.Helper()
 
-	omniflix := app.Setup(t)
-	ctx := omniflix.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "testing", Time: time.Now().UTC()})
-	return omniflix, ctx
+	furya := app.Setup(t)
+	ctx := furya.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "testing", Time: time.Now().UTC()})
+	return furya, ctx
 }
 
-func FundAccount(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp, acct sdk.AccAddress) {
+func FundAccount(t *testing.T, ctx sdk.Context, customApp *app.FuryaApp, acct sdk.AccAddress) {
 	t.Helper()
 
 	err := banktestutil.FundAccount(customApp.AppKeepers.BankKeeper, ctx, acct, sdk.NewCoins(
-		sdk.NewCoin("uflix", sdk.NewInt(10000000000)),
+		sdk.NewCoin("ufury", sdk.NewInt(10000000000)),
 	))
 	require.NoError(t, err)
 }
@@ -52,7 +52,7 @@ func RandomBech32AccountAddress() string {
 	return RandomAccountAddress().String()
 }
 
-func storeReflectCode(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp, addr sdk.AccAddress) uint64 {
+func storeReflectCode(t *testing.T, ctx sdk.Context, customApp *app.FuryaApp, addr sdk.AccAddress) uint64 {
 	t.Helper()
 
 	wasmCode, err := os.ReadFile("./testdata/token_reflect.wasm")
@@ -65,7 +65,7 @@ func storeReflectCode(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp,
 	return codeID
 }
 
-func instantiateReflectContract(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp, funder sdk.AccAddress) sdk.AccAddress {
+func instantiateReflectContract(t *testing.T, ctx sdk.Context, customApp *app.FuryaApp, funder sdk.AccAddress) sdk.AccAddress {
 	t.Helper()
 
 	initMsgBz := []byte("{}")
@@ -77,7 +77,7 @@ func instantiateReflectContract(t *testing.T, ctx sdk.Context, customApp *app.Om
 	return addr
 }
 
-func fundAccount(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp, addr sdk.AccAddress, coins sdk.Coins) {
+func fundAccount(t *testing.T, ctx sdk.Context, customApp *app.FuryaApp, addr sdk.AccAddress, coins sdk.Coins) {
 	t.Helper()
 
 	err := banktestutil.FundAccount(
@@ -89,7 +89,7 @@ func fundAccount(t *testing.T, ctx sdk.Context, customApp *app.OmniFlixApp, addr
 	require.NoError(t, err)
 }
 
-func SetupCustomApp(t *testing.T, addr sdk.AccAddress) (*app.OmniFlixApp, sdk.Context) {
+func SetupCustomApp(t *testing.T, addr sdk.AccAddress) (*app.FuryaApp, sdk.Context) {
 	t.Helper()
 
 	customApp, ctx := CreateTestInput(t)

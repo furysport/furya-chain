@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eo
+set -eo pipefail
 
 mkdir -p ./tmp-swagger-gen
 
@@ -25,22 +25,21 @@ if [ -d $temp_dir ]; then
   mv ./$temp_dir ./vendor
 fi
 
-proto_dirs=$(find $icq_proto_dir/proto $cosmos_sdk_dir/proto $alliance_dir/proto $ibc_dir/proto $ibc_pfm/proto $wasm_dir/proto $cosmos_proto_dir/proto ./proto -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
+proto_dirs=$(find $cosmos_sdk_dir/proto $alliance_dir/proto $ibc_dir/proto $ibc_pfm/proto $wasm_dir/proto $cosmos_proto_dir/proto ./proto -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
 for dir in $proto_dirs; do
   # generate swagger files (filter query files)
   query_file=$(find "${dir}" -maxdepth 1 \( -name 'query.proto' -o -name 'service.proto' \))
   
   if [[ ! -z "$query_file" ]]; then
-    protoc  \
+    /opt/homebrew/bin/protoc  \
     -I "$gogo_proto_dir" \
     -I "$gogo_proto_dir/protobuf" \
     -I "$cosmos_sdk_dir/proto" \
     -I "$alliance_dir/proto" \
     -I "$ibc_dir/proto" \
+    -I "$ibc_pfm/proto" \
     -I "$wasm_dir/proto" \
     -I "$google_api_dir" \
-    -I "$google_api_dir/third_party" \
-    -I "$google_api_dir/third_party/googleapis" \
     -I "$cosmos_proto_dir/proto" \
     -I "proto" \
       "$query_file" \
