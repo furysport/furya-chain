@@ -13,14 +13,14 @@ import (
 	// 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
 	// 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
 	// 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
-	"github.com/lum-network/chain/x/epochs"
-	"github.com/lum-network/chain/x/icacallbacks"
-	icacallbackstypes "github.com/lum-network/chain/x/icacallbacks/types"
-	"github.com/lum-network/chain/x/icqueries"
-	icqueriestypes "github.com/lum-network/chain/x/icqueries/types"
-	"github.com/lum-network/chain/x/millions"
-	millionstypes "github.com/lum-network/chain/x/millions/types"
-	epochstypes "github.com/lum-network/chain/x/epochs/types"
+	"github.com/furysport/furya-chain/v2/x/epochs"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks"
+	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/icqueries"
+	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
+	"github.com/furysport/furya-chain/v2/x/millions"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
 
 )
 

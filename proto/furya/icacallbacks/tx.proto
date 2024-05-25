@@ -1,0 +1,10 @@
+syntax = "proto3";
+package furya.icacallbacks;
+
+option go_package = "github.com/furysport/furya-chain/v2/x/icacallbacks/types";
+
+service Msg {
+  // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+// this line is used by starport scaffolding # proto/tx/message

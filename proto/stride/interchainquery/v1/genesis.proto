@@ -1,0 +1,51 @@
+syntax = "proto3";
+package stride.interchainquery.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/furysport/furya-chain/v2/x/icqueries/types";
+
+enum TimeoutPolicy {
+  REJECT_QUERY_RESPONSE = 0;
+  RETRY_QUERY_REQUEST = 1;
+  EXECUTE_QUERY_CALLBACK = 2;
+}
+
+message Query {
+  string id = 1;
+  string connection_id = 2;
+  string chain_id = 3;
+  string query_type = 4;
+  bytes request = 5;
+  string callback_module_name = 7;
+  string callback_id = 8;
+  uint64 timeout_timestamp = 9;
+  bool request_sent = 11;
+  string extra_id = 12;
+  TimeoutPolicy timeout_policy = 13;
+  google.protobuf.Duration timeout_duration = 14
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
+  uint64 submission_height = 15;
+}
+
+message DataPoint {
+  string id = 1;
+  string remote_height = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  string local_height = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  bytes value = 4 [ (gogoproto.jsontag) = "result,omitempty" ];
+}
+
+// GenesisState defines the epochs module's genesis state.
+message GenesisState {
+  repeated Query queries = 1 [ (gogoproto.nullable) = false ];
+}
