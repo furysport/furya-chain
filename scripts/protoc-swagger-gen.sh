@@ -25,8 +25,6 @@ else
   echo "Cosmos SDK directory already exists, skipping clone"
 fi
 
-
-
 alliance_dir=$(go list -f '{{ .Dir }}' -m github.com/terra-money/alliance)
 ibc_dir=$(go list -f '{{ .Dir }}' -m github.com/cosmos/ibc-go/v7)
 
