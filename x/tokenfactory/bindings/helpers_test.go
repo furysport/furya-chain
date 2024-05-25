@@ -24,8 +24,8 @@ func CreateTestInput(t *testing.T) (*app.App, sdk.Context) {
 	return osmosis, ctx
 }
 
-func FundAccount(t *testing.T, ctx sdk.Context, furyaapp *app.App, acct sdk.AccAddress) {
-	err := banktestutil.FundAccount(furyaapp.AppKeepers.BankKeeper, ctx, acct, sdk.NewCoins(
+func FundAccount(t *testing.T, ctx sdk.Context, junoapp *app.App, acct sdk.AccAddress) {
+	err := banktestutil.FundAccount(junoapp.AppKeepers.BankKeeper, ctx, acct, sdk.NewCoins(
 		sdk.NewCoin("uosmo", sdk.NewInt(10000000000)),
 	))
 	require.NoError(t, err)
@@ -48,20 +48,20 @@ func RandomBech32AccountAddress() string {
 	return RandomAccountAddress().String()
 }
 
-func storeReflectCode(t *testing.T, ctx sdk.Context, furyaapp *app.App, addr sdk.AccAddress) uint64 {
+func storeReflectCode(t *testing.T, ctx sdk.Context, junoapp *app.App, addr sdk.AccAddress) uint64 {
 	wasmCode, err := os.ReadFile("./testdata/token_reflect.wasm")
 	require.NoError(t, err)
 
-	contractKeeper := keeper.NewDefaultPermissionKeeper(furyaapp.AppKeepers.WasmKeeper)
+	contractKeeper := keeper.NewDefaultPermissionKeeper(junoapp.AppKeepers.WasmKeeper)
 	codeID, _, err := contractKeeper.Create(ctx, addr, wasmCode, nil)
 	require.NoError(t, err)
 
 	return codeID
 }
 
-func instantiateReflectContract(t *testing.T, ctx sdk.Context, furyaapp *app.App, funder sdk.AccAddress) sdk.AccAddress {
+func instantiateReflectContract(t *testing.T, ctx sdk.Context, junoapp *app.App, funder sdk.AccAddress) sdk.AccAddress {
 	initMsgBz := []byte("{}")
-	contractKeeper := keeper.NewDefaultPermissionKeeper(furyaapp.AppKeepers.WasmKeeper)
+	contractKeeper := keeper.NewDefaultPermissionKeeper(junoapp.AppKeepers.WasmKeeper)
 	codeID := uint64(1)
 	addr, _, err := contractKeeper.Instantiate(ctx, codeID, funder, funder, initMsgBz, "demo contract", nil)
 	require.NoError(t, err)
@@ -69,9 +69,9 @@ func instantiateReflectContract(t *testing.T, ctx sdk.Context, furyaapp *app.App
 	return addr
 }
 
-func fundAccount(t *testing.T, ctx sdk.Context, furyaapp *app.App, addr sdk.AccAddress, coins sdk.Coins) {
+func fundAccount(t *testing.T, ctx sdk.Context, junoapp *app.App, addr sdk.AccAddress, coins sdk.Coins) {
 	err := banktestutil.FundAccount(
-		furyaapp.AppKeepers.BankKeeper,
+		junoapp.AppKeepers.BankKeeper,
 		ctx,
 		addr,
 		coins,
@@ -80,13 +80,13 @@ func fundAccount(t *testing.T, ctx sdk.Context, furyaapp *app.App, addr sdk.AccA
 }
 
 func SetupCustomApp(t *testing.T, addr sdk.AccAddress) (*app.App, sdk.Context) {
-	furyaApp, ctx := CreateTestInput(t)
-	wasmKeeper := furyaApp.AppKeepers.WasmKeeper
+	junoApp, ctx := CreateTestInput(t)
+	wasmKeeper := junoApp.AppKeepers.WasmKeeper
 
-	storeReflectCode(t, ctx, furyaApp, addr)
+	storeReflectCode(t, ctx, junoApp, addr)
 
 	cInfo := wasmKeeper.GetCodeInfo(ctx, 1)
 	require.NotNil(t, cInfo)
 
-	return furyaApp, ctx
+	return junoApp, ctx
 }

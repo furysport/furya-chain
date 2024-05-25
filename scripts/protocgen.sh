@@ -17,6 +17,5 @@ done
 
 cd ..
 # move proto files to the right places
-cp -r github.com/osmosis-labs/osmosis/v17/* ./
 cp -r github.com/furysport/furya-chain/v2/* ./
 rm -rf github.com
