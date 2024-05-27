@@ -4,6 +4,19 @@ import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 
 	"github.com/furysport/furya-chain/v2/app/upgrades"
+	// intertxtypes "github.com/furysport/furya-chain/v2/x/intertx/types"
+	// icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
+	// packetforwardtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
+	// 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
+	// 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
+	// 	"github.com/cosmos/cosmos-sdk/x/group"
+	// 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
+	// 	tokenfactorytypes "github.com/furysport/furya-chain/v2/x/tokenfactory/types"
+	// 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
+	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
+	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
 )
 
 const (
@@ -15,6 +28,14 @@ var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
 	CreateUpgradeHandler: CreateUpgradeHandler,
 	StoreUpgrades: store.StoreUpgrades{
-		Added: []string{},
+		Added: []string{
+			// icacontrollertypes.StoreKey,
+			// intertxtypes.StoreKey,
+			// packetforwardtypes.StoreKey,
+			icacallbackstypes.ModuleName,
+			millionstypes.ModuleName,
+			icqueriestypes.ModuleName,
+			epochstypes.ModuleName,
+		},
 	},
 }

@@ -17,6 +17,7 @@ import (
 	v140 "github.com/furysport/furya-chain/v2/app/upgrades/v140"
 	v200 "github.com/furysport/furya-chain/v2/app/upgrades/v200"
 	v201 "github.com/furysport/furya-chain/v2/app/upgrades/v201"
+	v210 "github.com/furysport/furya-chain/v2/app/upgrades/v210"
 	airdrop "github.com/furysport/furya-chain/v2/x/airdrop"
 	airdropkeeper "github.com/furysport/furya-chain/v2/x/airdrop/keeper"
 	airdroptypes "github.com/furysport/furya-chain/v2/x/airdrop/types"
