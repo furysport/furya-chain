@@ -7,9 +7,9 @@ import "google/protobuf/duration.proto";
 option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 message Params {
-  // min_deposit_amount the minimum deposit amount accepted by pool
+  // min_credit_amount the minimum credit amount accepted by pool
   // configurations
-  string min_deposit_amount = 1 [
+  string min_credit_amount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
@@ -33,8 +33,8 @@ message Params {
       [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
   // DEPRECATED - DO NOT USE IN THE FUTURE - EX FEES STAKERS
   reserved 7;
-  // min_deposit_draw_delta the minimum delta before a draw for a deposit to be
+  // min_credit_draw_delta the minimum delta before a draw for a credit to be
   // accepted during the time weighted balance computation for a draw
-  google.protobuf.Duration min_deposit_draw_delta = 8
+  google.protobuf.Duration min_credit_draw_delta = 8
       [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
 }

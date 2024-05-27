@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 
 import "cosmos/base/query/v1beta1/pagination.proto";
 
-import "furya/millions/deposit.proto";
+import "furya/millions/credit.proto";
 import "furya/millions/draw.proto";
 import "furya/millions/params.proto";
 import "furya/millions/pool.proto";
@@ -28,29 +28,29 @@ service Query {
     option (google.api.http).get = "/furya/millions/pools/{pool_id}";
   }
 
-  rpc Deposits(QueryDepositsRequest) returns (QueryDepositsResponse) {
-    option (google.api.http).get = "/furya/millions/deposits";
+  rpc Credits(QueryCreditsRequest) returns (QueryCreditsResponse) {
+    option (google.api.http).get = "/furya/millions/credits";
   }
 
-  rpc PoolDeposits(QueryPoolDepositsRequest) returns (QueryDepositsResponse) {
-    option (google.api.http).get = "/furya/millions/deposits/{pool_id}";
+  rpc PoolCredits(QueryPoolCreditsRequest) returns (QueryCreditsResponse) {
+    option (google.api.http).get = "/furya/millions/credits/{pool_id}";
   }
 
-  rpc PoolDeposit(QueryPoolDepositRequest) returns (QueryDepositResponse) {
+  rpc PoolCredit(QueryPoolCreditRequest) returns (QueryCreditResponse) {
     option (google.api.http).get =
-        "/furya/millions/deposits/{pool_id}/{deposit_id}";
+        "/furya/millions/credits/{pool_id}/{credit_id}";
   }
 
-  rpc AccountDeposits(QueryAccountDepositsRequest)
-      returns (QueryDepositsResponse) {
+  rpc AccountCredits(QueryAccountCreditsRequest)
+      returns (QueryCreditsResponse) {
     option (google.api.http).get =
-        "/furya/millions/account/{depositor_address}/deposits";
+        "/furya/millions/account/{creditor_address}/credits";
   }
 
-  rpc AccountPoolDeposits(QueryAccountPoolDepositsRequest)
-      returns (QueryDepositsResponse) {
+  rpc AccountPoolCredits(QueryAccountPoolCreditsRequest)
+      returns (QueryCreditsResponse) {
     option (google.api.http).get =
-        "/furya/millions/account/{depositor_address}/deposits/{pool_id}";
+        "/furya/millions/account/{creditor_address}/credits/{pool_id}";
   }
 
   rpc Draws(QueryDrawsRequest) returns (QueryDrawsResponse) {
@@ -121,13 +121,13 @@ service Query {
   rpc AccountWithdrawals(QueryAccountWithdrawalsRequest)
       returns (QueryWithdrawalsResponse) {
     option (google.api.http).get =
-        "/furya/millions/account/{depositor_address}/withdrawals";
+        "/furya/millions/account/{creditor_address}/withdrawals";
   }
 
   rpc AccountPoolWithdrawals(QueryAccountPoolWithdrawalsRequest)
       returns (QueryWithdrawalsResponse) {
     option (google.api.http).get = "/furya/millions/account/"
-                                   "{depositor_address}/withdrawals/{pool_id}";
+                                   "{creditor_address}/withdrawals/{pool_id}";
   }
 }
 
@@ -154,38 +154,38 @@ message QueryPoolsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-// Deposits
+// Credits
 
-message QueryDepositResponse {
-  Deposit deposit = 1 [ (gogoproto.nullable) = false ];
+message QueryCreditResponse {
+  Credit credit = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryDepositsResponse {
-  repeated Deposit deposits = 1 [ (gogoproto.nullable) = false ];
+message QueryCreditsResponse {
+  repeated Credit credits = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryDepositsRequest {
+message QueryCreditsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryPoolDepositRequest {
+message QueryPoolCreditRequest {
   uint64 pool_id = 1;
-  uint64 deposit_id = 2;
+  uint64 credit_id = 2;
 }
 
-message QueryPoolDepositsRequest {
+message QueryPoolCreditsRequest {
   uint64 pool_id = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
-message QueryAccountDepositsRequest {
-  string depositor_address = 1;
+message QueryAccountCreditsRequest {
+  string creditor_address = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
-message QueryAccountPoolDepositsRequest {
-  string depositor_address = 1;
+message QueryAccountPoolCreditsRequest {
+  string creditor_address = 1;
   uint64 pool_id = 2;
   cosmos.base.query.v1beta1.PageRequest pagination = 3;
 }
@@ -287,12 +287,12 @@ message QueryPoolWithdrawalsRequest {
 }
 
 message QueryAccountWithdrawalsRequest {
-  string depositor_address = 1;
+  string creditor_address = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAccountPoolWithdrawalsRequest {
-  string depositor_address = 1;
+  string creditor_address = 1;
   uint64 pool_id = 2;
   cosmos.base.query.v1beta1.PageRequest pagination = 3;
 }

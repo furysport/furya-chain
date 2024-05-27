@@ -21,7 +21,7 @@ message ProposalRegisterPool {
   string native_denom = 5;
   string connection_id = 6;
   repeated string validators = 7;
-  string min_deposit_amount = 8 [
+  string min_credit_amount = 8 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
@@ -48,7 +48,7 @@ message ProposalUpdatePool {
 
   uint64 pool_id = 3;
   repeated string validators = 4 [ (gogoproto.nullable) = true ];
-  string min_deposit_amount = 5 [
+  string min_credit_amount = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = true
   ];
@@ -79,7 +79,7 @@ message ProposalUpdateParams {
   string title = 1;
   string description = 2;
 
-  string min_deposit_amount = 3 [
+  string min_credit_amount = 3 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = true
   ];
@@ -99,6 +99,6 @@ message ProposalUpdateParams {
       [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
   // DO NOT USE - EX FEES STAKERS
   reserved 9;
-  google.protobuf.Duration min_deposit_draw_delta = 10
+  google.protobuf.Duration min_credit_draw_delta = 10
       [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
 }

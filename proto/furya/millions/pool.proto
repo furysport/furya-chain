@@ -15,12 +15,12 @@ import "furya/millions/prize_strategy.proto";
 option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 // PoolState the state of a Pool
-// Deposits are only accepted for Pools in a Ready state
+// Credits are only accepted for Pools in a Ready state
 //
 // TODO:
 // Pool state KILLED is not available in the current implementation
 // Introduce the capability to:
-// - Kill a Pool and withdraw or migrate all deposits to another Pool via
+// - Kill a Pool and withdraw or migrate all credits to another Pool via
 // Governance proposal
 enum PoolState {
   option (gogoproto.goproto_enum_prefix) = true;
@@ -74,7 +74,7 @@ message Pool {
   string chain_id = 4;
   string connection_id = 5;
   string transfer_channel_id = 6;
-  string ica_deposit_port_id = 7;
+  string ica_credit_port_id = 7;
   string ica_prizepool_port_id = 8;
   PoolType pool_type = 9;
 
@@ -82,7 +82,7 @@ message Pool {
   string bech32_prefix_acc_addr = 11;
   string bech32_prefix_val_addr = 12;
 
-  string min_deposit_amount = 13 [
+  string min_credit_amount = 13 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
@@ -96,7 +96,7 @@ message Pool {
   ];
 
   string local_address = 18 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-  string ica_deposit_address = 19
+  string ica_credit_address = 19
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   string ica_prizepool_address = 20
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
@@ -107,7 +107,7 @@ message Pool {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  uint64 depositors_count = 24;
+  uint64 creditors_count = 24;
   string sponsorship_amount = 25 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false

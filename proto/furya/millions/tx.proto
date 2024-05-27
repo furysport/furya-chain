@@ -16,13 +16,13 @@ import "furya/millions/prize_strategy.proto";
 option go_package = "github.com/furysport/furya-chain/v2/x/millions/types";
 
 service Msg {
-  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
-  rpc DepositRetry(MsgDepositRetry) returns (MsgDepositRetryResponse);
-  rpc DepositEdit(MsgDepositEdit) returns (MsgDepositEditResponse);
+  rpc Credit(MsgCredit) returns (MsgCreditResponse);
+  rpc CreditRetry(MsgCreditRetry) returns (MsgCreditRetryResponse);
+  rpc CreditEdit(MsgCreditEdit) returns (MsgCreditEditResponse);
   rpc ClaimPrize(MsgClaimPrize) returns (MsgClaimPrizeResponse);
-  rpc WithdrawDeposit(MsgWithdrawDeposit) returns (MsgWithdrawDepositResponse);
-  rpc WithdrawDepositRetry(MsgWithdrawDepositRetry)
-      returns (MsgWithdrawDepositRetryResponse);
+  rpc WithdrawCredit(MsgWithdrawCredit) returns (MsgWithdrawCreditResponse);
+  rpc WithdrawCreditRetry(MsgWithdrawCreditRetry)
+      returns (MsgWithdrawCreditRetryResponse);
   rpc DrawRetry(MsgDrawRetry) returns (MsgDrawRetryResponse);
   rpc RestoreInterchainAccounts(MsgRestoreInterchainAccounts)
       returns (MsgRestoreInterchainAccountsResponse);
@@ -32,7 +32,7 @@ service Msg {
 message MsgUpdateParams {
   option (amino.name) = "furya/millions/MsgUpdateParams";
 
-  string min_deposit_amount = 1 [
+  string min_credit_amount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = true
   ];
@@ -54,7 +54,7 @@ message MsgUpdateParams {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = true
   ];
-  google.protobuf.Duration min_deposit_draw_delta = 8
+  google.protobuf.Duration min_credit_draw_delta = 8
       [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
   string updater_address = 9 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
@@ -69,7 +69,7 @@ message MsgRegisterPool {
   string native_denom = 3;
   string connection_id = 4;
   repeated string validators = 5;
-  string min_deposit_amount = 6 [
+  string min_credit_amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
@@ -88,7 +88,7 @@ message MsgUpdatePool {
 
   uint64 pool_id = 1;
   repeated string validators = 2 [ (gogoproto.nullable) = true ];
-  string min_deposit_amount = 3 [
+  string min_credit_amount = 3 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = true
   ];
@@ -99,42 +99,42 @@ message MsgUpdatePool {
 
 message MsgUpdatePoolResponse {}
 
-message MsgDeposit {
-  option (amino.name) = "furya/millions/MsgDeposit";
+message MsgCredit {
+  option (amino.name) = "furya/millions/MsgCredit";
 
   uint64 pool_id = 1;
   cosmos.base.v1beta1.Coin amount = 2 [ (gogoproto.nullable) = false ];
-  string depositor_address = 3
+  string creditor_address = 3
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   string winner_address = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   bool is_sponsor = 5;
 }
 
-message MsgDepositResponse { uint64 deposit_id = 1; }
+message MsgCreditResponse { uint64 credit_id = 1; }
 
-message MsgDepositRetry {
-  option (amino.name) = "furya/millions/MsgDepositRetry";
+message MsgCreditRetry {
+  option (amino.name) = "furya/millions/MsgCreditRetry";
 
   uint64 pool_id = 1;
-  uint64 deposit_id = 2;
-  string depositor_address = 3
+  uint64 credit_id = 2;
+  string creditor_address = 3
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message MsgDepositEdit {
-  option (amino.name) = "furya/millions/MsgDepositEdit";
+message MsgCreditEdit {
+  option (amino.name) = "furya/millions/MsgCreditEdit";
 
   uint64 pool_id = 1;
-  uint64 deposit_id = 2;
+  uint64 credit_id = 2;
   string winner_address = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   google.protobuf.BoolValue is_sponsor = 4;
-  string depositor_address = 5
+  string creditor_address = 5
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message MsgDepositEditResponse {}
+message MsgCreditEditResponse {}
 
-message MsgDepositRetryResponse {}
+message MsgCreditRetryResponse {}
 
 message MsgClaimPrize {
   option (amino.name) = "furya/millions/MsgClaimPrize";
@@ -147,28 +147,28 @@ message MsgClaimPrize {
 
 message MsgClaimPrizeResponse {}
 
-message MsgWithdrawDeposit {
-  option (amino.name) = "furya/millions/MsgWithdrawDeposit";
+message MsgWithdrawCredit {
+  option (amino.name) = "furya/millions/MsgWithdrawCredit";
 
   uint64 pool_id = 1;
-  uint64 deposit_id = 2;
-  string depositor_address = 3
+  uint64 credit_id = 2;
+  string creditor_address = 3
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   string to_address = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message MsgWithdrawDepositResponse { uint64 withdrawal_id = 1; }
+message MsgWithdrawCreditResponse { uint64 withdrawal_id = 1; }
 
-message MsgWithdrawDepositRetry {
-  option (amino.name) = "furya/millions/MsgWithdrawDepositRetry";
+message MsgWithdrawCreditRetry {
+  option (amino.name) = "furya/millions/MsgWithdrawCreditRetry";
 
   uint64 pool_id = 1;
   uint64 withdrawal_id = 2;
-  string depositor_address = 3
+  string creditor_address = 3
       [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message MsgWithdrawDepositRetryResponse {}
+message MsgWithdrawCreditRetryResponse {}
 
 message MsgDrawRetry {
   option (amino.name) = "furya/millions/MsgDrawRetry";
