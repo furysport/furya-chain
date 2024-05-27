@@ -2,6 +2,9 @@
 
 # Furya
 
+The current Mainnet version is v2.0.0.Rawhide. 
+**NOTE** - Please DO NOT use the 'develop' branch as it contains code that is currently being tested and could break the binary and in some cases cause irreperable damage. 
+
 Furya is a Cosmos SDK based blockchain here to enhance Web3 individuals, communities & builders experience through an all-in-one hub of dApps.
 
 The Furya Chain is a cutting-edge blockchain platform that lies at the heart of the Furya Hub, a decentralized fantasy sports casino and sports blockchain. 
