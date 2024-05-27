@@ -13,7 +13,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/v2/x/millions/types"
+	"github.com/lum-network/chain/x/millions/types"
 )
 
 type draw struct {
@@ -227,7 +227,7 @@ func (k Keeper) OnQueryFreshPrizePoolCoinsOnRemoteZoneCompleted(ctx sdk.Context,
 			freshPrizePool = freshPrizePool.AddAmount(c.Amount)
 		}
 		// TODO: handle other denoms here ?
-		// - in the case of Furya we will receive here the stakers fees as well (inception)
+		// - in the case of Lum we will receive here the stakers fees as well (inception)
 		// - in the case of other zones we might receive other tokens as well
 		// - TBD: do something with it at some point
 	}

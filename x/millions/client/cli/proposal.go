@@ -14,7 +14,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/spf13/cobra"
 
-	"github.com/furysport/furya-chain/v2/x/millions/types"
+	"github.com/lum-network/chain/x/millions/types"
 )
 
 func parseClosePoolProposalFile(cdc codec.JSONCodec, proposalFile string) (proposal types.ProposalClosePool, err error) {
@@ -80,11 +80,11 @@ Where proposal.json contains:
 {
     "title": "My new pool",
     "description": "This is my new pool",
-    "chain_id": "furya-testnet",
-    "denom": "ufury",
-    "native_denom": "ufury",
+    "chain_id": "lumnetwork-testnet",
+    "denom": "ulum",
+    "native_denom": "ulum",
     "connection_id": "",
-    "validators": ["furyavaloper1wf6alkrpjn4zhcnag3afqz34mlanplzwx6v8qz"],
+    "validators": ["lumvaloper1wf6alkrpjn4zhcnag3afqz34mlanplzwx6v8qz"],
     "min_deposit_amount": "1000000",
     "draw_schedule": {
         "draw_delta": "3600s",
@@ -97,8 +97,8 @@ Where proposal.json contains:
             "quantity": "100"
         }]
     },
-    "bech32_prefix_acc_addr": "furya",
-    "bech32_prefix_val_addr": "furyavaloper",
+    "bech32_prefix_acc_addr": "lum",
+    "bech32_prefix_val_addr": "lumvaloper",
     "transfer_channel_id": "",
     "unbonding_duration": "504h",
     "max_unbonding_entries": "7"
@@ -151,7 +151,7 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
+	cmd.Flags().String(govcli.FlagDeposit, "1ulum", "deposit of proposal")
 	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
 		panic(err)
 	}
@@ -175,7 +175,7 @@ Where proposal.json contains:
     "description": "This is my updated pool",
     "pool_id": 1,
     "pool_type": 1,
-    "validators": ["furyavaloper1wf6alkrpjn4zhcnag3afqz34mlanplzwx6v8qz"],
+    "validators": ["lumvaloper1wf6alkrpjn4zhcnag3afqz34mlanplzwx6v8qz"],
     "min_deposit_amount": "2000000",
     "draw_schedule": {
         "draw_delta": "3600s",
@@ -240,7 +240,7 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
+	cmd.Flags().String(govcli.FlagDeposit, "1ulum", "deposit of proposal")
 	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
 		panic(err)
 	}
@@ -312,7 +312,7 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
+	cmd.Flags().String(govcli.FlagDeposit, "1ulum", "deposit of proposal")
 	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
 		panic(err)
 	}
@@ -391,7 +391,7 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
+	cmd.Flags().String(govcli.FlagDeposit, "1ulum", "deposit of proposal")
 	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
 		panic(err)
 	}

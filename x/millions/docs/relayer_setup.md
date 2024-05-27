@@ -58,7 +58,7 @@ Then type
 
 If you type 
 
-`furyad query bank balances furya1vvhncsjsdy2d7cnge2773kd49pkvvv9wsrt8ra`
+`furya query bank balances furya1vvhncsjsdy2d7cnge2773kd49pkvvv9wsrt8ra`
 
 You should see something like this with the IBC denom from Gaia
 

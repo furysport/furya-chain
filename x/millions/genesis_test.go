@@ -12,25 +12,25 @@ import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	apptypes "github.com/furysport/furya-chain/v2/app"
-	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
-	"github.com/furysport/furya-chain/v2/x/millions"
-	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
+	apptypes "github.com/lum-network/chain/app"
+	epochstypes "github.com/lum-network/chain/x/epochs/types"
+	"github.com/lum-network/chain/x/millions"
+	millionstypes "github.com/lum-network/chain/x/millions/types"
 )
 
 var (
 	now      = time.Now().UTC()
 	future   = now.Add(10 * time.Second)
 	testAccs = []string{
-		"furya19vp4wqsdyw8gftvkat0vrfqzvdrlp9wxp6fevr",
-		"furya1s3zyjkd79tf83jew2f4cu4zhc9e5y53faqv3te",
-		"furya1hag45rj53nfpj6357ql7nzq3p678s7lx3gpmyu",
-		"furya1xutdwytajz6zn338wq7n4wx6m95076nepyu5zl",
-		"furya10dtsxdl0uj0pw58yvlmsuy8p5mvzvewga5dgl8",
-		"furya17p728nwzmkg5038pepfzeavxfu063aej0shwc8",
+		"lum19vp4wqsdyw8gftvkat0vrfqzvdrlp9wxp6fevr",
+		"lum1s3zyjkd79tf83jew2f4cu4zhc9e5y53faqv3te",
+		"lum1hag45rj53nfpj6357ql7nzq3p678s7lx3gpmyu",
+		"lum1xutdwytajz6zn338wq7n4wx6m95076nepyu5zl",
+		"lum10dtsxdl0uj0pw58yvlmsuy8p5mvzvewga5dgl8",
+		"lum17p728nwzmkg5038pepfzeavxfu063aej0shwc8",
 	}
 	defaultValidators = []millionstypes.PoolValidator{{
-		OperatorAddress: "furyavaloper1qx2dts3tglxcu0jh47k7ghstsn4nactufgmmlk",
+		OperatorAddress: "lumvaloper1qx2dts3tglxcu0jh47k7ghstsn4nactufgmmlk",
 		BondedAmount:    sdk.ZeroInt(),
 	}}
 	defaultSchedule   = millionstypes.DrawSchedule{DrawDelta: 404 * time.Hour, InitialDrawAt: now}
@@ -55,7 +55,7 @@ var testGenesis = millionstypes.GenesisState{
 		{PoolId: 1, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(510), DepositorsCount: 3, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-1", NativeDenom: "denom-1", NextDrawId: 3,
 			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-1", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
-			State: millionstypes.PoolState_Created, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
+			State: millionstypes.PoolState_Created, Bech32PrefixAccAddr: "lum", Bech32PrefixValAddr: "lumvaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
@@ -63,7 +63,7 @@ var testGenesis = millionstypes.GenesisState{
 		{PoolId: 2, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(603), DepositorsCount: 2, SponsorshipAmount: sdk.NewInt(401), Denom: "denom-2", NativeDenom: "denom-2", NextDrawId: 2,
 			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-2", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
-			State: millionstypes.PoolState_Ready, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
+			State: millionstypes.PoolState_Ready, Bech32PrefixAccAddr: "lum", Bech32PrefixValAddr: "lumvaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
@@ -71,7 +71,7 @@ var testGenesis = millionstypes.GenesisState{
 		{PoolId: 3, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(601), DepositorsCount: 1, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-3", NativeDenom: "denom-3", NextDrawId: 1,
 			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-3", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
-			State: millionstypes.PoolState_Closed, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
+			State: millionstypes.PoolState_Closed, Bech32PrefixAccAddr: "lum", Bech32PrefixValAddr: "lumvaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
@@ -79,7 +79,7 @@ var testGenesis = millionstypes.GenesisState{
 		{PoolId: 4, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(400), DepositorsCount: 1, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-4", NativeDenom: "denom-4", NextDrawId: 1,
 			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-4", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
-			State: millionstypes.PoolState_Created, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
+			State: millionstypes.PoolState_Created, Bech32PrefixAccAddr: "lum", Bech32PrefixValAddr: "lumvaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
@@ -87,7 +87,7 @@ var testGenesis = millionstypes.GenesisState{
 		{PoolId: 5, PoolType: millionstypes.PoolType_Staking, TvlAmount: sdk.NewInt(0), DepositorsCount: 0, SponsorshipAmount: sdk.ZeroInt(), Denom: "denom-5", NativeDenom: "denom-5", NextDrawId: 1,
 			ChainId: "c1", Validators: defaultValidators, MinDepositAmount: sdk.NewInt(1_000_000), UnbondingDuration: time.Duration(millionstypes.DefaultUnbondingDuration), MaxUnbondingEntries: sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries), AvailablePrizePool: sdk.NewCoin("denom-5", sdk.ZeroInt()),
 			DrawSchedule: defaultSchedule, PrizeStrategy: defaultPrizeStrat,
-			State: millionstypes.PoolState_Closed, Bech32PrefixAccAddr: "furya", Bech32PrefixValAddr: "furyavaloper",
+			State: millionstypes.PoolState_Closed, Bech32PrefixAccAddr: "lum", Bech32PrefixValAddr: "lumvaloper",
 			FeeTakers: []millionstypes.FeeTaker{
 				{Destination: authtypes.FeeCollectorName, Amount: sdk.NewDecWithPrec(millionstypes.DefaultFeeTakerAmount, 2), Type: millionstypes.FeeTakerType_LocalModuleAccount},
 			},
@@ -126,7 +126,7 @@ var testGenesis = millionstypes.GenesisState{
 		{EpochTrackerType: epochstypes.DAY_EPOCH, EpochIdentifier: epochstypes.DAY_EPOCH, NextEpochNumber: uint64(2), PreviousEpochNumber: uint64(0), NextEpochStartTime: future},
 	},
 	EpochUnbondings: []millionstypes.EpochUnbonding{
-		{PoolId: 1, EpochIdentifier: "test", EpochNumber: 1, TotalAmount: sdk.NewCoin("ufury", sdk.NewInt(1000000)), WithdrawalIds: []uint64{1, 2}, WithdrawalIdsCount: 2},
+		{PoolId: 1, EpochIdentifier: "test", EpochNumber: 1, TotalAmount: sdk.NewCoin("ulum", sdk.NewInt(1000000)), WithdrawalIds: []uint64{1, 2}, WithdrawalIdsCount: 2},
 	},
 }
 

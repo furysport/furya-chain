@@ -12,9 +12,9 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
-	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
-	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
+	epochstypes "github.com/lum-network/chain/x/epochs/types"
+	millionskeeper "github.com/lum-network/chain/x/millions/keeper"
+	millionstypes "github.com/lum-network/chain/x/millions/types"
 )
 
 func splitDelegationSliceToMap(vals []*millionstypes.SplitDelegation) map[string]*millionstypes.SplitDelegation {
@@ -46,10 +46,10 @@ func (suite *KeeperTestSuite) TestPool_ValidatorsBasics() {
 	pool.Bech32PrefixValAddr = ""
 	suite.Require().Error(pool.ValidateBasic(params))
 	suite.Require().ErrorIs(pool.ValidateBasic(params), millionstypes.ErrInvalidPoolParams)
-	pool.Bech32PrefixAccAddr = "furya"
+	pool.Bech32PrefixAccAddr = "lum"
 	suite.Require().Error(pool.ValidateBasic(params))
 	suite.Require().ErrorIs(pool.ValidateBasic(params), millionstypes.ErrInvalidPoolParams)
-	pool.Bech32PrefixValAddr = "furyavaloper"
+	pool.Bech32PrefixValAddr = "lumvaloper"
 	suite.Require().NoError(pool.ValidateBasic(params))
 
 	// Prefix should match validators config
@@ -295,14 +295,14 @@ func (suite *KeeperTestSuite) TestPool_DepositorsCountAndTVL() {
 	denom := app.StakingKeeper.BondDenom(ctx)
 	poolID, err := app.MillionsKeeper.RegisterPool(ctx,
 		millionstypes.PoolType_Staking,
-		"ufury",
-		"ufury",
+		"ulum",
+		"ulum",
 		testChainID,
 		"",
 		"",
 		[]string{suite.valAddrs[0].String()},
-		"furya",
-		"furyavaloper",
+		"lum",
+		"lumvaloper",
 		app.MillionsKeeper.GetParams(ctx).MinDepositAmount,
 		time.Duration(millionstypes.DefaultUnbondingDuration),
 		sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries),
@@ -965,14 +965,14 @@ func (suite *KeeperTestSuite) TestPool_ClosePool() {
 	// Set up the base pool
 	poolID, err := app.MillionsKeeper.RegisterPool(ctx,
 		millionstypes.PoolType_Staking,
-		"ufury",
-		"ufury",
+		"ulum",
+		"ulum",
 		testChainID,
 		"",
 		"",
 		[]string{suite.valAddrs[0].String()},
-		"furya",
-		"furyavaloper",
+		"lum",
+		"lumvaloper",
 		app.MillionsKeeper.GetParams(ctx).MinDepositAmount,
 		time.Duration(millionstypes.DefaultUnbondingDuration),
 		sdk.NewInt(millionstypes.DefaultMaxUnbondingEntries),

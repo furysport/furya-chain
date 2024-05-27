@@ -14,7 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	gogotypes "github.com/cosmos/gogoproto/types"
 
-	"github.com/furysport/furya-chain/v2/x/millions/types"
+	"github.com/lum-network/chain/x/millions/types"
 )
 
 func GetTxCmd() *cobra.Command {

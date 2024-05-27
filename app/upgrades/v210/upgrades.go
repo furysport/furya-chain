@@ -2,15 +2,15 @@ package v210
 
 import (
 	"github.com/furysport/furya-chain/v2/app/keepers"
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	tmtypes "github.com/cometbft/cometbft/types"
+// 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+// 	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
 	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
-	icacontrollertypes "github.com/cosmos/interchain-accounts/x/controller/types"
+	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 )
 
 // nolint:all
@@ -39,35 +39,21 @@ func CreateUpgradeHandler(
 		)
 
 		// Apply patched parameters
-		if err := keepers.ICAHostKeeper.SetParams(ctx, icaHostParams); err != nil {
-			return nil, err
-		}
-		if err := keepers.ICAControllerKeeper.SetParams(ctx, icaControllerParams); err != nil {
-			return nil, err
-		}
-
+		keepers.ICAHostKeeper.SetParams(ctx, icaHostParams)
+		keepers.ICAControllerKeeper.SetParams(ctx, icaControllerParams)
+		
 		// Set the ICA Callbacks, ICQueries, and Millions modules versions so InitGenesis is not run
 		vm[icacallbackstypes.ModuleName] = mm.GetVersionMap()[icacallbackstypes.ModuleName]
 		vm[icqueriestypes.ModuleName] = mm.GetVersionMap()[icqueriestypes.ModuleName]
 		vm[millionstypes.ModuleName] = mm.GetVersionMap()[millionstypes.ModuleName]
-
+		
 		// Apply initial millions state
 		genState := millionstypes.DefaultGenesisState()
-		if err := keepers.MillionsKeeper.SetParams(ctx, genState.Params); err != nil {
-			return nil, err
-		}
-		if err := keepers.MillionsKeeper.SetNextPoolID(ctx, genState.NextPoolId); err != nil {
-			return nil, err
-		}
-		if err := keepers.MillionsKeeper.SetNextDepositID(ctx, genState.NextDepositId); err != nil {
-			return nil, err
-		}
-		if err := keepers.MillionsKeeper.SetNextPrizeID(ctx, genState.NextPrizeId); err != nil {
-			return nil, err
-		}
-		if err := keepers.MillionsKeeper.SetNextWithdrawalID(ctx, genState.NextWithdrawalId); err != nil {
-			return nil, err
-		}
+		keepers.MillionsKeeper.SetParams(ctx, genState.Params)
+		keepers.MillionsKeeper.SetNextPoolID(ctx, genState.NextPoolId)
+		keepers.MillionsKeeper.SetNextDepositID(ctx, genState.NextDepositId)
+		keepers.MillionsKeeper.SetNextPrizeID(ctx, genState.NextPrizeId)
+		keepers.MillionsKeeper.SetNextWithdrawalID(ctx, genState.NextWithdrawalId)
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
