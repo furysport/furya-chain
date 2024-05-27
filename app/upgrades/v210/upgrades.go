@@ -30,11 +30,11 @@ func CreateUpgradeHandler(
 		}
 		icaHostParams.AllowMessages = append(icaHostParams.AllowMessages,
 			// Change: added millions messages
-			sdk.MsgTypeURL(&millionstypes.MsgDeposit{}),
-			sdk.MsgTypeURL(&millionstypes.MsgDepositRetry{}),
+			sdk.MsgTypeURL(&millionstypes.MsgCredit{}),
+			sdk.MsgTypeURL(&millionstypes.MsgCreditRetry{}),
 			sdk.MsgTypeURL(&millionstypes.MsgClaimPrize{}),
-			sdk.MsgTypeURL(&millionstypes.MsgWithdrawDeposit{}),
-			sdk.MsgTypeURL(&millionstypes.MsgWithdrawDepositRetry{}),
+			sdk.MsgTypeURL(&millionstypes.MsgWithdrawCredit{}),
+			sdk.MsgTypeURL(&millionstypes.MsgWithdrawCreditRetry{}),
 			sdk.MsgTypeURL(&millionstypes.MsgDrawRetry{}),
 		)
 
@@ -50,7 +50,7 @@ func CreateUpgradeHandler(
 		genState := millionstypes.DefaultGenesisState()
 		keepers.MillionsKeeper.SetParams(ctx, genState.Params)
 		keepers.MillionsKeeper.SetNextPoolID(ctx, genState.NextPoolId)
-		keepers.MillionsKeeper.SetNextDepositID(ctx, genState.NextDepositId)
+		keepers.MillionsKeeper.SetNextCreditID(ctx, genState.NextCreditId)
 		keepers.MillionsKeeper.SetNextPrizeID(ctx, genState.NextPrizeId)
 		keepers.MillionsKeeper.SetNextWithdrawalID(ctx, genState.NextWithdrawalId)
 
