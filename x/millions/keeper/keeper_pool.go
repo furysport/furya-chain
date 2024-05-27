@@ -56,15 +56,15 @@ func (k Keeper) SetupPoolICA(ctx sdk.Context, poolID uint64) (*types.Pool, error
 		return &pool, errorsmod.Wrapf(types.ErrFailedToRegisterPool, err.Error())
 	}
 
-	// Register the accounts deposit account first
+	// Register the accounts credit account first
 	// Wait for this account to be setup to register the prize pool account
 	// This is done to avoid race conditions for the last setup step (SetWithdrawAddress)
-	pool.IcaDepositPortId = string(types.NewPoolName(pool.GetPoolId(), types.ICATypeDeposit))
+	pool.IcaCreditPortId = string(types.NewPoolName(pool.GetPoolId(), types.ICATypeCredit))
 	if err != nil {
-		return &pool, errorsmod.Wrapf(types.ErrFailedToRegisterPool, fmt.Sprintf("Unable to create deposit account port id, err: %s", err.Error()))
+		return &pool, errorsmod.Wrapf(types.ErrFailedToRegisterPool, fmt.Sprintf("Unable to create credit account port id, err: %s", err.Error()))
 	}
-	if err := k.ICAControllerKeeper.RegisterInterchainAccount(ctx, pool.GetConnectionId(), pool.GetIcaDepositPortId(), appVersion); err != nil {
-		return &pool, errorsmod.Wrapf(types.ErrFailedToRegisterPool, fmt.Sprintf("Unable to trigger deposit account registration, err: %s", err.Error()))
+	if err := k.ICAControllerKeeper.RegisterInterchainAccount(ctx, pool.GetConnectionId(), pool.GetIcaCreditPortId(), appVersion); err != nil {
+		return &pool, errorsmod.Wrapf(types.ErrFailedToRegisterPool, fmt.Sprintf("Unable to trigger credit account registration, err: %s", err.Error()))
 	}
 
 	k.updatePool(ctx, &pool)
@@ -93,12 +93,12 @@ func (k Keeper) OnSetupPoolICACompleted(ctx sdk.Context, poolID uint64, icaType 
 		return k.SetupPoolWithdrawalAddress(ctx, poolID)
 	}
 
-	if pool.IcaDepositAddress == "" && icaType == types.ICATypeDeposit && len(icaAddress) > 0 {
-		// Assign the ICA deposit address
-		pool.IcaDepositAddress = icaAddress
+	if pool.IcaCreditAddress == "" && icaType == types.ICATypeCredit && len(icaAddress) > 0 {
+		// Assign the ICA credit address
+		pool.IcaCreditAddress = icaAddress
 
 		if pool.IcaPrizepoolPortId == "" {
-			// First time registering ICA Deposit
+			// First time registering ICA Credit
 			// Initialize ICA PrizePool
 			appVersion, err := k.getPoolAppVersion(ctx, pool)
 			if err != nil {
@@ -121,7 +121,7 @@ func (k Keeper) OnSetupPoolICACompleted(ctx sdk.Context, poolID uint64, icaType 
 		k.updatePool(ctx, &pool)
 	}
 
-	if len(pool.IcaDepositAddress) > 0 && len(pool.IcaPrizepoolAddress) > 0 {
+	if len(pool.IcaCreditAddress) > 0 && len(pool.IcaPrizepoolAddress) > 0 {
 		// Move to next step since both accounts have been created
 		return k.SetupPoolWithdrawalAddress(ctx, poolID)
 	}
@@ -129,7 +129,7 @@ func (k Keeper) OnSetupPoolICACompleted(ctx sdk.Context, poolID uint64, icaType 
 	return &pool, nil
 }
 
-// SetupPoolWithdrawalAddress sets the PrizePoolAddress as the Staking withdrawal address for the DepositAddress
+// SetupPoolWithdrawalAddress sets the PrizePoolAddress as the Staking withdrawal address for the CreditAddress
 // - waits for the ICA callback to move to OnSetupPoolWithdrawalAddressCompleted
 // - or go to OnSetupPoolWithdrawalAddressCompleted directly upon setting up the withdrawal address if local zone
 func (k Keeper) SetupPoolWithdrawalAddress(ctx sdk.Context, poolID uint64) (*types.Pool, error) {
@@ -147,7 +147,7 @@ func (k Keeper) SetupPoolWithdrawalAddress(ctx sdk.Context, poolID uint64) (*typ
 	if pool.IsLocalZone(ctx) {
 		if err := k.DistributionKeeper.SetWithdrawAddr(
 			ctx,
-			sdk.MustAccAddressFromBech32(pool.IcaDepositAddress),
+			sdk.MustAccAddressFromBech32(pool.IcaCreditAddress),
 			sdk.MustAccAddressFromBech32(pool.IcaPrizepoolAddress),
 		); err != nil {
 			logger.Error(
@@ -168,10 +168,10 @@ func (k Keeper) SetupPoolWithdrawalAddress(ctx sdk.Context, poolID uint64) (*typ
 		return &pool, err
 	}
 	msgs := []sdk.Msg{&distribtypes.MsgSetWithdrawAddress{
-		DelegatorAddress: pool.GetIcaDepositAddress(),
+		DelegatorAddress: pool.GetIcaCreditAddress(),
 		WithdrawAddress:  pool.GetIcaPrizepoolAddress(),
 	}}
-	sequence, err := k.BroadcastICAMessages(ctx, pool, types.ICATypeDeposit, msgs, types.IBCTimeoutNanos, ICACallbackID_SetWithdrawAddress, marshalledCallbackData)
+	sequence, err := k.BroadcastICAMessages(ctx, pool, types.ICATypeCredit, msgs, types.IBCTimeoutNanos, ICACallbackID_SetWithdrawAddress, marshalledCallbackData)
 	if err != nil {
 		logger.Error(
 			fmt.Sprintf("failed to dispatch ICA set withdraw address: %v", err),
@@ -269,7 +269,7 @@ func (k Keeper) RegisterPool(
 	denom, nativeDenom, chainId, connectionId, transferChannelId string,
 	vals []string,
 	bech32Acc, bech32Val string,
-	minDepositAmount math.Int,
+	minCreditAmount math.Int,
 	UnbondingDuration time.Duration,
 	maxUnbondingEntries math.Int,
 	drawSchedule types.DrawSchedule,
@@ -290,8 +290,8 @@ func (k Keeper) RegisterPool(
 		})
 	}
 
-	// Initialize our local deposit address
-	localAddress := types.NewPoolAddress(poolID, types.ICATypeDeposit)
+	// Initialize our local credit address
+	localAddress := types.NewPoolAddress(poolID, types.ICATypeCredit)
 	poolAccount := k.AccountKeeper.NewAccount(ctx, authtypes.NewModuleAccount(authtypes.NewBaseAccountWithAddress(localAddress), localAddress.String()))
 	k.AccountKeeper.SetAccount(ctx, poolAccount)
 
@@ -306,7 +306,7 @@ func (k Keeper) RegisterPool(
 		Validators:          validators,
 		Bech32PrefixAccAddr: bech32Acc,
 		Bech32PrefixValAddr: bech32Val,
-		MinDepositAmount:    minDepositAmount,
+		MinCreditAmount:    minCreditAmount,
 		UnbondingDuration:   UnbondingDuration,
 		MaxUnbondingEntries: maxUnbondingEntries,
 		DrawSchedule:        drawSchedule.Sanitized(),
@@ -314,7 +314,7 @@ func (k Keeper) RegisterPool(
 		LocalAddress:        localAddress.String(),
 		NextDrawId:          1,
 		TvlAmount:           sdk.ZeroInt(),
-		DepositorsCount:     0,
+		CreditorsCount:     0,
 		SponsorshipAmount:   sdk.ZeroInt(),
 		AvailablePrizePool:  sdk.NewCoin(denom, sdk.ZeroInt()),
 		State:               types.PoolState_Created,
@@ -337,8 +337,8 @@ func (k Keeper) RegisterPool(
 
 	// If it's a local zone, we have more setup steps for module accounts
 	if pool.IsLocalZone(ctx) {
-		// Set the deposit address to the local module account address
-		pool.IcaDepositAddress = localAddress.String()
+		// Set the credit address to the local module account address
+		pool.IcaCreditAddress = localAddress.String()
 
 		// Initialize our local prizepool address
 		icaPrizePoolAddress := types.NewPoolAddress(poolID, types.ICATypePrizePool)
@@ -377,7 +377,7 @@ func (k Keeper) UpdatePool(
 	ctx sdk.Context,
 	poolID uint64,
 	vals []string,
-	minDepositAmount *math.Int,
+	minCreditAmount *math.Int,
 	UnbondingDuration *time.Duration,
 	maxUnbondingEntries *math.Int,
 	drawSchedule *types.DrawSchedule,
@@ -392,8 +392,8 @@ func (k Keeper) UpdatePool(
 	}
 
 	// Only a few properties can be updated
-	if minDepositAmount != nil {
-		pool.MinDepositAmount = *minDepositAmount
+	if minCreditAmount != nil {
+		pool.MinCreditAmount = *minCreditAmount
 	}
 	if UnbondingDuration != nil {
 		pool.UnbondingDuration = *UnbondingDuration
@@ -479,12 +479,12 @@ func (k Keeper) UpdatePool(
 	return nil
 }
 
-// ClosePool iterate through many stages to close a Pool based on its local state, deposits and withdrawals
+// ClosePool iterate through many stages to close a Pool based on its local state, credits and withdrawals
 //
 // Closing procedure steps:
 // 1. Move pool into state Closing
 // 2. Launch the final Draw
-// 3. Launch the withdrawal of all the deposits
+// 3. Launch the withdrawal of all the credits
 // 4. Wait for all withdrawals to complete
 func (k Keeper) ClosePool(ctx sdk.Context, poolID uint64) error {
 	logger := k.Logger(ctx).With("ctx", "close_pool", "pool_id", poolID)
@@ -524,36 +524,36 @@ func (k Keeper) ClosePool(ctx sdk.Context, poolID uint64) error {
 		return nil
 	}
 
-	// Step 3: Initiate the withdrawal of all the deposits
-	deposits := k.ListPoolDeposits(ctx, poolID)
-	if len(deposits) > 0 {
-		logger.Info("Initiate the withdrawal of all deposits")
-		// As long as we have deposits we will keep trying to withdraw them before moving forward
+	// Step 3: Initiate the withdrawal of all the credits
+	credits := k.ListPoolCredits(ctx, poolID)
+	if len(credits) > 0 {
+		logger.Info("Initiate the withdrawal of all credits")
+		// As long as we have credits we will keep trying to withdraw them before moving forward
 		serv := msgServer{Keeper: k}
-		for _, deposit := range deposits {
-			if deposit.State == types.DepositState_Failure {
-				// Force retry deposits in error states
-				logger.Info(fmt.Sprintf("Retrying deposit with ID %d in error state %s", deposit.GetDepositId(), deposit.GetErrorState().String()))
-				_, err := serv.DepositRetry(sdk.WrapSDKContext(ctx), &types.MsgDepositRetry{
-					PoolId:           deposit.GetPoolId(),
-					DepositId:        deposit.GetDepositId(),
-					DepositorAddress: deposit.GetDepositorAddress(),
+		for _, credit := range credits {
+			if credit.State == types.CreditState_Failure {
+				// Force retry credits in error states
+				logger.Info(fmt.Sprintf("Retrying credit with ID %d in error state %s", credit.GetCreditId(), credit.GetErrorState().String()))
+				_, err := serv.CreditRetry(sdk.WrapSDKContext(ctx), &types.MsgCreditRetry{
+					PoolId:           credit.GetPoolId(),
+					CreditId:        credit.GetCreditId(),
+					CreditorAddress: credit.GetCreditorAddress(),
 				})
 				if err != nil {
-					logger.Error(fmt.Sprintf("Error while forcing retry for deposit %d: %v", deposit.GetDepositId(), err))
+					logger.Error(fmt.Sprintf("Error while forcing retry for credit %d: %v", credit.GetCreditId(), err))
 					return err
 				}
-			} else if deposit.State == types.DepositState_Success {
-				// Withdraw deposits in success state
-				logger.Info(fmt.Sprintf("Withdrawing deposit with ID %d", deposit.GetDepositId()))
-				_, err := serv.WithdrawDeposit(sdk.WrapSDKContext(ctx), types.NewMsgWithdrawDeposit(
-					deposit.GetDepositorAddress(),
-					deposit.GetDepositorAddress(),
-					deposit.GetPoolId(),
-					deposit.GetDepositId(),
+			} else if credit.State == types.CreditState_Success {
+				// Withdraw credits in success state
+				logger.Info(fmt.Sprintf("Withdrawing credit with ID %d", credit.GetCreditId()))
+				_, err := serv.WithdrawCredit(sdk.WrapSDKContext(ctx), types.NewMsgWithdrawCredit(
+					credit.GetCreditorAddress(),
+					credit.GetCreditorAddress(),
+					credit.GetPoolId(),
+					credit.GetCreditId(),
 				))
 				if err != nil {
-					logger.Error(fmt.Sprintf("Error while launching withdrawal for deposit with ID %d: %v", deposit.GetDepositId(), err))
+					logger.Error(fmt.Sprintf("Error while launching withdrawal for credit with ID %d: %v", credit.GetCreditId(), err))
 					return err
 				}
 			}
@@ -569,10 +569,10 @@ func (k Keeper) ClosePool(ctx sdk.Context, poolID uint64) error {
 			if withdrawal.State == types.WithdrawalState_Failure {
 				// Force retry withdrawals in error state
 				logger.Info(fmt.Sprintf("Retrying withdrawal with ID %d in error state %s", withdrawal.GetWithdrawalId(), withdrawal.GetErrorState().String()))
-				_, err := serv.WithdrawDepositRetry(sdk.WrapSDKContext(ctx), &types.MsgWithdrawDepositRetry{
+				_, err := serv.WithdrawCreditRetry(sdk.WrapSDKContext(ctx), &types.MsgWithdrawCreditRetry{
 					PoolId:           withdrawal.GetPoolId(),
 					WithdrawalId:     withdrawal.GetWithdrawalId(),
-					DepositorAddress: withdrawal.GetDepositorAddress(),
+					CreditorAddress: withdrawal.GetCreditorAddress(),
 				})
 				if err != nil {
 					logger.Error(fmt.Sprintf("Error while forcing retry for withdrawal with ID %d: %v", withdrawal.GetWithdrawalId(), err))
@@ -716,7 +716,7 @@ func (k Keeper) OnRedelegateToActiveValidatorsOnRemoteZoneCompleted(ctx sdk.Cont
 
 // UnsafeUpdatePoolPortIds This method raw update the provided pool port ids.
 // It's heavily unsafe and could break the ICA implementation. It should only be used by store migrations.
-func (k Keeper) UnsafeUpdatePoolPortIds(ctx sdk.Context, poolID uint64, icaDepositPortId, icaPrizePoolPortId string) (types.Pool, error) {
+func (k Keeper) UnsafeUpdatePoolPortIds(ctx sdk.Context, poolID uint64, icaCreditPortId, icaPrizePoolPortId string) (types.Pool, error) {
 	// Grab our pool instance
 	pool, err := k.GetPool(ctx, poolID)
 	if err != nil {
@@ -724,7 +724,7 @@ func (k Keeper) UnsafeUpdatePoolPortIds(ctx sdk.Context, poolID uint64, icaDepos
 	}
 
 	// Patch and update our pool entity
-	pool.IcaDepositPortId = icaDepositPortId
+	pool.IcaCreditPortId = icaCreditPortId
 	pool.IcaPrizepoolPortId = icaPrizePoolPortId
 	k.updatePool(ctx, &pool)
 	return pool, nil
@@ -830,7 +830,7 @@ func (k Keeper) GetPoolForControllerPortID(ctx sdk.Context, controllerPortID str
 	var pool = types.Pool{}
 	found := false
 	k.IteratePools(ctx, func(p types.Pool) bool {
-		if p.GetIcaDepositPortIdWithPrefix() == controllerPortID || p.GetIcaPrizepoolPortIdWithPrefix() == controllerPortID {
+		if p.GetIcaCreditPortIdWithPrefix() == controllerPortID || p.GetIcaPrizepoolPortIdWithPrefix() == controllerPortID {
 			pool = p
 			found = true
 			return true
@@ -881,7 +881,7 @@ func (k Keeper) ListPoolsToDraw(ctx sdk.Context) (pools []types.Pool) {
 	return pools
 }
 
-// BroadcastIBCTransfer broadcasts and IBC transfer for the a given amount to the Pool remote zone ICA Deposit account from the Pool Local address
+// BroadcastIBCTransfer broadcasts and IBC transfer for the a given amount to the Pool remote zone ICA Credit account from the Pool Local address
 // Amount denom must be based on pool.Denom
 // Also registers the requested callback
 // This method should not and DOEST NOT update the pool state
@@ -902,7 +902,7 @@ func (k Keeper) BroadcastIBCTransfer(ctx sdk.Context, pool types.Pool, amount sd
 		pool.GetTransferChannelId(),
 		amount,
 		pool.GetLocalAddress(),
-		pool.GetIcaDepositAddress(),
+		pool.GetIcaCreditAddress(),
 		clienttypes.Height{},
 		timeoutTimestamp,
 		"Cosmos Millions",
@@ -948,9 +948,9 @@ func (k Keeper) BroadcastICAMessages(ctx sdk.Context, pool types.Pool, accountTy
 	// Compute the port ID
 	var portOwner string
 	var portID string
-	if accountType == types.ICATypeDeposit {
-		portOwner = pool.GetIcaDepositPortId()
-		portID = pool.GetIcaDepositPortIdWithPrefix()
+	if accountType == types.ICATypeCredit {
+		portOwner = pool.GetIcaCreditPortId()
+		portID = pool.GetIcaCreditPortIdWithPrefix()
 	} else if accountType == types.ICATypePrizePool {
 		portOwner = pool.GetIcaPrizepoolPortId()
 		portID = pool.GetIcaPrizepoolPortIdWithPrefix()
@@ -961,7 +961,7 @@ func (k Keeper) BroadcastICAMessages(ctx sdk.Context, pool types.Pool, accountTy
 	// Acquire the channel capacities
 	channelID, found := k.ICAControllerKeeper.GetActiveChannelID(ctx, pool.GetConnectionId(), portID)
 	if !found {
-		return 0, errorsmod.Wrapf(icatypes.ErrActiveChannelNotFound, "Millions failed to retrieve open active channel for port %s (%s / %s) on connection %s", portID, pool.GetIcaDepositPortId(), pool.GetIcaPrizepoolPortId(), pool.GetConnectionId())
+		return 0, errorsmod.Wrapf(icatypes.ErrActiveChannelNotFound, "Millions failed to retrieve open active channel for port %s (%s / %s) on connection %s", portID, pool.GetIcaCreditPortId(), pool.GetIcaPrizepoolPortId(), pool.GetConnectionId())
 	}
 
 	// Serialize the data and construct the packet to send

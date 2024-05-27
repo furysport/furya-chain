@@ -10,21 +10,21 @@ import (
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	k.SetParams(ctx, genState.Params)
 	k.SetNextPoolID(ctx, genState.NextPoolId)
-	k.SetNextDepositID(ctx, genState.NextDepositId)
+	k.SetNextCreditID(ctx, genState.NextCreditId)
 	k.SetNextPrizeID(ctx, genState.NextPrizeId)
 	k.SetNextWithdrawalID(ctx, genState.NextWithdrawalId)
 
 	for _, pool := range genState.Pools {
-		// Voluntary reset TvlAmount, DepositorsCount and SponsorshipAmount since they will be recomputed from deposits
+		// Voluntary reset TvlAmount, CreditorsCount and SponsorshipAmount since they will be recomputed from credits
 		pool.TvlAmount = sdk.ZeroInt()
-		pool.DepositorsCount = 0
+		pool.CreditorsCount = 0
 		pool.SponsorshipAmount = sdk.ZeroInt()
 		k.AddPool(ctx, &pool)
 	}
 
-	// Import deposits
-	for _, deposit := range genState.Deposits {
-		k.AddDeposit(ctx, &deposit)
+	// Import credits
+	for _, credit := range genState.Credits {
+		k.AddCredit(ctx, &credit)
 	}
 
 	// Import draws
@@ -57,11 +57,11 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	return &types.GenesisState{
 		Params:           params,
 		NextPoolId:       k.GetNextPoolID(ctx),
-		NextDepositId:    k.GetNextDepositID(ctx),
+		NextCreditId:    k.GetNextCreditID(ctx),
 		NextPrizeId:      k.GetNextPrizeID(ctx),
 		NextWithdrawalId: k.GetNextWithdrawalID(ctx),
 		Pools:            k.ListPools(ctx),
-		Deposits:         k.ListDeposits(ctx),
+		Credits:         k.ListCredits(ctx),
 		Draws:            k.ListDraws(ctx),
 		Prizes:           k.ListPrizes(ctx),
 		Withdrawals:      k.ListWithdrawals(ctx),

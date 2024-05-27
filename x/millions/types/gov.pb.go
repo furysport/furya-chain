@@ -37,7 +37,7 @@ type ProposalRegisterPool struct {
 	NativeDenom         string                                 `protobuf:"bytes,5,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty"`
 	ConnectionId        string                                 `protobuf:"bytes,6,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
 	Validators          []string                               `protobuf:"bytes,7,rep,name=validators,proto3" json:"validators,omitempty"`
-	MinDepositAmount    github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=min_deposit_amount,json=minDepositAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_deposit_amount"`
+	MinCreditAmount    github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=min_credit_amount,json=minCreditAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_credit_amount"`
 	DrawSchedule        DrawSchedule                           `protobuf:"bytes,9,opt,name=draw_schedule,json=drawSchedule,proto3" json:"draw_schedule"`
 	PrizeStrategy       PrizeStrategy                          `protobuf:"bytes,10,opt,name=prize_strategy,json=prizeStrategy,proto3" json:"prize_strategy"`
 	Bech32PrefixAccAddr string                                 `protobuf:"bytes,11,opt,name=bech32_prefix_acc_addr,json=bech32PrefixAccAddr,proto3" json:"bech32_prefix_acc_addr,omitempty"`
@@ -191,7 +191,7 @@ type ProposalUpdatePool struct {
 	Description         string                                  `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	PoolId              uint64                                  `protobuf:"varint,3,opt,name=pool_id,json=poolId,proto3" json:"pool_id,omitempty"`
 	Validators          []string                                `protobuf:"bytes,4,rep,name=validators,proto3" json:"validators,omitempty"`
-	MinDepositAmount    *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=min_deposit_amount,json=minDepositAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_deposit_amount,omitempty"`
+	MinCreditAmount    *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=min_credit_amount,json=minCreditAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_credit_amount,omitempty"`
 	DrawSchedule        *DrawSchedule                           `protobuf:"bytes,6,opt,name=draw_schedule,json=drawSchedule,proto3" json:"draw_schedule,omitempty"`
 	PrizeStrategy       *PrizeStrategy                          `protobuf:"bytes,7,opt,name=prize_strategy,json=prizeStrategy,proto3" json:"prize_strategy,omitempty"`
 	State               PoolState                               `protobuf:"varint,8,opt,name=state,proto3,enum=furya.millions.PoolState" json:"state,omitempty"`
@@ -357,13 +357,13 @@ func (m *ProposalClosePool) GetPoolId() uint64 {
 type ProposalUpdateParams struct {
 	Title                   string                                  `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	Description             string                                  `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
-	MinDepositAmount        *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=min_deposit_amount,json=minDepositAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_deposit_amount,omitempty"`
+	MinCreditAmount        *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=min_credit_amount,json=minCreditAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_credit_amount,omitempty"`
 	MaxPrizeStrategyBatches *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_prize_strategy_batches,json=maxPrizeStrategyBatches,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_prize_strategy_batches,omitempty"`
 	MaxPrizeBatchQuantity   *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_prize_batch_quantity,json=maxPrizeBatchQuantity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_prize_batch_quantity,omitempty"`
 	MinDrawScheduleDelta    *time.Duration                          `protobuf:"bytes,6,opt,name=min_draw_schedule_delta,json=minDrawScheduleDelta,proto3,stdduration" json:"min_draw_schedule_delta,omitempty"`
 	MaxDrawScheduleDelta    *time.Duration                          `protobuf:"bytes,7,opt,name=max_draw_schedule_delta,json=maxDrawScheduleDelta,proto3,stdduration" json:"max_draw_schedule_delta,omitempty"`
 	PrizeExpirationDelta    *time.Duration                          `protobuf:"bytes,8,opt,name=prize_expiration_delta,json=prizeExpirationDelta,proto3,stdduration" json:"prize_expiration_delta,omitempty"`
-	MinDepositDrawDelta     *time.Duration                          `protobuf:"bytes,10,opt,name=min_deposit_draw_delta,json=minDepositDrawDelta,proto3,stdduration" json:"min_deposit_draw_delta,omitempty"`
+	MinCreditDrawDelta     *time.Duration                          `protobuf:"bytes,10,opt,name=min_credit_draw_delta,json=minCreditDrawDelta,proto3,stdduration" json:"min_credit_draw_delta,omitempty"`
 }
 
 func (m *ProposalUpdateParams) Reset()      { *m = ProposalUpdateParams{} }
@@ -433,9 +433,9 @@ func (m *ProposalUpdateParams) GetPrizeExpirationDelta() *time.Duration {
 	return nil
 }
 
-func (m *ProposalUpdateParams) GetMinDepositDrawDelta() *time.Duration {
+func (m *ProposalUpdateParams) GetMinCreditDrawDelta() *time.Duration {
 	if m != nil {
-		return m.MinDepositDrawDelta
+		return m.MinCreditDrawDelta
 	}
 	return nil
 }
@@ -617,9 +617,9 @@ func (m *ProposalRegisterPool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i--
 	dAtA[i] = 0x4a
 	{
-		size := m.MinDepositAmount.Size()
+		size := m.MinCreditAmount.Size()
 		i -= size
-		if _, err := m.MinDepositAmount.MarshalTo(dAtA[i:]); err != nil {
+		if _, err := m.MinCreditAmount.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
 		i = encodeVarintGov(dAtA, i, uint64(size))
@@ -765,11 +765,11 @@ func (m *ProposalUpdatePool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x32
 	}
-	if m.MinDepositAmount != nil {
+	if m.MinCreditAmount != nil {
 		{
-			size := m.MinDepositAmount.Size()
+			size := m.MinCreditAmount.Size()
 			i -= size
-			if _, err := m.MinDepositAmount.MarshalTo(dAtA[i:]); err != nil {
+			if _, err := m.MinCreditAmount.MarshalTo(dAtA[i:]); err != nil {
 				return 0, err
 			}
 			i = encodeVarintGov(dAtA, i, uint64(size))
@@ -870,8 +870,8 @@ func (m *ProposalUpdateParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.MinDepositDrawDelta != nil {
-		n7, err7 := github_com_cosmos_gogoproto_types.StdDurationMarshalTo(*m.MinDepositDrawDelta, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdDuration(*m.MinDepositDrawDelta):])
+	if m.MinCreditDrawDelta != nil {
+		n7, err7 := github_com_cosmos_gogoproto_types.StdDurationMarshalTo(*m.MinCreditDrawDelta, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdDuration(*m.MinCreditDrawDelta):])
 		if err7 != nil {
 			return 0, err7
 		}
@@ -934,11 +934,11 @@ func (m *ProposalUpdateParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x22
 	}
-	if m.MinDepositAmount != nil {
+	if m.MinCreditAmount != nil {
 		{
-			size := m.MinDepositAmount.Size()
+			size := m.MinCreditAmount.Size()
 			i -= size
-			if _, err := m.MinDepositAmount.MarshalTo(dAtA[i:]); err != nil {
+			if _, err := m.MinCreditAmount.MarshalTo(dAtA[i:]); err != nil {
 				return 0, err
 			}
 			i = encodeVarintGov(dAtA, i, uint64(size))
@@ -1010,7 +1010,7 @@ func (m *ProposalRegisterPool) Size() (n int) {
 			n += 1 + l + sovGov(uint64(l))
 		}
 	}
-	l = m.MinDepositAmount.Size()
+	l = m.MinCreditAmount.Size()
 	n += 1 + l + sovGov(uint64(l))
 	l = m.DrawSchedule.Size()
 	n += 1 + l + sovGov(uint64(l))
@@ -1067,8 +1067,8 @@ func (m *ProposalUpdatePool) Size() (n int) {
 			n += 1 + l + sovGov(uint64(l))
 		}
 	}
-	if m.MinDepositAmount != nil {
-		l = m.MinDepositAmount.Size()
+	if m.MinCreditAmount != nil {
+		l = m.MinCreditAmount.Size()
 		n += 1 + l + sovGov(uint64(l))
 	}
 	if m.DrawSchedule != nil {
@@ -1133,8 +1133,8 @@ func (m *ProposalUpdateParams) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovGov(uint64(l))
 	}
-	if m.MinDepositAmount != nil {
-		l = m.MinDepositAmount.Size()
+	if m.MinCreditAmount != nil {
+		l = m.MinCreditAmount.Size()
 		n += 1 + l + sovGov(uint64(l))
 	}
 	if m.MaxPrizeStrategyBatches != nil {
@@ -1157,8 +1157,8 @@ func (m *ProposalUpdateParams) Size() (n int) {
 		l = github_com_cosmos_gogoproto_types.SizeOfStdDuration(*m.PrizeExpirationDelta)
 		n += 1 + l + sovGov(uint64(l))
 	}
-	if m.MinDepositDrawDelta != nil {
-		l = github_com_cosmos_gogoproto_types.SizeOfStdDuration(*m.MinDepositDrawDelta)
+	if m.MinCreditDrawDelta != nil {
+		l = github_com_cosmos_gogoproto_types.SizeOfStdDuration(*m.MinCreditDrawDelta)
 		n += 1 + l + sovGov(uint64(l))
 	}
 	return n
@@ -1425,7 +1425,7 @@ func (m *ProposalRegisterPool) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 8:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinDepositAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinCreditAmount", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1453,7 +1453,7 @@ func (m *ProposalRegisterPool) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.MinDepositAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.MinCreditAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1906,7 +1906,7 @@ func (m *ProposalUpdatePool) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinDepositAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinCreditAmount", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1935,8 +1935,8 @@ func (m *ProposalUpdatePool) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			var v github_com_cosmos_cosmos_sdk_types.Int
-			m.MinDepositAmount = &v
-			if err := m.MinDepositAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.MinCreditAmount = &v
+			if err := m.MinCreditAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2386,7 +2386,7 @@ func (m *ProposalUpdateParams) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinDepositAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinCreditAmount", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2415,8 +2415,8 @@ func (m *ProposalUpdateParams) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			var v github_com_cosmos_cosmos_sdk_types.Int
-			m.MinDepositAmount = &v
-			if err := m.MinDepositAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.MinCreditAmount = &v
+			if err := m.MinCreditAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2602,7 +2602,7 @@ func (m *ProposalUpdateParams) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 10:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinDepositDrawDelta", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinCreditDrawDelta", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2629,10 +2629,10 @@ func (m *ProposalUpdateParams) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.MinDepositDrawDelta == nil {
-				m.MinDepositDrawDelta = new(time.Duration)
+			if m.MinCreditDrawDelta == nil {
+				m.MinCreditDrawDelta = new(time.Duration)
 			}
-			if err := github_com_cosmos_gogoproto_types.StdDurationUnmarshal(m.MinDepositDrawDelta, dAtA[iNdEx:postIndex]); err != nil {
+			if err := github_com_cosmos_gogoproto_types.StdDurationUnmarshal(m.MinCreditDrawDelta, dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

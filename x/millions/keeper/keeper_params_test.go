@@ -13,10 +13,10 @@ func (suite *KeeperTestSuite) TestParams_Validation() {
 	params := app.MillionsKeeper.GetParams(ctx)
 	suite.Require().NoError(params.ValidateBasics())
 
-	// MinDepositAmount should always be gte than MinAcceptableDepositAmount
-	params.MinDepositAmount = sdk.NewInt(millionstypes.MinAcceptableDepositAmount - 1)
+	// MinCreditAmount should always be gte than MinAcceptableCreditAmount
+	params.MinCreditAmount = sdk.NewInt(millionstypes.MinAcceptableCreditAmount - 1)
 	suite.Require().Error(params.ValidateBasics())
-	params.MinDepositAmount = sdk.NewInt(millionstypes.MinAcceptableDepositAmount)
+	params.MinCreditAmount = sdk.NewInt(millionstypes.MinAcceptableCreditAmount)
 	suite.Require().NoError(params.ValidateBasics())
 
 	// MaxPrizeStrategyBatches should always be gt 0
@@ -49,9 +49,9 @@ func (suite *KeeperTestSuite) TestParams_Validation() {
 	params.PrizeExpirationDelta = millionstypes.MinAcceptablePrizeExpirationDelta
 	suite.Require().NoError(params.ValidateBasics())
 
-	// MinDepositDrawDelta should always be gte MinAcceptableDepositDrawDelta
-	params.MinDepositDrawDelta = millionstypes.MinAcceptableDepositDrawDelta - 1
+	// MinCreditDrawDelta should always be gte MinAcceptableCreditDrawDelta
+	params.MinCreditDrawDelta = millionstypes.MinAcceptableCreditDrawDelta - 1
 	suite.Require().Error(params.ValidateBasics())
-	params.MinDepositDrawDelta = millionstypes.MinAcceptableDepositDrawDelta
+	params.MinCreditDrawDelta = millionstypes.MinAcceptableCreditDrawDelta
 	suite.Require().NoError(params.ValidateBasics())
 }

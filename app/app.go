@@ -223,7 +223,7 @@ var (
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
 
-	Upgrades = []upgrades.Upgrade{v130.Upgrade, v131.Upgrade, v140.Upgrade, v200.Upgrade, v201.Upgrade}
+	Upgrades = []upgrades.Upgrade{v130.Upgrade, v131.Upgrade, v140.Upgrade, v200.Upgrade, v201.Upgrade, v210.Upgrade}
 
 	// ModuleBasics defines the module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -587,7 +587,7 @@ func NewFuryaApp(
 		keys[icacallbackstypes.MemStoreKey],
 		app.GetSubspace(icacallbackstypes.ModuleName),
 		*app.IBCKeeper,
-		*app.ICAControllerKeeper,
+		app.ICAControllerKeeper,
 	)
 
 	// Initialize our ICQueries keeper

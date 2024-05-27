@@ -23,13 +23,13 @@ func init() {
 	govtypes.RegisterProposalType(ProposalTypeUpdatePool)
 }
 
-func NewUpdatePoolProposal(title, description string, poolId uint64, validators []string, minDepositAmount *math.Int, prizeStrategy *PrizeStrategy, drawSchedule *DrawSchedule, state PoolState, UnbondingDuration *time.Duration, maxUnbondingEntries *math.Int, fees []FeeTaker) govtypes.Content {
+func NewUpdatePoolProposal(title, description string, poolId uint64, validators []string, minCreditAmount *math.Int, prizeStrategy *PrizeStrategy, drawSchedule *DrawSchedule, state PoolState, UnbondingDuration *time.Duration, maxUnbondingEntries *math.Int, fees []FeeTaker) govtypes.Content {
 	return &ProposalUpdatePool{
 		Title:               title,
 		Description:         description,
 		PoolId:              poolId,
 		Validators:          validators,
-		MinDepositAmount:    minDepositAmount,
+		MinCreditAmount:    minCreditAmount,
 		PrizeStrategy:       prizeStrategy,
 		DrawSchedule:        drawSchedule,
 		State:               state,
@@ -52,9 +52,9 @@ func (p *ProposalUpdatePool) ValidateBasic() error {
 		return err
 	}
 
-	if p.MinDepositAmount != nil {
-		if p.MinDepositAmount.IsNil() || p.MinDepositAmount.LT(sdk.NewInt(MinAcceptableDepositAmount)) {
-			return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "min deposit denom must be gte %d", MinAcceptableDepositAmount)
+	if p.MinCreditAmount != nil {
+		if p.MinCreditAmount.IsNil() || p.MinCreditAmount.LT(sdk.NewInt(MinAcceptableCreditAmount)) {
+			return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "min credit denom must be gte %d", MinAcceptableCreditAmount)
 		}
 	}
 	if p.UnbondingDuration != nil {
@@ -95,7 +95,7 @@ func (p ProposalUpdatePool) String() string {
 	Pool ID:					%d
 	Validators:       			%+v
 	State: 						%s
-	Min Deposit Amount: 		%d
+	Min Credit Amount: 		%d
 	Zone Unbonding Duration:	%s
 	Max Unbonding Entries:		%d
 	======Draw Schedule======
@@ -109,7 +109,7 @@ func (p ProposalUpdatePool) String() string {
 		p.PoolId,
 		p.Validators,
 		p.State.String(),
-		p.MinDepositAmount.Int64(),
+		p.MinCreditAmount.Int64(),
 		p.UnbondingDuration.String(),
 		p.MaxUnbondingEntries.Int64(),
 		p.DrawSchedule.String(),

@@ -127,7 +127,7 @@ Where proposal.json contains:
 			from := clientCtx.GetFromAddress()
 
 			// Grab the deposit
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			depositStr, err := cmd.Flags().GetString(govcli.FlagCredit)
 			if err != nil {
 				return err
 			}
@@ -151,8 +151,8 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
-	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
+	cmd.Flags().String(govcli.FlagCredit, "1ufury", "deposit of proposal")
+	if err := cmd.MarkFlagRequired(govcli.FlagCredit); err != nil {
 		panic(err)
 	}
 	return cmd
@@ -216,7 +216,7 @@ Where proposal.json contains:
 			from := clientCtx.GetFromAddress()
 
 			// Grab the deposit
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			depositStr, err := cmd.Flags().GetString(govcli.FlagCredit)
 			if err != nil {
 				return err
 			}
@@ -240,8 +240,8 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
-	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
+	cmd.Flags().String(govcli.FlagCredit, "1ufury", "deposit of proposal")
+	if err := cmd.MarkFlagRequired(govcli.FlagCredit); err != nil {
 		panic(err)
 	}
 	return cmd
@@ -288,7 +288,7 @@ Where proposal.json contains:
 			from := clientCtx.GetFromAddress()
 
 			// Grab the deposit
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			depositStr, err := cmd.Flags().GetString(govcli.FlagCredit)
 			if err != nil {
 				return err
 			}
@@ -312,8 +312,8 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
-	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
+	cmd.Flags().String(govcli.FlagCredit, "1ufury", "deposit of proposal")
+	if err := cmd.MarkFlagRequired(govcli.FlagCredit); err != nil {
 		panic(err)
 	}
 	return cmd
@@ -367,7 +367,7 @@ Where proposal.json contains:
 			from := clientCtx.GetFromAddress()
 
 			// Grab the deposit
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			depositStr, err := cmd.Flags().GetString(govcli.FlagCredit)
 			if err != nil {
 				return err
 			}
@@ -391,8 +391,8 @@ Where proposal.json contains:
 		},
 	}
 
-	cmd.Flags().String(govcli.FlagDeposit, "1ufury", "deposit of proposal")
-	if err := cmd.MarkFlagRequired(govcli.FlagDeposit); err != nil {
+	cmd.Flags().String(govcli.FlagCredit, "1ufury", "deposit of proposal")
+	if err := cmd.MarkFlagRequired(govcli.FlagCredit); err != nil {
 		panic(err)
 	}
 	return cmd

@@ -4,38 +4,38 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-var _ sdk.Msg = &MsgDepositEdit{}
+var _ sdk.Msg = &MsgCreditEdit{}
 
-func NewMsgDepositEdit(depositorAddr string, poolID uint64, depositID uint64) *MsgDepositEdit {
-	return &MsgDepositEdit{
+func NewMsgCreditEdit(creditorAddr string, poolID uint64, creditID uint64) *MsgCreditEdit {
+	return &MsgCreditEdit{
 		PoolId:           poolID,
-		DepositId:        depositID,
-		DepositorAddress: depositorAddr,
+		CreditId:        creditID,
+		CreditorAddress: creditorAddr,
 	}
 }
 
-func (msg MsgDepositEdit) Route() string {
+func (msg MsgCreditEdit) Route() string {
 	return RouterKey
 }
 
-func (msg MsgDepositEdit) Type() string {
-	return "DepositEdit"
+func (msg MsgCreditEdit) Type() string {
+	return "CreditEdit"
 }
 
-func (msg *MsgDepositEdit) GetSigners() []sdk.AccAddress {
-	depositor := sdk.MustAccAddressFromBech32(msg.GetDepositorAddress())
-	return []sdk.AccAddress{depositor}
+func (msg *MsgCreditEdit) GetSigners() []sdk.AccAddress {
+	creditor := sdk.MustAccAddressFromBech32(msg.GetCreditorAddress())
+	return []sdk.AccAddress{creditor}
 }
 
-func (msg *MsgDepositEdit) GetSignBytes() []byte {
+func (msg *MsgCreditEdit) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgDepositEdit) ValidateBasic() error {
+func (msg *MsgCreditEdit) ValidateBasic() error {
 	// Ensure the address is correct and that we are able to acquire it
-	if _, err := sdk.AccAddressFromBech32(msg.GetDepositorAddress()); err != nil {
-		return ErrInvalidDepositorAddress
+	if _, err := sdk.AccAddressFromBech32(msg.GetCreditorAddress()); err != nil {
+		return ErrInvalidCreditorAddress
 	}
 
 	if msg.GetWinnerAddress() != "" {
@@ -44,12 +44,12 @@ func (msg *MsgDepositEdit) ValidateBasic() error {
 		}
 	}
 
-	if msg.GetPoolId() == UnknownID || msg.GetDepositId() == UnknownID {
+	if msg.GetPoolId() == UnknownID || msg.GetCreditId() == UnknownID {
 		return ErrInvalidID
 	}
 
 	if msg.IsSponsor != nil {
-		if msg.WinnerAddress != "" && msg.WinnerAddress != msg.DepositorAddress && msg.IsSponsor.Value {
+		if msg.WinnerAddress != "" && msg.WinnerAddress != msg.CreditorAddress && msg.IsSponsor.Value {
 			return ErrInvalidSponsorWinnerCombo
 		}
 	}

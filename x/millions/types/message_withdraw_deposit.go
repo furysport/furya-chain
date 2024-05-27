@@ -5,39 +5,39 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 )
 
-var _ sdk.Msg = &MsgWithdrawDeposit{}
+var _ sdk.Msg = &MsgWithdrawCredit{}
 
-func NewMsgWithdrawDeposit(depositor string, toAddress string, poolID uint64, depositID uint64) *MsgWithdrawDeposit {
-	return &MsgWithdrawDeposit{
+func NewMsgWithdrawCredit(creditor string, toAddress string, poolID uint64, creditID uint64) *MsgWithdrawCredit {
+	return &MsgWithdrawCredit{
 		PoolId:           poolID,
-		DepositId:        depositID,
-		DepositorAddress: depositor,
+		CreditId:        creditID,
+		CreditorAddress: creditor,
 		ToAddress:        toAddress,
 	}
 }
 
-func (msg MsgWithdrawDeposit) Route() string {
+func (msg MsgWithdrawCredit) Route() string {
 	return RouterKey
 }
 
-func (msg MsgWithdrawDeposit) Type() string {
-	return "WithdrawDeposit"
+func (msg MsgWithdrawCredit) Type() string {
+	return "WithdrawCredit"
 }
 
-func (msg *MsgWithdrawDeposit) GetSigners() []sdk.AccAddress {
-	depositor := sdk.MustAccAddressFromBech32(msg.GetDepositorAddress())
-	return []sdk.AccAddress{depositor}
+func (msg *MsgWithdrawCredit) GetSigners() []sdk.AccAddress {
+	creditor := sdk.MustAccAddressFromBech32(msg.GetCreditorAddress())
+	return []sdk.AccAddress{creditor}
 }
 
-func (msg *MsgWithdrawDeposit) GetSignBytes() []byte {
+func (msg *MsgWithdrawCredit) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgWithdrawDeposit) ValidateBasic() error {
+func (msg *MsgWithdrawCredit) ValidateBasic() error {
 	// Ensure the address is correct and that we are able to acquire it
-	if _, err := sdk.AccAddressFromBech32(msg.GetDepositorAddress()); err != nil {
-		return ErrInvalidDepositorAddress
+	if _, err := sdk.AccAddressFromBech32(msg.GetCreditorAddress()); err != nil {
+		return ErrInvalidCreditorAddress
 	}
 
 	// Verify that a valid bech32 address is passed regardless of its prefix
@@ -46,7 +46,7 @@ func (msg *MsgWithdrawDeposit) ValidateBasic() error {
 		return ErrInvalidDestinationAddress
 	}
 
-	if msg.GetPoolId() == UnknownID || msg.GetDepositId() == UnknownID {
+	if msg.GetPoolId() == UnknownID || msg.GetCreditId() == UnknownID {
 		return ErrInvalidID
 	}
 

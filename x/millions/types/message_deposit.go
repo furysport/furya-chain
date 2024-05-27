@@ -4,48 +4,48 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-var _ sdk.Msg = &MsgDeposit{}
+var _ sdk.Msg = &MsgCredit{}
 
-func NewMsgDeposit(depositor string, amount sdk.Coin, poolID uint64) *MsgDeposit {
-	return &MsgDeposit{
+func NewMsgCredit(creditor string, amount sdk.Coin, poolID uint64) *MsgCredit {
+	return &MsgCredit{
 		PoolId:           poolID,
 		Amount:           amount,
-		DepositorAddress: depositor,
+		CreditorAddress: creditor,
 	}
 }
 
-func (msg MsgDeposit) Route() string {
+func (msg MsgCredit) Route() string {
 	return RouterKey
 }
 
-func (msg MsgDeposit) Type() string {
-	return "Deposit"
+func (msg MsgCredit) Type() string {
+	return "Credit"
 }
 
-func (msg *MsgDeposit) GetSigners() []sdk.AccAddress {
-	depositor := sdk.MustAccAddressFromBech32(msg.GetDepositorAddress())
-	return []sdk.AccAddress{depositor}
+func (msg *MsgCredit) GetSigners() []sdk.AccAddress {
+	creditor := sdk.MustAccAddressFromBech32(msg.GetCreditorAddress())
+	return []sdk.AccAddress{creditor}
 }
 
-func (msg *MsgDeposit) GetSignBytes() []byte {
+func (msg *MsgCredit) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgDeposit) ValidateBasic() error {
+func (msg *MsgCredit) ValidateBasic() error {
 	// Ensure the address is correct and that we are able to acquire it
-	if _, err := sdk.AccAddressFromBech32(msg.GetDepositorAddress()); err != nil {
-		return ErrInvalidDepositorAddress
+	if _, err := sdk.AccAddressFromBech32(msg.GetCreditorAddress()); err != nil {
+		return ErrInvalidCreditorAddress
 	}
 
 	// ensure denom is valid
 	if err := sdk.ValidateDenom(msg.Amount.Denom); err != nil {
-		return ErrInvalidDepositDenom
+		return ErrInvalidCreditDenom
 	}
 
 	// If we have an amount, make sure it is not negative nor zero
-	if msg.Amount.IsNil() || msg.Amount.Amount.LT(sdk.NewInt(MinAcceptableDepositAmount)) {
-		return ErrInvalidDepositAmount
+	if msg.Amount.IsNil() || msg.Amount.Amount.LT(sdk.NewInt(MinAcceptableCreditAmount)) {
+		return ErrInvalidCreditAmount
 	}
 
 	if msg.GetWinnerAddress() != "" {
@@ -54,7 +54,7 @@ func (msg *MsgDeposit) ValidateBasic() error {
 		}
 	}
 
-	if msg.WinnerAddress != "" && msg.WinnerAddress != msg.DepositorAddress && msg.IsSponsor {
+	if msg.WinnerAddress != "" && msg.WinnerAddress != msg.CreditorAddress && msg.IsSponsor {
 		return ErrInvalidSponsorWinnerCombo
 	}
 

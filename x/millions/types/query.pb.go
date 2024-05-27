@@ -295,22 +295,22 @@ func (m *QueryPoolsRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-type QueryDepositResponse struct {
-	Deposit Deposit `protobuf:"bytes,1,opt,name=deposit,proto3" json:"deposit"`
+type QueryCreditResponse struct {
+	Credit Credit `protobuf:"bytes,1,opt,name=credit,proto3" json:"credit"`
 }
 
-func (m *QueryDepositResponse) Reset()         { *m = QueryDepositResponse{} }
-func (m *QueryDepositResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryDepositResponse) ProtoMessage()    {}
-func (*QueryDepositResponse) Descriptor() ([]byte, []int) {
+func (m *QueryCreditResponse) Reset()         { *m = QueryCreditResponse{} }
+func (m *QueryCreditResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryCreditResponse) ProtoMessage()    {}
+func (*QueryCreditResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e7e32a9262e561f8, []int{6}
 }
-func (m *QueryDepositResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryCreditResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryDepositResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryCreditResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryDepositResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryCreditResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -320,42 +320,42 @@ func (m *QueryDepositResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *QueryDepositResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryDepositResponse.Merge(m, src)
+func (m *QueryCreditResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCreditResponse.Merge(m, src)
 }
-func (m *QueryDepositResponse) XXX_Size() int {
+func (m *QueryCreditResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryDepositResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryDepositResponse.DiscardUnknown(m)
+func (m *QueryCreditResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCreditResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryDepositResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryCreditResponse proto.InternalMessageInfo
 
-func (m *QueryDepositResponse) GetDeposit() Deposit {
+func (m *QueryCreditResponse) GetCredit() Credit {
 	if m != nil {
-		return m.Deposit
+		return m.Credit
 	}
-	return Deposit{}
+	return Credit{}
 }
 
-type QueryDepositsResponse struct {
-	Deposits   []Deposit           `protobuf:"bytes,1,rep,name=deposits,proto3" json:"deposits"`
+type QueryCreditsResponse struct {
+	Credits   []Credit           `protobuf:"bytes,1,rep,name=credits,proto3" json:"credits"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryDepositsResponse) Reset()         { *m = QueryDepositsResponse{} }
-func (m *QueryDepositsResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryDepositsResponse) ProtoMessage()    {}
-func (*QueryDepositsResponse) Descriptor() ([]byte, []int) {
+func (m *QueryCreditsResponse) Reset()         { *m = QueryCreditsResponse{} }
+func (m *QueryCreditsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryCreditsResponse) ProtoMessage()    {}
+func (*QueryCreditsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e7e32a9262e561f8, []int{7}
 }
-func (m *QueryDepositsResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryCreditsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryDepositsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryCreditsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryDepositsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryCreditsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -365,48 +365,48 @@ func (m *QueryDepositsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
-func (m *QueryDepositsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryDepositsResponse.Merge(m, src)
+func (m *QueryCreditsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCreditsResponse.Merge(m, src)
 }
-func (m *QueryDepositsResponse) XXX_Size() int {
+func (m *QueryCreditsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryDepositsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryDepositsResponse.DiscardUnknown(m)
+func (m *QueryCreditsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCreditsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryDepositsResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryCreditsResponse proto.InternalMessageInfo
 
-func (m *QueryDepositsResponse) GetDeposits() []Deposit {
+func (m *QueryCreditsResponse) GetCredits() []Credit {
 	if m != nil {
-		return m.Deposits
+		return m.Credits
 	}
 	return nil
 }
 
-func (m *QueryDepositsResponse) GetPagination() *query.PageResponse {
+func (m *QueryCreditsResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-type QueryDepositsRequest struct {
+type QueryCreditsRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryDepositsRequest) Reset()         { *m = QueryDepositsRequest{} }
-func (m *QueryDepositsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryDepositsRequest) ProtoMessage()    {}
-func (*QueryDepositsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryCreditsRequest) Reset()         { *m = QueryCreditsRequest{} }
+func (m *QueryCreditsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryCreditsRequest) ProtoMessage()    {}
+func (*QueryCreditsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e7e32a9262e561f8, []int{8}
 }
-func (m *QueryDepositsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryCreditsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryDepositsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryCreditsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryDepositsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryCreditsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -416,42 +416,42 @@ func (m *QueryDepositsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *QueryDepositsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryDepositsRequest.Merge(m, src)
+func (m *QueryCreditsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCreditsRequest.Merge(m, src)
 }
-func (m *QueryDepositsRequest) XXX_Size() int {
+func (m *QueryCreditsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryDepositsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryDepositsRequest.DiscardUnknown(m)
+func (m *QueryCreditsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCreditsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryDepositsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryCreditsRequest proto.InternalMessageInfo
 
-func (m *QueryDepositsRequest) GetPagination() *query.PageRequest {
+func (m *QueryCreditsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-type QueryPoolDepositRequest struct {
+type QueryPoolCreditRequest struct {
 	PoolId    uint64 `protobuf:"varint,1,opt,name=pool_id,json=poolId,proto3" json:"pool_id,omitempty"`
-	DepositId uint64 `protobuf:"varint,2,opt,name=deposit_id,json=depositId,proto3" json:"deposit_id,omitempty"`
+	CreditId uint64 `protobuf:"varint,2,opt,name=credit_id,json=creditId,proto3" json:"credit_id,omitempty"`
 }
 
-func (m *QueryPoolDepositRequest) Reset()         { *m = QueryPoolDepositRequest{} }
-func (m *QueryPoolDepositRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryPoolDepositRequest) ProtoMessage()    {}
-func (*QueryPoolDepositRequest) Descriptor() ([]byte, []int) {
+func (m *QueryPoolCreditRequest) Reset()         { *m = QueryPoolCreditRequest{} }
+func (m *QueryPoolCreditRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryPoolCreditRequest) ProtoMessage()    {}
+func (*QueryPoolCreditRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e7e32a9262e561f8, []int{9}
 }
-func (m *QueryPoolDepositRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryPoolCreditRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryPoolDepositRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPoolCreditRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryPoolDepositRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPoolCreditRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -461,49 +461,49 @@ func (m *QueryPoolDepositRequest) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QueryPoolDepositRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryPoolDepositRequest.Merge(m, src)
+func (m *QueryPoolCreditRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPoolCreditRequest.Merge(m, src)
 }
-func (m *QueryPoolDepositRequest) XXX_Size() int {
+func (m *QueryPoolCreditRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryPoolDepositRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryPoolDepositRequest.DiscardUnknown(m)
+func (m *QueryPoolCreditRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPoolCreditRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryPoolDepositRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryPoolCreditRequest proto.InternalMessageInfo
 
-func (m *QueryPoolDepositRequest) GetPoolId() uint64 {
+func (m *QueryPoolCreditRequest) GetPoolId() uint64 {
 	if m != nil {
 		return m.PoolId
 	}
 	return 0
 }
 
-func (m *QueryPoolDepositRequest) GetDepositId() uint64 {
+func (m *QueryPoolCreditRequest) GetCreditId() uint64 {
 	if m != nil {
-		return m.DepositId
+		return m.CreditId
 	}
 	return 0
 }
 
-type QueryPoolDepositsRequest struct {
+type QueryPoolCreditsRequest struct {
 	PoolId     uint64             `protobuf:"varint,1,opt,name=pool_id,json=poolId,proto3" json:"pool_id,omitempty"`
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryPoolDepositsRequest) Reset()         { *m = QueryPoolDepositsRequest{} }
-func (m *QueryPoolDepositsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryPoolDepositsRequest) ProtoMessage()    {}
-func (*QueryPoolDepositsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryPoolCreditsRequest) Reset()         { *m = QueryPoolCreditsRequest{} }
+func (m *QueryPoolCreditsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryPoolCreditsRequest) ProtoMessage()    {}
+func (*QueryPoolCreditsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e7e32a9262e561f8, []int{10}
 }
-func (m *QueryPoolDepositsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryPoolCreditsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryPoolDepositsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPoolCreditsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryPoolDepositsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPoolCreditsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -513,49 +513,49 @@ func (m *QueryPoolDepositsRequest) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *QueryPoolDepositsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryPoolDepositsRequest.Merge(m, src)
+func (m *QueryPoolCreditsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPoolCreditsRequest.Merge(m, src)
 }
-func (m *QueryPoolDepositsRequest) XXX_Size() int {
+func (m *QueryPoolCreditsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryPoolDepositsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryPoolDepositsRequest.DiscardUnknown(m)
+func (m *QueryPoolCreditsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPoolCreditsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryPoolDepositsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryPoolCreditsRequest proto.InternalMessageInfo
 
-func (m *QueryPoolDepositsRequest) GetPoolId() uint64 {
+func (m *QueryPoolCreditsRequest) GetPoolId() uint64 {
 	if m != nil {
 		return m.PoolId
 	}
 	return 0
 }
 
-func (m *QueryPoolDepositsRequest) GetPagination() *query.PageRequest {
+func (m *QueryPoolCreditsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-type QueryAccountDepositsRequest struct {
-	DepositorAddress string             `protobuf:"bytes,1,opt,name=depositor_address,json=depositorAddress,proto3" json:"depositor_address,omitempty"`
+type QueryAccountCreditsRequest struct {
+	CreditorAddress string             `protobuf:"bytes,1,opt,name=creditor_address,json=creditorAddress,proto3" json:"creditor_address,omitempty"`
 	Pagination       *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAccountDepositsRequest) Reset()         { *m = QueryAccountDepositsRequest{} }
-func (m *QueryAccountDepositsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAccountDepositsRequest) ProtoMessage()    {}
-func (*QueryAccountDepositsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryAccountCreditsRequest) Reset()         { *m = QueryAccountCreditsRequest{} }
+func (m *QueryAccountCreditsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAccountCreditsRequest) ProtoMessage()    {}
+func (*QueryAccountCreditsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e7e32a9262e561f8, []int{11}
 }
-func (m *QueryAccountDepositsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryAccountCreditsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAccountDepositsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAccountCreditsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAccountDepositsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAccountCreditsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -565,50 +565,50 @@ func (m *QueryAccountDepositsRequest) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *QueryAccountDepositsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAccountDepositsRequest.Merge(m, src)
+func (m *QueryAccountCreditsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAccountCreditsRequest.Merge(m, src)
 }
-func (m *QueryAccountDepositsRequest) XXX_Size() int {
+func (m *QueryAccountCreditsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAccountDepositsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAccountDepositsRequest.DiscardUnknown(m)
+func (m *QueryAccountCreditsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAccountCreditsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAccountDepositsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryAccountCreditsRequest proto.InternalMessageInfo
 
-func (m *QueryAccountDepositsRequest) GetDepositorAddress() string {
+func (m *QueryAccountCreditsRequest) GetCreditorAddress() string {
 	if m != nil {
-		return m.DepositorAddress
+		return m.CreditorAddress
 	}
 	return ""
 }
 
-func (m *QueryAccountDepositsRequest) GetPagination() *query.PageRequest {
+func (m *QueryAccountCreditsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-type QueryAccountPoolDepositsRequest struct {
-	DepositorAddress string             `protobuf:"bytes,1,opt,name=depositor_address,json=depositorAddress,proto3" json:"depositor_address,omitempty"`
+type QueryAccountPoolCreditsRequest struct {
+	CreditorAddress string             `protobuf:"bytes,1,opt,name=creditor_address,json=creditorAddress,proto3" json:"creditor_address,omitempty"`
 	PoolId           uint64             `protobuf:"varint,2,opt,name=pool_id,json=poolId,proto3" json:"pool_id,omitempty"`
 	Pagination       *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAccountPoolDepositsRequest) Reset()         { *m = QueryAccountPoolDepositsRequest{} }
-func (m *QueryAccountPoolDepositsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAccountPoolDepositsRequest) ProtoMessage()    {}
-func (*QueryAccountPoolDepositsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryAccountPoolCreditsRequest) Reset()         { *m = QueryAccountPoolCreditsRequest{} }
+func (m *QueryAccountPoolCreditsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAccountPoolCreditsRequest) ProtoMessage()    {}
+func (*QueryAccountPoolCreditsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e7e32a9262e561f8, []int{12}
 }
-func (m *QueryAccountPoolDepositsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryAccountPoolCreditsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAccountPoolDepositsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAccountPoolCreditsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAccountPoolDepositsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAccountPoolCreditsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -618,33 +618,33 @@ func (m *QueryAccountPoolDepositsRequest) XXX_Marshal(b []byte, deterministic bo
 		return b[:n], nil
 	}
 }
-func (m *QueryAccountPoolDepositsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAccountPoolDepositsRequest.Merge(m, src)
+func (m *QueryAccountPoolCreditsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAccountPoolCreditsRequest.Merge(m, src)
 }
-func (m *QueryAccountPoolDepositsRequest) XXX_Size() int {
+func (m *QueryAccountPoolCreditsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAccountPoolDepositsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAccountPoolDepositsRequest.DiscardUnknown(m)
+func (m *QueryAccountPoolCreditsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAccountPoolCreditsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAccountPoolDepositsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryAccountPoolCreditsRequest proto.InternalMessageInfo
 
-func (m *QueryAccountPoolDepositsRequest) GetDepositorAddress() string {
+func (m *QueryAccountPoolCreditsRequest) GetCreditorAddress() string {
 	if m != nil {
-		return m.DepositorAddress
+		return m.CreditorAddress
 	}
 	return ""
 }
 
-func (m *QueryAccountPoolDepositsRequest) GetPoolId() uint64 {
+func (m *QueryAccountPoolCreditsRequest) GetPoolId() uint64 {
 	if m != nil {
 		return m.PoolId
 	}
 	return 0
 }
 
-func (m *QueryAccountPoolDepositsRequest) GetPagination() *query.PageRequest {
+func (m *QueryAccountPoolCreditsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
@@ -1632,7 +1632,7 @@ func (m *QueryPoolWithdrawalsRequest) GetPagination() *query.PageRequest {
 }
 
 type QueryAccountWithdrawalsRequest struct {
-	DepositorAddress string             `protobuf:"bytes,1,opt,name=depositor_address,json=depositorAddress,proto3" json:"depositor_address,omitempty"`
+	CreditorAddress string             `protobuf:"bytes,1,opt,name=creditor_address,json=creditorAddress,proto3" json:"creditor_address,omitempty"`
 	Pagination       *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -1669,9 +1669,9 @@ func (m *QueryAccountWithdrawalsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryAccountWithdrawalsRequest proto.InternalMessageInfo
 
-func (m *QueryAccountWithdrawalsRequest) GetDepositorAddress() string {
+func (m *QueryAccountWithdrawalsRequest) GetCreditorAddress() string {
 	if m != nil {
-		return m.DepositorAddress
+		return m.CreditorAddress
 	}
 	return ""
 }
@@ -1684,7 +1684,7 @@ func (m *QueryAccountWithdrawalsRequest) GetPagination() *query.PageRequest {
 }
 
 type QueryAccountPoolWithdrawalsRequest struct {
-	DepositorAddress string             `protobuf:"bytes,1,opt,name=depositor_address,json=depositorAddress,proto3" json:"depositor_address,omitempty"`
+	CreditorAddress string             `protobuf:"bytes,1,opt,name=creditor_address,json=creditorAddress,proto3" json:"creditor_address,omitempty"`
 	PoolId           uint64             `protobuf:"varint,2,opt,name=pool_id,json=poolId,proto3" json:"pool_id,omitempty"`
 	Pagination       *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
@@ -1722,9 +1722,9 @@ func (m *QueryAccountPoolWithdrawalsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryAccountPoolWithdrawalsRequest proto.InternalMessageInfo
 
-func (m *QueryAccountPoolWithdrawalsRequest) GetDepositorAddress() string {
+func (m *QueryAccountPoolWithdrawalsRequest) GetCreditorAddress() string {
 	if m != nil {
-		return m.DepositorAddress
+		return m.CreditorAddress
 	}
 	return ""
 }
@@ -1750,13 +1750,13 @@ func init() {
 	proto.RegisterType((*QueryPoolsResponse)(nil), "furya.millions.QueryPoolsResponse")
 	proto.RegisterType((*QueryPoolRequest)(nil), "furya.millions.QueryPoolRequest")
 	proto.RegisterType((*QueryPoolsRequest)(nil), "furya.millions.QueryPoolsRequest")
-	proto.RegisterType((*QueryDepositResponse)(nil), "furya.millions.QueryDepositResponse")
-	proto.RegisterType((*QueryDepositsResponse)(nil), "furya.millions.QueryDepositsResponse")
-	proto.RegisterType((*QueryDepositsRequest)(nil), "furya.millions.QueryDepositsRequest")
-	proto.RegisterType((*QueryPoolDepositRequest)(nil), "furya.millions.QueryPoolDepositRequest")
-	proto.RegisterType((*QueryPoolDepositsRequest)(nil), "furya.millions.QueryPoolDepositsRequest")
-	proto.RegisterType((*QueryAccountDepositsRequest)(nil), "furya.millions.QueryAccountDepositsRequest")
-	proto.RegisterType((*QueryAccountPoolDepositsRequest)(nil), "furya.millions.QueryAccountPoolDepositsRequest")
+	proto.RegisterType((*QueryCreditResponse)(nil), "furya.millions.QueryCreditResponse")
+	proto.RegisterType((*QueryCreditsResponse)(nil), "furya.millions.QueryCreditsResponse")
+	proto.RegisterType((*QueryCreditsRequest)(nil), "furya.millions.QueryCreditsRequest")
+	proto.RegisterType((*QueryPoolCreditRequest)(nil), "furya.millions.QueryPoolCreditRequest")
+	proto.RegisterType((*QueryPoolCreditsRequest)(nil), "furya.millions.QueryPoolCreditsRequest")
+	proto.RegisterType((*QueryAccountCreditsRequest)(nil), "furya.millions.QueryAccountCreditsRequest")
+	proto.RegisterType((*QueryAccountPoolCreditsRequest)(nil), "furya.millions.QueryAccountPoolCreditsRequest")
 	proto.RegisterType((*QueryDrawResponse)(nil), "furya.millions.QueryDrawResponse")
 	proto.RegisterType((*QueryDrawsResponse)(nil), "furya.millions.QueryDrawsResponse")
 	proto.RegisterType((*QueryDrawsRequest)(nil), "furya.millions.QueryDrawsRequest")
@@ -1899,11 +1899,11 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	Pools(ctx context.Context, in *QueryPoolsRequest, opts ...grpc.CallOption) (*QueryPoolsResponse, error)
 	Pool(ctx context.Context, in *QueryPoolRequest, opts ...grpc.CallOption) (*QueryPoolResponse, error)
-	Deposits(ctx context.Context, in *QueryDepositsRequest, opts ...grpc.CallOption) (*QueryDepositsResponse, error)
-	PoolDeposits(ctx context.Context, in *QueryPoolDepositsRequest, opts ...grpc.CallOption) (*QueryDepositsResponse, error)
-	PoolDeposit(ctx context.Context, in *QueryPoolDepositRequest, opts ...grpc.CallOption) (*QueryDepositResponse, error)
-	AccountDeposits(ctx context.Context, in *QueryAccountDepositsRequest, opts ...grpc.CallOption) (*QueryDepositsResponse, error)
-	AccountPoolDeposits(ctx context.Context, in *QueryAccountPoolDepositsRequest, opts ...grpc.CallOption) (*QueryDepositsResponse, error)
+	Credits(ctx context.Context, in *QueryCreditsRequest, opts ...grpc.CallOption) (*QueryCreditsResponse, error)
+	PoolCredits(ctx context.Context, in *QueryPoolCreditsRequest, opts ...grpc.CallOption) (*QueryCreditsResponse, error)
+	PoolCredit(ctx context.Context, in *QueryPoolCreditRequest, opts ...grpc.CallOption) (*QueryCreditResponse, error)
+	AccountCredits(ctx context.Context, in *QueryAccountCreditsRequest, opts ...grpc.CallOption) (*QueryCreditsResponse, error)
+	AccountPoolCredits(ctx context.Context, in *QueryAccountPoolCreditsRequest, opts ...grpc.CallOption) (*QueryCreditsResponse, error)
 	Draws(ctx context.Context, in *QueryDrawsRequest, opts ...grpc.CallOption) (*QueryDrawsResponse, error)
 	PoolDraws(ctx context.Context, in *QueryPoolDrawsRequest, opts ...grpc.CallOption) (*QueryDrawsResponse, error)
 	PoolDraw(ctx context.Context, in *QueryPoolDrawRequest, opts ...grpc.CallOption) (*QueryDrawResponse, error)
@@ -1956,45 +1956,45 @@ func (c *queryClient) Pool(ctx context.Context, in *QueryPoolRequest, opts ...gr
 	return out, nil
 }
 
-func (c *queryClient) Deposits(ctx context.Context, in *QueryDepositsRequest, opts ...grpc.CallOption) (*QueryDepositsResponse, error) {
-	out := new(QueryDepositsResponse)
-	err := c.cc.Invoke(ctx, "/furya.millions.Query/Deposits", in, out, opts...)
+func (c *queryClient) Credits(ctx context.Context, in *QueryCreditsRequest, opts ...grpc.CallOption) (*QueryCreditsResponse, error) {
+	out := new(QueryCreditsResponse)
+	err := c.cc.Invoke(ctx, "/furya.millions.Query/Credits", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) PoolDeposits(ctx context.Context, in *QueryPoolDepositsRequest, opts ...grpc.CallOption) (*QueryDepositsResponse, error) {
-	out := new(QueryDepositsResponse)
-	err := c.cc.Invoke(ctx, "/furya.millions.Query/PoolDeposits", in, out, opts...)
+func (c *queryClient) PoolCredits(ctx context.Context, in *QueryPoolCreditsRequest, opts ...grpc.CallOption) (*QueryCreditsResponse, error) {
+	out := new(QueryCreditsResponse)
+	err := c.cc.Invoke(ctx, "/furya.millions.Query/PoolCredits", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) PoolDeposit(ctx context.Context, in *QueryPoolDepositRequest, opts ...grpc.CallOption) (*QueryDepositResponse, error) {
-	out := new(QueryDepositResponse)
-	err := c.cc.Invoke(ctx, "/furya.millions.Query/PoolDeposit", in, out, opts...)
+func (c *queryClient) PoolCredit(ctx context.Context, in *QueryPoolCreditRequest, opts ...grpc.CallOption) (*QueryCreditResponse, error) {
+	out := new(QueryCreditResponse)
+	err := c.cc.Invoke(ctx, "/furya.millions.Query/PoolCredit", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) AccountDeposits(ctx context.Context, in *QueryAccountDepositsRequest, opts ...grpc.CallOption) (*QueryDepositsResponse, error) {
-	out := new(QueryDepositsResponse)
-	err := c.cc.Invoke(ctx, "/furya.millions.Query/AccountDeposits", in, out, opts...)
+func (c *queryClient) AccountCredits(ctx context.Context, in *QueryAccountCreditsRequest, opts ...grpc.CallOption) (*QueryCreditsResponse, error) {
+	out := new(QueryCreditsResponse)
+	err := c.cc.Invoke(ctx, "/furya.millions.Query/AccountCredits", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) AccountPoolDeposits(ctx context.Context, in *QueryAccountPoolDepositsRequest, opts ...grpc.CallOption) (*QueryDepositsResponse, error) {
-	out := new(QueryDepositsResponse)
-	err := c.cc.Invoke(ctx, "/furya.millions.Query/AccountPoolDeposits", in, out, opts...)
+func (c *queryClient) AccountPoolCredits(ctx context.Context, in *QueryAccountPoolCreditsRequest, opts ...grpc.CallOption) (*QueryCreditsResponse, error) {
+	out := new(QueryCreditsResponse)
+	err := c.cc.Invoke(ctx, "/furya.millions.Query/AccountPoolCredits", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2141,11 +2141,11 @@ type QueryServer interface {
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	Pools(context.Context, *QueryPoolsRequest) (*QueryPoolsResponse, error)
 	Pool(context.Context, *QueryPoolRequest) (*QueryPoolResponse, error)
-	Deposits(context.Context, *QueryDepositsRequest) (*QueryDepositsResponse, error)
-	PoolDeposits(context.Context, *QueryPoolDepositsRequest) (*QueryDepositsResponse, error)
-	PoolDeposit(context.Context, *QueryPoolDepositRequest) (*QueryDepositResponse, error)
-	AccountDeposits(context.Context, *QueryAccountDepositsRequest) (*QueryDepositsResponse, error)
-	AccountPoolDeposits(context.Context, *QueryAccountPoolDepositsRequest) (*QueryDepositsResponse, error)
+	Credits(context.Context, *QueryCreditsRequest) (*QueryCreditsResponse, error)
+	PoolCredits(context.Context, *QueryPoolCreditsRequest) (*QueryCreditsResponse, error)
+	PoolCredit(context.Context, *QueryPoolCreditRequest) (*QueryCreditResponse, error)
+	AccountCredits(context.Context, *QueryAccountCreditsRequest) (*QueryCreditsResponse, error)
+	AccountPoolCredits(context.Context, *QueryAccountPoolCreditsRequest) (*QueryCreditsResponse, error)
 	Draws(context.Context, *QueryDrawsRequest) (*QueryDrawsResponse, error)
 	PoolDraws(context.Context, *QueryPoolDrawsRequest) (*QueryDrawsResponse, error)
 	PoolDraw(context.Context, *QueryPoolDrawRequest) (*QueryDrawResponse, error)
@@ -2176,20 +2176,20 @@ func (*UnimplementedQueryServer) Pools(ctx context.Context, req *QueryPoolsReque
 func (*UnimplementedQueryServer) Pool(ctx context.Context, req *QueryPoolRequest) (*QueryPoolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Pool not implemented")
 }
-func (*UnimplementedQueryServer) Deposits(ctx context.Context, req *QueryDepositsRequest) (*QueryDepositsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Deposits not implemented")
+func (*UnimplementedQueryServer) Credits(ctx context.Context, req *QueryCreditsRequest) (*QueryCreditsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Credits not implemented")
 }
-func (*UnimplementedQueryServer) PoolDeposits(ctx context.Context, req *QueryPoolDepositsRequest) (*QueryDepositsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PoolDeposits not implemented")
+func (*UnimplementedQueryServer) PoolCredits(ctx context.Context, req *QueryPoolCreditsRequest) (*QueryCreditsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PoolCredits not implemented")
 }
-func (*UnimplementedQueryServer) PoolDeposit(ctx context.Context, req *QueryPoolDepositRequest) (*QueryDepositResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PoolDeposit not implemented")
+func (*UnimplementedQueryServer) PoolCredit(ctx context.Context, req *QueryPoolCreditRequest) (*QueryCreditResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PoolCredit not implemented")
 }
-func (*UnimplementedQueryServer) AccountDeposits(ctx context.Context, req *QueryAccountDepositsRequest) (*QueryDepositsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AccountDeposits not implemented")
+func (*UnimplementedQueryServer) AccountCredits(ctx context.Context, req *QueryAccountCreditsRequest) (*QueryCreditsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AccountCredits not implemented")
 }
-func (*UnimplementedQueryServer) AccountPoolDeposits(ctx context.Context, req *QueryAccountPoolDepositsRequest) (*QueryDepositsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AccountPoolDeposits not implemented")
+func (*UnimplementedQueryServer) AccountPoolCredits(ctx context.Context, req *QueryAccountPoolCreditsRequest) (*QueryCreditsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AccountPoolCredits not implemented")
 }
 func (*UnimplementedQueryServer) Draws(ctx context.Context, req *QueryDrawsRequest) (*QueryDrawsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Draws not implemented")
@@ -2295,92 +2295,92 @@ func _Query_Pool_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_Deposits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryDepositsRequest)
+func _Query_Credits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryCreditsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).Deposits(ctx, in)
+		return srv.(QueryServer).Credits(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/furya.millions.Query/Deposits",
+		FullMethod: "/furya.millions.Query/Credits",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Deposits(ctx, req.(*QueryDepositsRequest))
+		return srv.(QueryServer).Credits(ctx, req.(*QueryCreditsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_PoolDeposits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryPoolDepositsRequest)
+func _Query_PoolCredits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPoolCreditsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).PoolDeposits(ctx, in)
+		return srv.(QueryServer).PoolCredits(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/furya.millions.Query/PoolDeposits",
+		FullMethod: "/furya.millions.Query/PoolCredits",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).PoolDeposits(ctx, req.(*QueryPoolDepositsRequest))
+		return srv.(QueryServer).PoolCredits(ctx, req.(*QueryPoolCreditsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_PoolDeposit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryPoolDepositRequest)
+func _Query_PoolCredit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPoolCreditRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).PoolDeposit(ctx, in)
+		return srv.(QueryServer).PoolCredit(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/furya.millions.Query/PoolDeposit",
+		FullMethod: "/furya.millions.Query/PoolCredit",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).PoolDeposit(ctx, req.(*QueryPoolDepositRequest))
+		return srv.(QueryServer).PoolCredit(ctx, req.(*QueryPoolCreditRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_AccountDeposits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAccountDepositsRequest)
+func _Query_AccountCredits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAccountCreditsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).AccountDeposits(ctx, in)
+		return srv.(QueryServer).AccountCredits(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/furya.millions.Query/AccountDeposits",
+		FullMethod: "/furya.millions.Query/AccountCredits",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).AccountDeposits(ctx, req.(*QueryAccountDepositsRequest))
+		return srv.(QueryServer).AccountCredits(ctx, req.(*QueryAccountCreditsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_AccountPoolDeposits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAccountPoolDepositsRequest)
+func _Query_AccountPoolCredits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAccountPoolCreditsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).AccountPoolDeposits(ctx, in)
+		return srv.(QueryServer).AccountPoolCredits(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/furya.millions.Query/AccountPoolDeposits",
+		FullMethod: "/furya.millions.Query/AccountPoolCredits",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).AccountPoolDeposits(ctx, req.(*QueryAccountPoolDepositsRequest))
+		return srv.(QueryServer).AccountPoolCredits(ctx, req.(*QueryAccountPoolCreditsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2672,24 +2672,24 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_Pool_Handler,
 		},
 		{
-			MethodName: "Deposits",
-			Handler:    _Query_Deposits_Handler,
+			MethodName: "Credits",
+			Handler:    _Query_Credits_Handler,
 		},
 		{
-			MethodName: "PoolDeposits",
-			Handler:    _Query_PoolDeposits_Handler,
+			MethodName: "PoolCredits",
+			Handler:    _Query_PoolCredits_Handler,
 		},
 		{
-			MethodName: "PoolDeposit",
-			Handler:    _Query_PoolDeposit_Handler,
+			MethodName: "PoolCredit",
+			Handler:    _Query_PoolCredit_Handler,
 		},
 		{
-			MethodName: "AccountDeposits",
-			Handler:    _Query_AccountDeposits_Handler,
+			MethodName: "AccountCredits",
+			Handler:    _Query_AccountCredits_Handler,
 		},
 		{
-			MethodName: "AccountPoolDeposits",
-			Handler:    _Query_AccountPoolDeposits_Handler,
+			MethodName: "AccountPoolCredits",
+			Handler:    _Query_AccountPoolCredits_Handler,
 		},
 		{
 			MethodName: "Draws",
@@ -2957,7 +2957,7 @@ func (m *QueryPoolsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryDepositResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryCreditResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2967,18 +2967,18 @@ func (m *QueryDepositResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryDepositResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryCreditResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryDepositResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryCreditResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	{
-		size, err := m.Deposit.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.Credit.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -2990,7 +2990,7 @@ func (m *QueryDepositResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryDepositsResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryCreditsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3000,12 +3000,12 @@ func (m *QueryDepositsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryDepositsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryCreditsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryDepositsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryCreditsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3022,10 +3022,10 @@ func (m *QueryDepositsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.Deposits) > 0 {
-		for iNdEx := len(m.Deposits) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.Credits) > 0 {
+		for iNdEx := len(m.Credits) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.Deposits[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.Credits[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -3039,7 +3039,7 @@ func (m *QueryDepositsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryDepositsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryCreditsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3049,12 +3049,12 @@ func (m *QueryDepositsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryDepositsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryCreditsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryDepositsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryCreditsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3074,7 +3074,7 @@ func (m *QueryDepositsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryPoolDepositRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryPoolCreditRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3084,18 +3084,18 @@ func (m *QueryPoolDepositRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryPoolDepositRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPoolCreditRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryPoolDepositRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPoolCreditRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.DepositId != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.DepositId))
+	if m.CreditId != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.CreditId))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -3107,7 +3107,7 @@ func (m *QueryPoolDepositRequest) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryPoolDepositsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryPoolCreditsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3117,12 +3117,12 @@ func (m *QueryPoolDepositsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryPoolDepositsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPoolCreditsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryPoolDepositsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPoolCreditsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3147,7 +3147,7 @@ func (m *QueryPoolDepositsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAccountDepositsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryAccountCreditsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3157,12 +3157,12 @@ func (m *QueryAccountDepositsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAccountDepositsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAccountCreditsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAccountDepositsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAccountCreditsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3179,17 +3179,17 @@ func (m *QueryAccountDepositsRequest) MarshalToSizedBuffer(dAtA []byte) (int, er
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.DepositorAddress) > 0 {
-		i -= len(m.DepositorAddress)
-		copy(dAtA[i:], m.DepositorAddress)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.DepositorAddress)))
+	if len(m.CreditorAddress) > 0 {
+		i -= len(m.CreditorAddress)
+		copy(dAtA[i:], m.CreditorAddress)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.CreditorAddress)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAccountPoolDepositsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryAccountPoolCreditsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3199,12 +3199,12 @@ func (m *QueryAccountPoolDepositsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAccountPoolDepositsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAccountPoolCreditsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAccountPoolDepositsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAccountPoolCreditsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3226,10 +3226,10 @@ func (m *QueryAccountPoolDepositsRequest) MarshalToSizedBuffer(dAtA []byte) (int
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.DepositorAddress) > 0 {
-		i -= len(m.DepositorAddress)
-		copy(dAtA[i:], m.DepositorAddress)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.DepositorAddress)))
+	if len(m.CreditorAddress) > 0 {
+		i -= len(m.CreditorAddress)
+		copy(dAtA[i:], m.CreditorAddress)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.CreditorAddress)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4031,10 +4031,10 @@ func (m *QueryAccountWithdrawalsRequest) MarshalToSizedBuffer(dAtA []byte) (int,
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.DepositorAddress) > 0 {
-		i -= len(m.DepositorAddress)
-		copy(dAtA[i:], m.DepositorAddress)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.DepositorAddress)))
+	if len(m.CreditorAddress) > 0 {
+		i -= len(m.CreditorAddress)
+		copy(dAtA[i:], m.CreditorAddress)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.CreditorAddress)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4078,10 +4078,10 @@ func (m *QueryAccountPoolWithdrawalsRequest) MarshalToSizedBuffer(dAtA []byte) (
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.DepositorAddress) > 0 {
-		i -= len(m.DepositorAddress)
-		copy(dAtA[i:], m.DepositorAddress)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.DepositorAddress)))
+	if len(m.CreditorAddress) > 0 {
+		i -= len(m.CreditorAddress)
+		copy(dAtA[i:], m.CreditorAddress)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.CreditorAddress)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -4174,25 +4174,25 @@ func (m *QueryPoolsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryDepositResponse) Size() (n int) {
+func (m *QueryCreditResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.Deposit.Size()
+	l = m.Credit.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
 
-func (m *QueryDepositsResponse) Size() (n int) {
+func (m *QueryCreditsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.Deposits) > 0 {
-		for _, e := range m.Deposits {
+	if len(m.Credits) > 0 {
+		for _, e := range m.Credits {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -4204,7 +4204,7 @@ func (m *QueryDepositsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryDepositsRequest) Size() (n int) {
+func (m *QueryCreditsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4217,7 +4217,7 @@ func (m *QueryDepositsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryPoolDepositRequest) Size() (n int) {
+func (m *QueryPoolCreditRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4226,13 +4226,13 @@ func (m *QueryPoolDepositRequest) Size() (n int) {
 	if m.PoolId != 0 {
 		n += 1 + sovQuery(uint64(m.PoolId))
 	}
-	if m.DepositId != 0 {
-		n += 1 + sovQuery(uint64(m.DepositId))
+	if m.CreditId != 0 {
+		n += 1 + sovQuery(uint64(m.CreditId))
 	}
 	return n
 }
 
-func (m *QueryPoolDepositsRequest) Size() (n int) {
+func (m *QueryPoolCreditsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4248,13 +4248,13 @@ func (m *QueryPoolDepositsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryAccountDepositsRequest) Size() (n int) {
+func (m *QueryAccountCreditsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.DepositorAddress)
+	l = len(m.CreditorAddress)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -4265,13 +4265,13 @@ func (m *QueryAccountDepositsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryAccountPoolDepositsRequest) Size() (n int) {
+func (m *QueryAccountPoolCreditsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.DepositorAddress)
+	l = len(m.CreditorAddress)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -4597,7 +4597,7 @@ func (m *QueryAccountWithdrawalsRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.DepositorAddress)
+	l = len(m.CreditorAddress)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -4614,7 +4614,7 @@ func (m *QueryAccountPoolWithdrawalsRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.DepositorAddress)
+	l = len(m.CreditorAddress)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -5125,7 +5125,7 @@ func (m *QueryPoolsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryDepositResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryCreditResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5148,15 +5148,15 @@ func (m *QueryDepositResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryDepositResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryCreditResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryDepositResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryCreditResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Deposit", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Credit", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -5183,7 +5183,7 @@ func (m *QueryDepositResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Deposit.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Credit.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -5208,7 +5208,7 @@ func (m *QueryDepositResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryDepositsResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryCreditsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5231,15 +5231,15 @@ func (m *QueryDepositsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryDepositsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryCreditsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryDepositsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryCreditsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Deposits", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Credits", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -5266,8 +5266,8 @@ func (m *QueryDepositsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Deposits = append(m.Deposits, Deposit{})
-			if err := m.Deposits[len(m.Deposits)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Credits = append(m.Credits, Credit{})
+			if err := m.Credits[len(m.Credits)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -5328,7 +5328,7 @@ func (m *QueryDepositsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryDepositsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryCreditsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5351,10 +5351,10 @@ func (m *QueryDepositsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryDepositsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryCreditsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryDepositsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryCreditsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -5414,7 +5414,7 @@ func (m *QueryDepositsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryPoolDepositRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryPoolCreditRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5437,10 +5437,10 @@ func (m *QueryPoolDepositRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryPoolDepositRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPoolCreditRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryPoolDepositRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPoolCreditRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -5464,9 +5464,9 @@ func (m *QueryPoolDepositRequest) Unmarshal(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreditId", wireType)
 			}
-			m.DepositId = 0
+			m.CreditId = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -5476,7 +5476,7 @@ func (m *QueryPoolDepositRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.DepositId |= uint64(b&0x7F) << shift
+				m.CreditId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -5502,7 +5502,7 @@ func (m *QueryPoolDepositRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryPoolDepositsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryPoolCreditsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5525,10 +5525,10 @@ func (m *QueryPoolDepositsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryPoolDepositsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPoolCreditsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryPoolDepositsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPoolCreditsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -5607,7 +5607,7 @@ func (m *QueryPoolDepositsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAccountDepositsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryAccountCreditsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5630,15 +5630,15 @@ func (m *QueryAccountDepositsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAccountDepositsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAccountCreditsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAccountDepositsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAccountCreditsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositorAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreditorAddress", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5666,7 +5666,7 @@ func (m *QueryAccountDepositsRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DepositorAddress = string(dAtA[iNdEx:postIndex])
+			m.CreditorAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -5725,7 +5725,7 @@ func (m *QueryAccountDepositsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAccountPoolDepositsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryAccountPoolCreditsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5748,15 +5748,15 @@ func (m *QueryAccountPoolDepositsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAccountPoolDepositsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAccountPoolCreditsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAccountPoolDepositsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAccountPoolCreditsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositorAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreditorAddress", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5784,7 +5784,7 @@ func (m *QueryAccountPoolDepositsRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DepositorAddress = string(dAtA[iNdEx:postIndex])
+			m.CreditorAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -7896,7 +7896,7 @@ func (m *QueryAccountWithdrawalsRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositorAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreditorAddress", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -7924,7 +7924,7 @@ func (m *QueryAccountWithdrawalsRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DepositorAddress = string(dAtA[iNdEx:postIndex])
+			m.CreditorAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -8014,7 +8014,7 @@ func (m *QueryAccountPoolWithdrawalsRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositorAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreditorAddress", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -8042,7 +8042,7 @@ func (m *QueryAccountPoolWithdrawalsRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DepositorAddress = string(dAtA[iNdEx:postIndex])
+			m.CreditorAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {

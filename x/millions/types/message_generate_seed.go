@@ -19,8 +19,8 @@ func (msg MsgGenerateSeed) Type() string {
 }
 
 func (msg *MsgGenerateSeed) GetSigners() []sdk.AccAddress {
-	depositor := sdk.MustAccAddressFromBech32(msg.GetRequesterAddress())
-	return []sdk.AccAddress{depositor}
+	creditor := sdk.MustAccAddressFromBech32(msg.GetRequesterAddress())
+	return []sdk.AccAddress{creditor}
 }
 
 func (msg *MsgGenerateSeed) GetSignBytes() []byte {

@@ -33,11 +33,11 @@ func (runner *PoolRunnerStaking) OnUpdatePool(ctx sdk.Context, pool types.Pool) 
 	return nil
 }
 
-func (runner *PoolRunnerStaking) DelegateDepositOnRemoteZone(ctx sdk.Context, pool types.Pool, deposit types.Deposit) ([]*types.SplitDelegation, error) {
-	logger := runner.Logger(ctx).With("ctx", "deposit_delegate")
+func (runner *PoolRunnerStaking) DelegateCreditOnRemoteZone(ctx sdk.Context, pool types.Pool, credit types.Credit) ([]*types.SplitDelegation, error) {
+	logger := runner.Logger(ctx).With("ctx", "credit_delegate")
 
 	// Prepare delegations split
-	splits := pool.ComputeSplitDelegations(ctx, deposit.Amount.Amount)
+	splits := pool.ComputeSplitDelegations(ctx, credit.Amount.Amount)
 	if len(splits) == 0 {
 		return splits, types.ErrPoolEmptySplitDelegations
 	}
@@ -56,7 +56,7 @@ func (runner *PoolRunnerStaking) DelegateDepositOnRemoteZone(ctx sdk.Context, po
 			}
 			if _, err := runner.keeper.StakingKeeper.Delegate(
 				ctx,
-				sdk.MustAccAddressFromBech32(pool.IcaDepositAddress),
+				sdk.MustAccAddressFromBech32(pool.IcaCreditAddress),
 				split.Amount,
 				stakingtypes.Unbonded,
 				validator,
@@ -71,7 +71,7 @@ func (runner *PoolRunnerStaking) DelegateDepositOnRemoteZone(ctx sdk.Context, po
 	// Construct our callback data
 	callbackData := types.DelegateCallback{
 		PoolId:           pool.PoolId,
-		DepositId:        deposit.DepositId,
+		CreditId:        credit.CreditId,
 		SplitDelegations: splits,
 	}
 	marshalledCallbackData, err := runner.keeper.MarshalDelegateCallbackArgs(ctx, callbackData)
@@ -83,21 +83,21 @@ func (runner *PoolRunnerStaking) DelegateDepositOnRemoteZone(ctx sdk.Context, po
 	var msgs []sdk.Msg
 	for _, split := range splits {
 		msgs = append(msgs, &stakingtypes.MsgDelegate{
-			DelegatorAddress: pool.IcaDepositAddress,
+			DelegatorAddress: pool.IcaCreditAddress,
 			ValidatorAddress: split.ValidatorAddress,
 			Amount:           sdk.NewCoin(pool.NativeDenom, split.Amount),
 		})
 	}
 
 	// Dispatch our message with a timeout of 30 minutes in nanos
-	sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeDeposit, msgs, types.IBCTimeoutNanos, ICACallbackID_Delegate, marshalledCallbackData)
+	sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeCredit, msgs, types.IBCTimeoutNanos, ICACallbackID_Delegate, marshalledCallbackData)
 	if err != nil {
 		// Save error state since we cannot simply recover from a failure at this stage
-		// A subsequent call to DepositRetry will be made possible by setting an error state and not returning an error here
+		// A subsequent call to CreditRetry will be made possible by setting an error state and not returning an error here
 		logger.Error(
 			fmt.Sprintf("failed to dispatch ICA delegation: %v", err),
 			"pool_id", pool.PoolId,
-			"deposit_id", deposit.DepositId,
+			"credit_id", credit.CreditId,
 			"chain_id", pool.GetChainId(),
 			"sequence", sequence,
 		)
@@ -106,7 +106,7 @@ func (runner *PoolRunnerStaking) DelegateDepositOnRemoteZone(ctx sdk.Context, po
 	logger.Debug(
 		"ICA delegation dispatched",
 		"pool_id", pool.PoolId,
-		"deposit_id", deposit.DepositId,
+		"credit_id", credit.CreditId,
 		"chain_id", pool.GetChainId(),
 		"sequence", sequence,
 	)
@@ -129,7 +129,7 @@ func (runner *PoolRunnerStaking) UndelegateWithdrawalsOnRemoteZone(ctx sdk.Conte
 
 	if pool.IsLocalZone(ctx) {
 		var unbondingEndsAt *time.Time
-		modAddr := sdk.MustAccAddressFromBech32(pool.GetIcaDepositAddress())
+		modAddr := sdk.MustAccAddressFromBech32(pool.GetIcaCreditAddress())
 		for _, split := range splits {
 			valAddr, err := sdk.ValAddressFromBech32(split.ValidatorAddress)
 			if err != nil {
@@ -173,14 +173,14 @@ func (runner *PoolRunnerStaking) UndelegateWithdrawalsOnRemoteZone(ctx sdk.Conte
 	var msgs []sdk.Msg
 	for _, split := range splits {
 		msgs = append(msgs, &stakingtypes.MsgUndelegate{
-			DelegatorAddress: pool.GetIcaDepositAddress(),
+			DelegatorAddress: pool.GetIcaCreditAddress(),
 			ValidatorAddress: split.ValidatorAddress,
 			Amount:           sdk.NewCoin(pool.NativeDenom, split.Amount),
 		})
 	}
 
 	// Dispatch our message with a timeout of 30 minutes in nanos
-	sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeDeposit, msgs, types.IBCTimeoutNanos, ICACallbackID_Undelegate, marshalledCallbackData)
+	sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeCredit, msgs, types.IBCTimeoutNanos, ICACallbackID_Undelegate, marshalledCallbackData)
 	if err != nil {
 		// Return with error here since it is the first operation and nothing needs to be saved to state
 		logger.Error(
@@ -208,7 +208,7 @@ func (runner *PoolRunnerStaking) RedelegateToActiveValidatorsOnRemoteZone(ctx sd
 	// If pool is local, we just process operation in place
 	// Otherwise we trigger ICA transactions
 	if pool.IsLocalZone(ctx) {
-		delAddr := sdk.MustAccAddressFromBech32(pool.GetIcaDepositAddress())
+		delAddr := sdk.MustAccAddressFromBech32(pool.GetIcaCreditAddress())
 		valSrcAddr, err := sdk.ValAddressFromBech32(inactiveVal.GetOperatorAddress())
 		if err != nil {
 			return err
@@ -255,7 +255,7 @@ func (runner *PoolRunnerStaking) RedelegateToActiveValidatorsOnRemoteZone(ctx sd
 	var msgs []sdk.Msg
 	for _, split := range splits {
 		msgs = append(msgs, &stakingtypes.MsgBeginRedelegate{
-			DelegatorAddress:    pool.GetIcaDepositAddress(),
+			DelegatorAddress:    pool.GetIcaCreditAddress(),
 			ValidatorSrcAddress: inactiveVal.GetOperatorAddress(),
 			ValidatorDstAddress: split.GetValidatorAddress(),
 			Amount:              sdk.NewCoin(pool.NativeDenom, split.Amount),
@@ -264,7 +264,7 @@ func (runner *PoolRunnerStaking) RedelegateToActiveValidatorsOnRemoteZone(ctx sd
 
 	// Dispatch our message with a timeout of 30 minutes in nanos
 	timeoutTimestamp := uint64(ctx.BlockTime().UnixNano()) + types.IBCTimeoutNanos
-	sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeDeposit, msgs, timeoutTimestamp, ICACallbackID_Redelegate, marshalledCallbackData)
+	sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeCredit, msgs, timeoutTimestamp, ICACallbackID_Redelegate, marshalledCallbackData)
 	if err != nil {
 		logger.Error(
 			fmt.Sprintf("failed to dispatch ICA redelegation: %v", err),
@@ -293,7 +293,7 @@ func (runner *PoolRunnerStaking) ClaimYieldOnRemoteZone(ctx sdk.Context, pool ty
 			if validator.IsBonded() {
 				rewardCoins, err := runner.keeper.DistributionKeeper.WithdrawDelegationRewards(
 					ctx,
-					sdk.MustAccAddressFromBech32(pool.GetIcaDepositAddress()),
+					sdk.MustAccAddressFromBech32(pool.GetIcaCreditAddress()),
 					validator.MustValAddressFromBech32(),
 				)
 				if err != nil {
@@ -308,7 +308,7 @@ func (runner *PoolRunnerStaking) ClaimYieldOnRemoteZone(ctx sdk.Context, pool ty
 		for _, validator := range pool.GetValidators() {
 			if validator.IsBonded() {
 				msgs = append(msgs, &distributiontypes.MsgWithdrawDelegatorReward{
-					DelegatorAddress: pool.GetIcaDepositAddress(),
+					DelegatorAddress: pool.GetIcaCreditAddress(),
 					ValidatorAddress: validator.OperatorAddress,
 				})
 			}
@@ -331,7 +331,7 @@ func (runner *PoolRunnerStaking) ClaimYieldOnRemoteZone(ctx sdk.Context, pool ty
 		}
 
 		// Dispatch our message with a timeout of 30 minutes in nanos
-		sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeDeposit, msgs, types.IBCTimeoutNanos, ICACallbackID_Claim, marshalledCallbackData)
+		sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeCredit, msgs, types.IBCTimeoutNanos, ICACallbackID_Claim, marshalledCallbackData)
 		if err != nil {
 			// Return with error here since it is the first operation and nothing needs to be saved to state
 			logger.Error(

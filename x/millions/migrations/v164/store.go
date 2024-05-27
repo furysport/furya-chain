@@ -12,10 +12,10 @@ import (
 func SaveEntitiesOnAccountLevel(ctx sdk.Context, k millionskeeper.Keeper) error {
 	ctx.Logger().Info("Saving entities on account level")
 
-	updatedDeposits := k.UnsafeSetUnpersistedDeposits(ctx)
+	updatedCredits := k.UnsafeSetUnpersistedCredits(ctx)
 	updatedWithdrawals := k.UnsafeSetUnpersistedWithdrawals(ctx)
 
-	ctx.Logger().Info("Saving entities on account level: deposits", "count", updatedDeposits)
+	ctx.Logger().Info("Saving entities on account level: credits", "count", updatedCredits)
 	ctx.Logger().Info("Saving entities on account level: withdrawals", "count", updatedWithdrawals)
 	return nil
 }

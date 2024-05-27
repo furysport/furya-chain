@@ -23,12 +23,12 @@ type PoolRunner interface {
 	Logger(ctx sdk.Context) log.Logger
 	// OnUpdatePool triggered upon pool update proposal
 	OnUpdatePool(ctx sdk.Context, pool types.Pool) error
-	// SendDepositToPool sends the deposit amount to a local Pool owned address
-	SendDepositToPool(ctx sdk.Context, pool types.Pool, deposit types.Deposit) error
-	// TransferDepositToRemoteZone transfers the deposit amount from a local Pool owned address to a remote Pool owned address
-	TransferDepositToRemoteZone(ctx sdk.Context, pool types.Pool, deposit types.Deposit) error
-	// DelegateDepositOnRemoteZone launches an ICA action on the remote Pool owned address (such as delegate coins for native staking Pools)
-	DelegateDepositOnRemoteZone(ctx sdk.Context, pool types.Pool, deposit types.Deposit) ([]*types.SplitDelegation, error)
+	// SendCreditToPool sends the credit amount to a local Pool owned address
+	SendCreditToPool(ctx sdk.Context, pool types.Pool, credit types.Credit) error
+	// TransferCreditToRemoteZone transfers the credit amount from a local Pool owned address to a remote Pool owned address
+	TransferCreditToRemoteZone(ctx sdk.Context, pool types.Pool, credit types.Credit) error
+	// DelegateCreditOnRemoteZone launches an ICA action on the remote Pool owned address (such as delegate coins for native staking Pools)
+	DelegateCreditOnRemoteZone(ctx sdk.Context, pool types.Pool, credit types.Credit) ([]*types.SplitDelegation, error)
 	// UndelegateWithdrawalOnRemoteZone launches and ICA action on the remote Pool owned address (such as undelegate coins for native staking Pools)
 	UndelegateWithdrawalsOnRemoteZone(ctx sdk.Context, epochUnbonding types.EpochUnbonding) ([]*types.SplitDelegation, *time.Time, error)
 	// RedelegateToActiveValidatorsOnRemoteZone launches an ICA action on the remote pool to redelegate the bonded tokens from inactive to active validators
@@ -56,26 +56,26 @@ func (runner *PoolRunnerBase) Logger(ctx sdk.Context) log.Logger {
 	return runner.keeper.Logger(ctx).With("pool_runner", runner.String())
 }
 
-func (runner *PoolRunnerBase) SendDepositToPool(ctx sdk.Context, pool types.Pool, deposit types.Deposit) error {
+func (runner *PoolRunnerBase) SendCreditToPool(ctx sdk.Context, pool types.Pool, credit types.Credit) error {
 	if pool.IsLocalZone(ctx) {
-		// Directly send funds to the local deposit address in case of local pool
+		// Directly send funds to the local credit address in case of local pool
 		return runner.keeper.BankKeeper.SendCoins(
 			ctx,
-			sdk.MustAccAddressFromBech32(deposit.DepositorAddress),
-			sdk.MustAccAddressFromBech32(pool.IcaDepositAddress),
-			sdk.NewCoins(deposit.Amount),
+			sdk.MustAccAddressFromBech32(credit.CreditorAddress),
+			sdk.MustAccAddressFromBech32(pool.IcaCreditAddress),
+			sdk.NewCoins(credit.Amount),
 		)
 	}
 	return runner.keeper.BankKeeper.SendCoins(
 		ctx,
-		sdk.MustAccAddressFromBech32(deposit.DepositorAddress),
+		sdk.MustAccAddressFromBech32(credit.CreditorAddress),
 		sdk.MustAccAddressFromBech32(pool.LocalAddress),
-		sdk.NewCoins(deposit.Amount),
+		sdk.NewCoins(credit.Amount),
 	)
 }
 
-func (runner *PoolRunnerBase) TransferDepositToRemoteZone(ctx sdk.Context, pool types.Pool, deposit types.Deposit) error {
-	logger := runner.Logger(ctx).With("ctx", "deposit_transfer")
+func (runner *PoolRunnerBase) TransferCreditToRemoteZone(ctx sdk.Context, pool types.Pool, credit types.Credit) error {
+	logger := runner.Logger(ctx).With("ctx", "credit_transfer")
 
 	if pool.IsLocalZone(ctx) {
 		// no-op
@@ -85,7 +85,7 @@ func (runner *PoolRunnerBase) TransferDepositToRemoteZone(ctx sdk.Context, pool 
 	// Construct our callback
 	transferToNativeCallback := types.TransferToNativeCallback{
 		PoolId:    pool.PoolId,
-		DepositId: deposit.DepositId,
+		CreditId: credit.CreditId,
 	}
 	marshalledCallbackData, err := runner.keeper.MarshalTransferToNativeCallbackArgs(ctx, transferToNativeCallback)
 	if err != nil {
@@ -93,12 +93,12 @@ func (runner *PoolRunnerBase) TransferDepositToRemoteZone(ctx sdk.Context, pool 
 	}
 
 	// Dispatch our transfer with a timeout of 30 minutes in nanos
-	sequence, err := runner.keeper.BroadcastIBCTransfer(ctx, pool, deposit.Amount, types.IBCTimeoutNanos, ICACallbackID_TransferToNative, marshalledCallbackData)
+	sequence, err := runner.keeper.BroadcastIBCTransfer(ctx, pool, credit.Amount, types.IBCTimeoutNanos, ICACallbackID_TransferToNative, marshalledCallbackData)
 	if err != nil {
 		logger.Error(
 			fmt.Sprintf("failed to dispatch IBC transfer: %v", err),
 			"pool_id", pool.PoolId,
-			"deposit_id", deposit.DepositId,
+			"credit_id", credit.CreditId,
 			"chain_id", pool.ChainId,
 			"sequence", sequence,
 		)
@@ -107,7 +107,7 @@ func (runner *PoolRunnerBase) TransferDepositToRemoteZone(ctx sdk.Context, pool 
 	logger.Debug(
 		"IBC transfer dispatched",
 		"pool_id", pool.PoolId,
-		"deposit_id", deposit.DepositId,
+		"credit_id", credit.CreditId,
 		"chain_id", pool.ChainId,
 		"sequence", sequence,
 	)
@@ -125,7 +125,7 @@ func (runner *PoolRunnerBase) TransferWithdrawalToRecipient(ctx sdk.Context, poo
 	if pool.IsLocalZone(ctx) {
 		// Move funds
 		if err := runner.keeper.BankKeeper.SendCoins(ctx,
-			sdk.MustAccAddressFromBech32(pool.GetIcaDepositAddress()),
+			sdk.MustAccAddressFromBech32(pool.GetIcaCreditAddress()),
 			toAddr,
 			sdk.NewCoins(withdrawal.Amount),
 		); err != nil {
@@ -168,7 +168,7 @@ func (runner *PoolRunnerBase) TransferWithdrawalToRecipient(ctx sdk.Context, poo
 			ibctransfertypes.PortID,
 			counterpartyChannelId,
 			amount,
-			pool.GetIcaDepositAddress(),
+			pool.GetIcaCreditAddress(),
 			withdrawal.GetToAddress(),
 			clienttypes.Height{},
 			uint64(ctx.BlockTime().UnixNano())+types.IBCTimeoutNanos,
@@ -188,14 +188,14 @@ func (runner *PoolRunnerBase) TransferWithdrawalToRecipient(ctx sdk.Context, poo
 		}
 
 		msgs = append(msgs, &banktypes.MsgSend{
-			FromAddress: pool.GetIcaDepositAddress(),
+			FromAddress: pool.GetIcaCreditAddress(),
 			ToAddress:   toAddr.String(),
 			Amount:      sdk.NewCoins(amount),
 		})
 	}
 
 	// Dispatch message
-	sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeDeposit, msgs, types.IBCTimeoutNanos, callbackID, marshalledCallbackData)
+	sequence, err := runner.keeper.BroadcastICAMessages(ctx, pool, types.ICATypeCredit, msgs, types.IBCTimeoutNanos, callbackID, marshalledCallbackData)
 	if err != nil {
 		logger.Error(
 			fmt.Sprintf("failed to dispatch %s: %v", msgLog, err),

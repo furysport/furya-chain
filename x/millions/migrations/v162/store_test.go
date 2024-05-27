@@ -97,8 +97,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.Bech32PrefixValAddr == "" {
 		pool.Bech32PrefixValAddr = sdk.GetConfig().GetBech32ValidatorAddrPrefix()
 	}
-	if pool.MinDepositAmount.IsNil() {
-		pool.MinDepositAmount = params.MinDepositAmount
+	if pool.MinCreditAmount.IsNil() {
+		pool.MinCreditAmount = params.MinCreditAmount
 	}
 	if err := pool.DrawSchedule.ValidateBasic(params); err != nil {
 		pool.DrawSchedule = millionstypes.DrawSchedule{DrawDelta: 1 * time.Hour, InitialDrawAt: time.Now().UTC()}
@@ -109,8 +109,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.LocalAddress == "" {
 		pool.LocalAddress = suite.moduleAddrs[0].String()
 	}
-	if pool.IcaDepositAddress == "" {
-		pool.IcaDepositAddress = suite.moduleAddrs[1].String()
+	if pool.IcaCreditAddress == "" {
+		pool.IcaCreditAddress = suite.moduleAddrs[1].String()
 	}
 	if pool.IcaPrizepoolAddress == "" {
 		pool.IcaPrizepoolAddress = suite.moduleAddrs[2].String()
@@ -136,8 +136,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.UpdatedAt.IsZero() {
 		pool.UpdatedAt = suite.ctx.BlockTime()
 	}
-	if pool.IcaDepositPortId == "" {
-		pool.IcaDepositPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypeDeposit))
+	if pool.IcaCreditPortId == "" {
+		pool.IcaCreditPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypeCredit))
 	}
 	if pool.IcaPrizepoolPortId == "" {
 		pool.IcaPrizepoolPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypePrizePool))
@@ -172,13 +172,13 @@ func (suite *StoreMigrationTestSuite) SetupTest() {
 
 	// Setup test params
 	suite.app.MillionsKeeper.SetParams(ctx, millionstypes.Params{
-		MinDepositAmount:        sdk.NewInt(millionstypes.MinAcceptableDepositAmount),
+		MinCreditAmount:        sdk.NewInt(millionstypes.MinAcceptableCreditAmount),
 		MaxPrizeStrategyBatches: 1_000,
 		MaxPrizeBatchQuantity:   1_000_000,
 		MinDrawScheduleDelta:    1 * time.Hour,
 		MaxDrawScheduleDelta:    366 * 24 * time.Hour,
 		PrizeExpirationDelta:    30 * 24 * time.Hour,
-		MinDepositDrawDelta:     millionstypes.MinAcceptableDepositDrawDelta,
+		MinCreditDrawDelta:     millionstypes.MinAcceptableCreditDrawDelta,
 	})
 }
 
@@ -191,22 +191,22 @@ func (suite *StoreMigrationTestSuite) TestMigratePendingWithdrawalsToEpochUnbond
 	suite.Require().NoError(err)
 
 	for i := 0; i < 5; i++ {
-		suite.app.MillionsKeeper.AddDeposit(suite.ctx, &millionstypes.Deposit{
+		suite.app.MillionsKeeper.AddCredit(suite.ctx, &millionstypes.Credit{
 			PoolId:           pool.PoolId,
-			DepositorAddress: suite.addrs[i].String(),
+			CreditorAddress: suite.addrs[i].String(),
 			WinnerAddress:    suite.addrs[i].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin("ufury", sdk.NewInt(1_000_0)),
 		})
 	}
 
-	deposits := suite.app.MillionsKeeper.ListDeposits(suite.ctx)
+	credits := suite.app.MillionsKeeper.ListCredits(suite.ctx)
 
 	for i := 0; i < 5; i++ {
 		suite.app.MillionsKeeper.AddWithdrawal(suite.ctx, millionstypes.Withdrawal{
 			PoolId:           pool.PoolId,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[i].String(),
+			CreditId:        credits[i].CreditId,
+			CreditorAddress: suite.addrs[i].String(),
 			ToAddress:        suite.addrs[i].String(),
 			State:            millionstypes.WithdrawalState_Pending,
 			ErrorState:       millionstypes.WithdrawalState_Unspecified,
@@ -214,15 +214,15 @@ func (suite *StoreMigrationTestSuite) TestMigratePendingWithdrawalsToEpochUnbond
 		})
 	}
 
-	// Delete deposits
-	deposits = suite.app.MillionsKeeper.ListDeposits(suite.ctx)
+	// Delete credits
+	credits = suite.app.MillionsKeeper.ListCredits(suite.ctx)
 	for i := 0; i < 5; i++ {
-		suite.app.MillionsKeeper.RemoveDeposit(suite.ctx, &millionstypes.Deposit{
-			PoolId:           deposits[i].PoolId,
-			DepositId:        deposits[i].DepositId,
-			DepositorAddress: suite.addrs[i].String(),
+		suite.app.MillionsKeeper.RemoveCredit(suite.ctx, &millionstypes.Credit{
+			PoolId:           credits[i].PoolId,
+			CreditId:        credits[i].CreditId,
+			CreditorAddress: suite.addrs[i].String(),
 			WinnerAddress:    suite.addrs[i].String(),
-			State:            millionstypes.DepositState_Success,
+			State:            millionstypes.CreditState_Success,
 			Amount:           sdk.NewCoin("ufury", sdk.NewInt(1_000_0)),
 		})
 	}

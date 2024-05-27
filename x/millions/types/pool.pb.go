@@ -32,12 +32,12 @@ var _ = time.Kitchen
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // PoolState the state of a Pool
-// Deposits are only accepted for Pools in a Ready state
+// Credits are only accepted for Pools in a Ready state
 //
 // TODO:
 // Pool state KILLED is not available in the current implementation
 // Introduce the capability to:
-// - Kill a Pool and withdraw or migrate all deposits to another Pool via
+// - Kill a Pool and withdraw or migrate all credits to another Pool via
 // Governance proposal
 type PoolState int32
 
@@ -195,23 +195,23 @@ type Pool struct {
 	ChainId             string                                 `protobuf:"bytes,4,opt,name=chain_id,json=chainId,proto3" json:"chain_id,omitempty"`
 	ConnectionId        string                                 `protobuf:"bytes,5,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
 	TransferChannelId   string                                 `protobuf:"bytes,6,opt,name=transfer_channel_id,json=transferChannelId,proto3" json:"transfer_channel_id,omitempty"`
-	IcaDepositPortId    string                                 `protobuf:"bytes,7,opt,name=ica_deposit_port_id,json=icaDepositPortId,proto3" json:"ica_deposit_port_id,omitempty"`
+	IcaCreditPortId    string                                 `protobuf:"bytes,7,opt,name=ica_credit_port_id,json=icaCreditPortId,proto3" json:"ica_credit_port_id,omitempty"`
 	IcaPrizepoolPortId  string                                 `protobuf:"bytes,8,opt,name=ica_prizepool_port_id,json=icaPrizepoolPortId,proto3" json:"ica_prizepool_port_id,omitempty"`
 	PoolType            PoolType                               `protobuf:"varint,9,opt,name=pool_type,json=poolType,proto3,enum=furya.millions.PoolType" json:"pool_type,omitempty"`
 	Validators          []PoolValidator                        `protobuf:"bytes,10,rep,name=validators,proto3" json:"validators"`
 	Bech32PrefixAccAddr string                                 `protobuf:"bytes,11,opt,name=bech32_prefix_acc_addr,json=bech32PrefixAccAddr,proto3" json:"bech32_prefix_acc_addr,omitempty"`
 	Bech32PrefixValAddr string                                 `protobuf:"bytes,12,opt,name=bech32_prefix_val_addr,json=bech32PrefixValAddr,proto3" json:"bech32_prefix_val_addr,omitempty"`
-	MinDepositAmount    github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,13,opt,name=min_deposit_amount,json=minDepositAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_deposit_amount"`
+	MinCreditAmount    github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,13,opt,name=min_credit_amount,json=minCreditAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_credit_amount"`
 	DrawSchedule        DrawSchedule                           `protobuf:"bytes,14,opt,name=draw_schedule,json=drawSchedule,proto3" json:"draw_schedule"`
 	PrizeStrategy       PrizeStrategy                          `protobuf:"bytes,15,opt,name=prize_strategy,json=prizeStrategy,proto3" json:"prize_strategy"`
 	UnbondingDuration   time.Duration                          `protobuf:"bytes,16,opt,name=unbonding_duration,json=unbondingDuration,proto3,stdduration" json:"unbonding_duration"`
 	MaxUnbondingEntries github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,17,opt,name=max_unbonding_entries,json=maxUnbondingEntries,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_unbonding_entries"`
 	LocalAddress        string                                 `protobuf:"bytes,18,opt,name=local_address,json=localAddress,proto3" json:"local_address,omitempty"`
-	IcaDepositAddress   string                                 `protobuf:"bytes,19,opt,name=ica_deposit_address,json=icaDepositAddress,proto3" json:"ica_deposit_address,omitempty"`
+	IcaCreditAddress   string                                 `protobuf:"bytes,19,opt,name=ica_credit_address,json=icaCreditAddress,proto3" json:"ica_credit_address,omitempty"`
 	IcaPrizepoolAddress string                                 `protobuf:"bytes,20,opt,name=ica_prizepool_address,json=icaPrizepoolAddress,proto3" json:"ica_prizepool_address,omitempty"`
 	NextDrawId          uint64                                 `protobuf:"varint,22,opt,name=next_draw_id,json=nextDrawId,proto3" json:"next_draw_id,omitempty"`
 	TvlAmount           github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,23,opt,name=tvl_amount,json=tvlAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"tvl_amount"`
-	DepositorsCount     uint64                                 `protobuf:"varint,24,opt,name=depositors_count,json=depositorsCount,proto3" json:"depositors_count,omitempty"`
+	CreditorsCount     uint64                                 `protobuf:"varint,24,opt,name=creditors_count,json=creditorsCount,proto3" json:"creditors_count,omitempty"`
 	SponsorshipAmount   github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,25,opt,name=sponsorship_amount,json=sponsorshipAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"sponsorship_amount"`
 	LastDrawCreatedAt   *time.Time                             `protobuf:"bytes,27,opt,name=last_draw_created_at,json=lastDrawCreatedAt,proto3,stdtime" json:"last_draw_created_at,omitempty"`
 	LastDrawState       DrawState                              `protobuf:"varint,28,opt,name=last_draw_state,json=lastDrawState,proto3,enum=furya.millions.DrawState" json:"last_draw_state,omitempty"`
@@ -299,9 +299,9 @@ func (m *Pool) GetTransferChannelId() string {
 	return ""
 }
 
-func (m *Pool) GetIcaDepositPortId() string {
+func (m *Pool) GetIcaCreditPortId() string {
 	if m != nil {
-		return m.IcaDepositPortId
+		return m.IcaCreditPortId
 	}
 	return ""
 }
@@ -369,9 +369,9 @@ func (m *Pool) GetLocalAddress() string {
 	return ""
 }
 
-func (m *Pool) GetIcaDepositAddress() string {
+func (m *Pool) GetIcaCreditAddress() string {
 	if m != nil {
-		return m.IcaDepositAddress
+		return m.IcaCreditAddress
 	}
 	return ""
 }
@@ -390,9 +390,9 @@ func (m *Pool) GetNextDrawId() uint64 {
 	return 0
 }
 
-func (m *Pool) GetDepositorsCount() uint64 {
+func (m *Pool) GetCreditorsCount() uint64 {
 	if m != nil {
-		return m.DepositorsCount
+		return m.CreditorsCount
 	}
 	return 0
 }
@@ -786,8 +786,8 @@ func (m *Pool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	dAtA[i] = 0x1
 	i--
 	dAtA[i] = 0xca
-	if m.DepositorsCount != 0 {
-		i = encodeVarintPool(dAtA, i, uint64(m.DepositorsCount))
+	if m.CreditorsCount != 0 {
+		i = encodeVarintPool(dAtA, i, uint64(m.CreditorsCount))
 		i--
 		dAtA[i] = 0x1
 		i--
@@ -821,10 +821,10 @@ func (m *Pool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0xa2
 	}
-	if len(m.IcaDepositAddress) > 0 {
-		i -= len(m.IcaDepositAddress)
-		copy(dAtA[i:], m.IcaDepositAddress)
-		i = encodeVarintPool(dAtA, i, uint64(len(m.IcaDepositAddress)))
+	if len(m.IcaCreditAddress) > 0 {
+		i -= len(m.IcaCreditAddress)
+		copy(dAtA[i:], m.IcaCreditAddress)
+		i = encodeVarintPool(dAtA, i, uint64(len(m.IcaCreditAddress)))
 		i--
 		dAtA[i] = 0x1
 		i--
@@ -882,9 +882,9 @@ func (m *Pool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i--
 	dAtA[i] = 0x72
 	{
-		size := m.MinDepositAmount.Size()
+		size := m.MinCreditAmount.Size()
 		i -= size
-		if _, err := m.MinDepositAmount.MarshalTo(dAtA[i:]); err != nil {
+		if _, err := m.MinCreditAmount.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
 		i = encodeVarintPool(dAtA, i, uint64(size))
@@ -931,10 +931,10 @@ func (m *Pool) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x42
 	}
-	if len(m.IcaDepositPortId) > 0 {
-		i -= len(m.IcaDepositPortId)
-		copy(dAtA[i:], m.IcaDepositPortId)
-		i = encodeVarintPool(dAtA, i, uint64(len(m.IcaDepositPortId)))
+	if len(m.IcaCreditPortId) > 0 {
+		i -= len(m.IcaCreditPortId)
+		copy(dAtA[i:], m.IcaCreditPortId)
+		i = encodeVarintPool(dAtA, i, uint64(len(m.IcaCreditPortId)))
 		i--
 		dAtA[i] = 0x3a
 	}
@@ -1089,7 +1089,7 @@ func (m *Pool) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovPool(uint64(l))
 	}
-	l = len(m.IcaDepositPortId)
+	l = len(m.IcaCreditPortId)
 	if l > 0 {
 		n += 1 + l + sovPool(uint64(l))
 	}
@@ -1114,7 +1114,7 @@ func (m *Pool) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovPool(uint64(l))
 	}
-	l = m.MinDepositAmount.Size()
+	l = m.MinCreditAmount.Size()
 	n += 1 + l + sovPool(uint64(l))
 	l = m.DrawSchedule.Size()
 	n += 1 + l + sovPool(uint64(l))
@@ -1128,7 +1128,7 @@ func (m *Pool) Size() (n int) {
 	if l > 0 {
 		n += 2 + l + sovPool(uint64(l))
 	}
-	l = len(m.IcaDepositAddress)
+	l = len(m.IcaCreditAddress)
 	if l > 0 {
 		n += 2 + l + sovPool(uint64(l))
 	}
@@ -1141,8 +1141,8 @@ func (m *Pool) Size() (n int) {
 	}
 	l = m.TvlAmount.Size()
 	n += 2 + l + sovPool(uint64(l))
-	if m.DepositorsCount != 0 {
-		n += 2 + sovPool(uint64(m.DepositorsCount))
+	if m.CreditorsCount != 0 {
+		n += 2 + sovPool(uint64(m.CreditorsCount))
 	}
 	l = m.SponsorshipAmount.Size()
 	n += 2 + l + sovPool(uint64(l))
@@ -1546,7 +1546,7 @@ func (m *Pool) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field IcaDepositPortId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field IcaCreditPortId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1574,7 +1574,7 @@ func (m *Pool) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.IcaDepositPortId = string(dAtA[iNdEx:postIndex])
+			m.IcaCreditPortId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 8:
 			if wireType != 2 {
@@ -1727,7 +1727,7 @@ func (m *Pool) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 13:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinDepositAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinCreditAmount", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1755,7 +1755,7 @@ func (m *Pool) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.MinDepositAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.MinCreditAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1926,7 +1926,7 @@ func (m *Pool) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 19:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field IcaDepositAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field IcaCreditAddress", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1954,7 +1954,7 @@ func (m *Pool) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.IcaDepositAddress = string(dAtA[iNdEx:postIndex])
+			m.IcaCreditAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 20:
 			if wireType != 2 {
@@ -2043,9 +2043,9 @@ func (m *Pool) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 24:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositorsCount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreditorsCount", wireType)
 			}
-			m.DepositorsCount = 0
+			m.CreditorsCount = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowPool
@@ -2055,7 +2055,7 @@ func (m *Pool) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.DepositorsCount |= uint64(b&0x7F) << shift
+				m.CreditorsCount |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

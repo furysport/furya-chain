@@ -18,13 +18,13 @@ var (
 // RegisterLegacyAminoCodec Register the codec for the message passing
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	// Messages
-	cdc.RegisterConcrete(&MsgDeposit{}, "furya/millions/MsgDeposit", nil)
-	cdc.RegisterConcrete(&MsgDepositRetry{}, "furya/millions/MsgDepositRetry", nil)
-	cdc.RegisterConcrete(&MsgDepositEdit{}, "furya/millions/MsgDepositEdit", nil)
+	cdc.RegisterConcrete(&MsgCredit{}, "furya/millions/MsgCredit", nil)
+	cdc.RegisterConcrete(&MsgCreditRetry{}, "furya/millions/MsgCreditRetry", nil)
+	cdc.RegisterConcrete(&MsgCreditEdit{}, "furya/millions/MsgCreditEdit", nil)
 	cdc.RegisterConcrete(&MsgClaimPrize{}, "furya/millions/MsgClaimPrize", nil)
 	cdc.RegisterConcrete(&MsgDrawRetry{}, "furya/millions/MsgDrawRetry", nil)
-	cdc.RegisterConcrete(&MsgWithdrawDeposit{}, "furya/millions/MsgWithdrawDeposit", nil)
-	cdc.RegisterConcrete(&MsgWithdrawDepositRetry{}, "furya/millions/MsgWithdrawDepositRetry", nil)
+	cdc.RegisterConcrete(&MsgWithdrawCredit{}, "furya/millions/MsgWithdrawCredit", nil)
+	cdc.RegisterConcrete(&MsgWithdrawCreditRetry{}, "furya/millions/MsgWithdrawCreditRetry", nil)
 	cdc.RegisterConcrete(&MsgRestoreInterchainAccounts{}, "furya/millions/MsgRestoreInterchainAccounts", nil)
 	cdc.RegisterConcrete(&MsgGenerateSeed{}, "furya/millions/MsgGenerateSeed", nil)
 
@@ -38,13 +38,13 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 // RegisterInterfaces Register the implementations for the given codecs
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// Messages
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgDeposit{})
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgDepositRetry{})
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgDepositEdit{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgCredit{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgCreditRetry{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgCreditEdit{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgClaimPrize{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgDrawRetry{})
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgWithdrawDeposit{})
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgWithdrawDepositRetry{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgWithdrawCredit{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgWithdrawCreditRetry{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgRestoreInterchainAccounts{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgGenerateSeed{})
 

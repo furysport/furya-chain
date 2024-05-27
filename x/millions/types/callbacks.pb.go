@@ -101,7 +101,7 @@ func (m *SplitDelegation) GetValidatorAddress() string {
 
 type DelegateCallback struct {
 	PoolId           uint64             `protobuf:"varint,1,opt,name=pool_id,json=poolId,proto3" json:"pool_id,omitempty"`
-	DepositId        uint64             `protobuf:"varint,2,opt,name=deposit_id,json=depositId,proto3" json:"deposit_id,omitempty"`
+	CreditId        uint64             `protobuf:"varint,2,opt,name=credit_id,json=creditId,proto3" json:"credit_id,omitempty"`
 	SplitDelegations []*SplitDelegation `protobuf:"bytes,3,rep,name=split_delegations,json=splitDelegations,proto3" json:"split_delegations,omitempty"`
 }
 
@@ -145,9 +145,9 @@ func (m *DelegateCallback) GetPoolId() uint64 {
 	return 0
 }
 
-func (m *DelegateCallback) GetDepositId() uint64 {
+func (m *DelegateCallback) GetCreditId() uint64 {
 	if m != nil {
-		return m.DepositId
+		return m.CreditId
 	}
 	return 0
 }
@@ -325,7 +325,7 @@ func (m *ClaimRewardsCallback) GetDrawId() uint64 {
 
 type TransferToNativeCallback struct {
 	PoolId    uint64 `protobuf:"varint,1,opt,name=pool_id,json=poolId,proto3" json:"pool_id,omitempty"`
-	DepositId uint64 `protobuf:"varint,2,opt,name=deposit_id,json=depositId,proto3" json:"deposit_id,omitempty"`
+	CreditId uint64 `protobuf:"varint,2,opt,name=credit_id,json=creditId,proto3" json:"credit_id,omitempty"`
 }
 
 func (m *TransferToNativeCallback) Reset()         { *m = TransferToNativeCallback{} }
@@ -368,9 +368,9 @@ func (m *TransferToNativeCallback) GetPoolId() uint64 {
 	return 0
 }
 
-func (m *TransferToNativeCallback) GetDepositId() uint64 {
+func (m *TransferToNativeCallback) GetCreditId() uint64 {
 	if m != nil {
-		return m.DepositId
+		return m.CreditId
 	}
 	return 0
 }
@@ -676,8 +676,8 @@ func (m *DelegateCallback) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x1a
 		}
 	}
-	if m.DepositId != 0 {
-		i = encodeVarintCallbacks(dAtA, i, uint64(m.DepositId))
+	if m.CreditId != 0 {
+		i = encodeVarintCallbacks(dAtA, i, uint64(m.CreditId))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -837,8 +837,8 @@ func (m *TransferToNativeCallback) MarshalToSizedBuffer(dAtA []byte) (int, error
 	_ = i
 	var l int
 	_ = l
-	if m.DepositId != 0 {
-		i = encodeVarintCallbacks(dAtA, i, uint64(m.DepositId))
+	if m.CreditId != 0 {
+		i = encodeVarintCallbacks(dAtA, i, uint64(m.CreditId))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -989,8 +989,8 @@ func (m *DelegateCallback) Size() (n int) {
 	if m.PoolId != 0 {
 		n += 1 + sovCallbacks(uint64(m.PoolId))
 	}
-	if m.DepositId != 0 {
-		n += 1 + sovCallbacks(uint64(m.DepositId))
+	if m.CreditId != 0 {
+		n += 1 + sovCallbacks(uint64(m.CreditId))
 	}
 	if len(m.SplitDelegations) > 0 {
 		for _, e := range m.SplitDelegations {
@@ -1066,8 +1066,8 @@ func (m *TransferToNativeCallback) Size() (n int) {
 	if m.PoolId != 0 {
 		n += 1 + sovCallbacks(uint64(m.PoolId))
 	}
-	if m.DepositId != 0 {
-		n += 1 + sovCallbacks(uint64(m.DepositId))
+	if m.CreditId != 0 {
+		n += 1 + sovCallbacks(uint64(m.CreditId))
 	}
 	return n
 }
@@ -1292,9 +1292,9 @@ func (m *DelegateCallback) Unmarshal(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreditId", wireType)
 			}
-			m.DepositId = 0
+			m.CreditId = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCallbacks
@@ -1304,7 +1304,7 @@ func (m *DelegateCallback) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.DepositId |= uint64(b&0x7F) << shift
+				m.CreditId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1782,9 +1782,9 @@ func (m *TransferToNativeCallback) Unmarshal(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreditId", wireType)
 			}
-			m.DepositId = 0
+			m.CreditId = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCallbacks
@@ -1794,7 +1794,7 @@ func (m *TransferToNativeCallback) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.DepositId |= uint64(b&0x7F) << shift
+				m.CreditId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

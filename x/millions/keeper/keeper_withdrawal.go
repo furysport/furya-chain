@@ -170,7 +170,7 @@ func (k Keeper) OnTransferWithdrawalToRecipientCompleted(ctx sdk.Context, poolID
 	return nil
 }
 
-// GetNextWithdrawalID gets the next withdrawal deposit ID
+// GetNextWithdrawalID gets the next withdrawal credit ID
 func (k Keeper) GetNextWithdrawalID(ctx sdk.Context) uint64 {
 	store := ctx.KVStore(k.storeKey)
 	nextWithdrawalId := gogotypes.UInt64Value{}
@@ -231,7 +231,7 @@ func (k Keeper) RemoveWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) e
 	}
 
 	store := ctx.KVStore(k.storeKey)
-	addr := sdk.MustAccAddressFromBech32(withdrawal.DepositorAddress)
+	addr := sdk.MustAccAddressFromBech32(withdrawal.CreditorAddress)
 	store.Delete(types.GetPoolWithdrawalKey(withdrawal.PoolId, withdrawal.WithdrawalId))
 	store.Delete(types.GetAccountPoolWithdrawalKey(addr, withdrawal.PoolId, withdrawal.WithdrawalId))
 
@@ -258,15 +258,15 @@ func (k Keeper) UpdateWithdrawalStatus(ctx sdk.Context, poolID uint64, withdrawa
 	if unbondingEndsAt != nil {
 		withdrawal.UnbondingEndsAt = unbondingEndsAt
 	}
-	// Update pool withdraw deposit
+	// Update pool withdraw credit
 	k.setPoolWithdrawal(ctx, withdrawal)
-	// Update account withdraw deposit
+	// Update account withdraw credit
 	k.setAccountWithdrawal(ctx, withdrawal)
 }
 
-// AddWithdrawal adds a withdrawDeposit to a pool and account
+// AddWithdrawal adds a withdrawCredit to a pool and account
 // - adds it to the pool {pool_id, withdrawal_id}
-// - adds it to the account {depositor_address, pool_id, withdrawal_id} withdrawDeposits
+// - adds it to the account {creditor_address, pool_id, withdrawal_id} withdrawCredits
 func (k Keeper) AddWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
 	// Automatically affect ID if missing
 	if withdrawal.GetWithdrawalId() == types.UnknownID {
@@ -282,9 +282,9 @@ func (k Keeper) AddWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
 		panic(errorsmod.Wrapf(types.ErrEntityOverride, "ID %d", withdrawal.GetWithdrawalId()))
 	}
 
-	// Update pool withdraw deposit
+	// Update pool withdraw credit
 	k.setPoolWithdrawal(ctx, withdrawal)
-	// Update account withdraw deposit
+	// Update account withdraw credit
 	k.setAccountWithdrawal(ctx, withdrawal)
 
 	// Add withdrawal to unbonding queue if needed
@@ -293,7 +293,7 @@ func (k Keeper) AddWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
 	}
 }
 
-// setPoolWithdrawal sets a withdraw deposit to the pool withdrawal key
+// setPoolWithdrawal sets a withdraw credit to the pool withdrawal key
 func (k Keeper) setPoolWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.GetPoolWithdrawalKey(withdrawal.PoolId, withdrawal.WithdrawalId)
@@ -301,10 +301,10 @@ func (k Keeper) setPoolWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) 
 	store.Set(key, encodedWithDrawal)
 }
 
-// setAccountWithdrawal sets a withdraw deposit to the account withdrawal key
+// setAccountWithdrawal sets a withdraw credit to the account withdrawal key
 func (k Keeper) setAccountWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
 	store := ctx.KVStore(k.storeKey)
-	withdrawAddress := sdk.MustAccAddressFromBech32(withdrawal.DepositorAddress)
+	withdrawAddress := sdk.MustAccAddressFromBech32(withdrawal.CreditorAddress)
 	key := types.GetAccountPoolWithdrawalKey(withdrawAddress, withdrawal.PoolId, withdrawal.WithdrawalId)
 	encodedWithDrawal := k.cdc.MustMarshal(&withdrawal)
 	store.Set(key, encodedWithDrawal)
@@ -373,8 +373,8 @@ func (k Keeper) DequeueMaturedWithdrawalQueue(ctx sdk.Context, endTime time.Time
 // ListWithdrawals return all the withdrawals
 // Warning: expensive operation
 func (k Keeper) ListWithdrawals(ctx sdk.Context) (withdrawals []types.Withdrawal) {
-	withdrawDepositStore := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(withdrawDepositStore, types.GetWithdrawalsKey())
+	withdrawCreditStore := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(withdrawCreditStore, types.GetWithdrawalsKey())
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -385,11 +385,11 @@ func (k Keeper) ListWithdrawals(ctx sdk.Context) (withdrawals []types.Withdrawal
 	return
 }
 
-// ListAccountWithdrawals return all the withdraw deposits account
+// ListAccountWithdrawals return all the withdraw credits account
 // Warning: expensive operation
 func (k Keeper) ListAccountWithdrawals(ctx sdk.Context, addr sdk.Address) (withdrawals []types.Withdrawal) {
-	withdrawDepositStore := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(withdrawDepositStore, types.GetAccountWithdrawalsKey(addr))
+	withdrawCreditStore := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(withdrawCreditStore, types.GetAccountWithdrawalsKey(addr))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

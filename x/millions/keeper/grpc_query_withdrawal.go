@@ -104,7 +104,7 @@ func (k queryServer) AccountWithdrawals(goCtx context.Context, req *types.QueryA
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	addr, err := sdk.AccAddressFromBech32(req.GetDepositorAddress())
+	addr, err := sdk.AccAddressFromBech32(req.GetCreditorAddress())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -138,7 +138,7 @@ func (k queryServer) AccountPoolWithdrawals(goCtx context.Context, req *types.Qu
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	addr, err := sdk.AccAddressFromBech32(req.GetDepositorAddress())
+	addr, err := sdk.AccAddressFromBech32(req.GetCreditorAddress())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}

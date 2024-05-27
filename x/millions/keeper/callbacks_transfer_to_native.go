@@ -44,13 +44,13 @@ func TransferToNativeCallback(k Keeper, ctx sdk.Context, packet channeltypes.Pac
 	// - Error: Put entity in error state to allow users to retry
 	if ackResponse.Status == icacallbackstypes.AckResponseStatus_TIMEOUT {
 		k.Logger(ctx).Debug("Received timeout for a transfer to native packet")
-		return k.OnTransferDepositToRemoteZoneCompleted(ctx, transferCallback.GetPoolId(), transferCallback.GetDepositId(), true)
+		return k.OnTransferCreditToRemoteZoneCompleted(ctx, transferCallback.GetPoolId(), transferCallback.GetCreditId(), true)
 	} else if ackResponse.Status == icacallbackstypes.AckResponseStatus_FAILURE {
 		k.Logger(ctx).Debug("Received failure for a transfer to native packet")
-		return k.OnTransferDepositToRemoteZoneCompleted(ctx, transferCallback.GetPoolId(), transferCallback.GetDepositId(), true)
+		return k.OnTransferCreditToRemoteZoneCompleted(ctx, transferCallback.GetPoolId(), transferCallback.GetCreditId(), true)
 	} else if ackResponse.Status == icacallbackstypes.AckResponseStatus_SUCCESS {
 		k.Logger(ctx).Debug("Received success for a transfer to native packet.")
-		return k.OnTransferDepositToRemoteZoneCompleted(ctx, transferCallback.GetPoolId(), transferCallback.GetDepositId(), false)
+		return k.OnTransferCreditToRemoteZoneCompleted(ctx, transferCallback.GetPoolId(), transferCallback.GetCreditId(), false)
 	}
 	return nil
 }

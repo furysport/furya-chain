@@ -61,8 +61,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.Bech32PrefixValAddr == "" {
 		pool.Bech32PrefixValAddr = sdk.GetConfig().GetBech32ValidatorAddrPrefix()
 	}
-	if pool.MinDepositAmount.IsNil() {
-		pool.MinDepositAmount = params.MinDepositAmount
+	if pool.MinCreditAmount.IsNil() {
+		pool.MinCreditAmount = params.MinCreditAmount
 	}
 	if pool.UnbondingDuration == 0 {
 		pool.UnbondingDuration = time.Duration(millionstypes.DefaultUnbondingDuration)
@@ -79,8 +79,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.LocalAddress == "" {
 		pool.LocalAddress = suite.moduleAddrs[0].String()
 	}
-	if pool.IcaDepositAddress == "" {
-		pool.IcaDepositAddress = suite.moduleAddrs[1].String()
+	if pool.IcaCreditAddress == "" {
+		pool.IcaCreditAddress = suite.moduleAddrs[1].String()
 	}
 	if pool.IcaPrizepoolAddress == "" {
 		pool.IcaPrizepoolAddress = suite.moduleAddrs[2].String()
@@ -106,8 +106,8 @@ func newValidPool(suite *StoreMigrationTestSuite, pool millionstypes.Pool) *mill
 	if pool.UpdatedAt.IsZero() {
 		pool.UpdatedAt = suite.ctx.BlockTime()
 	}
-	if pool.IcaDepositPortId == "" {
-		pool.IcaDepositPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypeDeposit))
+	if pool.IcaCreditPortId == "" {
+		pool.IcaCreditPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypeCredit))
 	}
 	if pool.IcaPrizepoolPortId == "" {
 		pool.IcaPrizepoolPortId = icatypes.ControllerPortPrefix + string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypePrizePool))
@@ -142,13 +142,13 @@ func (suite *StoreMigrationTestSuite) SetupTest() {
 
 	// Setup test params
 	suite.app.MillionsKeeper.SetParams(ctx, millionstypes.Params{
-		MinDepositAmount:        sdk.NewInt(millionstypes.MinAcceptableDepositAmount),
+		MinCreditAmount:        sdk.NewInt(millionstypes.MinAcceptableCreditAmount),
 		MaxPrizeStrategyBatches: 1_000,
 		MaxPrizeBatchQuantity:   1_000_000,
 		MinDrawScheduleDelta:    1 * time.Hour,
 		MaxDrawScheduleDelta:    366 * 24 * time.Hour,
 		PrizeExpirationDelta:    30 * 24 * time.Hour,
-		MinDepositDrawDelta:     millionstypes.MinAcceptableDepositDrawDelta,
+		MinCreditDrawDelta:     millionstypes.MinAcceptableCreditDrawDelta,
 	})
 }
 
@@ -161,11 +161,11 @@ func (suite *StoreMigrationTestSuite) TestUpdatePortIds() {
 	suite.Require().NoError(err)
 
 	// Save old value for further testing
-	oldDepositPortId := pool.GetIcaDepositPortId()
+	oldCreditPortId := pool.GetIcaCreditPortId()
 	oldPrizepoolPortId := pool.GetIcaPrizepoolPortId()
 
 	// Ensure our pool has the old setup
-	suite.Require().True(strings.HasPrefix(oldDepositPortId, icatypes.ControllerPortPrefix))
+	suite.Require().True(strings.HasPrefix(oldCreditPortId, icatypes.ControllerPortPrefix))
 	suite.Require().True(strings.HasPrefix(oldPrizepoolPortId, icatypes.ControllerPortPrefix))
 
 	// Run the migration operation
@@ -177,15 +177,15 @@ func (suite *StoreMigrationTestSuite) TestUpdatePortIds() {
 	suite.Require().NoError(err)
 
 	// Ensure our pool has the new setup
-	suite.Require().False(strings.HasPrefix(pool.GetIcaDepositPortId(), icatypes.ControllerPortPrefix))
+	suite.Require().False(strings.HasPrefix(pool.GetIcaCreditPortId(), icatypes.ControllerPortPrefix))
 	suite.Require().False(strings.HasPrefix(pool.GetIcaPrizepoolPortId(), icatypes.ControllerPortPrefix))
 
 	// Make sure it matches the new format
-	newFormatPortNameDeposit := string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypeDeposit))
+	newFormatPortNameCredit := string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypeCredit))
 	newFormatPortNamePrizepool := string(millionstypes.NewPoolName(pool.GetPoolId(), millionstypes.ICATypePrizePool))
-	suite.Require().Equal(newFormatPortNameDeposit, pool.GetIcaDepositPortId())
+	suite.Require().Equal(newFormatPortNameCredit, pool.GetIcaCreditPortId())
 	suite.Require().Equal(newFormatPortNamePrizepool, pool.GetIcaPrizepoolPortId())
-	suite.Require().Equal(oldDepositPortId, pool.GetIcaDepositPortIdWithPrefix())
+	suite.Require().Equal(oldCreditPortId, pool.GetIcaCreditPortIdWithPrefix())
 	suite.Require().Equal(oldPrizepoolPortId, pool.GetIcaPrizepoolPortIdWithPrefix())
 }
 

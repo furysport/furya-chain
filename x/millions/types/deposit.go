@@ -5,22 +5,22 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// ValidateBasic validates if a deposit has a valid poolID, depositID and depositorAddress
+// ValidateBasic validates if a credit has a valid poolID, creditID and creditorAddress
 // meaning that it can be stored
-func (deposit *Deposit) ValidateBasic() error {
-	if deposit.PoolId == UnknownID {
+func (credit *Credit) ValidateBasic() error {
+	if credit.PoolId == UnknownID {
 		return errorsmod.Wrapf(ErrInvalidID, "pool ID")
 	}
-	if deposit.DepositId == UnknownID {
-		return errorsmod.Wrapf(ErrInvalidID, "deposit ID")
+	if credit.CreditId == UnknownID {
+		return errorsmod.Wrapf(ErrInvalidID, "credit ID")
 	}
-	if deposit.State == DepositState_Unspecified {
-		return errorsmod.Wrapf(ErrInvalidDepositState, "no state specified")
+	if credit.State == CreditState_Unspecified {
+		return errorsmod.Wrapf(ErrInvalidCreditState, "no state specified")
 	}
-	if _, err := sdk.AccAddressFromBech32(deposit.DepositorAddress); err != nil {
-		return errorsmod.Wrapf(ErrInvalidDepositorAddress, err.Error())
+	if _, err := sdk.AccAddressFromBech32(credit.CreditorAddress); err != nil {
+		return errorsmod.Wrapf(ErrInvalidCreditorAddress, err.Error())
 	}
-	if _, err := sdk.AccAddressFromBech32(deposit.WinnerAddress); err != nil {
+	if _, err := sdk.AccAddressFromBech32(credit.WinnerAddress); err != nil {
 		return errorsmod.Wrapf(ErrInvalidWinnerAddress, err.Error())
 	}
 	return nil

@@ -20,17 +20,17 @@ func init() {
 	govtypes.RegisterProposalType(ProposalTypeUpdateParams)
 }
 
-func NewUpdateParamsProposal(title, description string, minDepositAmount *math.Int, prizeDelta *time.Duration, minDepDrawDelta *time.Duration, minDrawDelta *time.Duration, maxDrawDelta *time.Duration, maxBatchQuantity *math.Int, maxStrategyBatches *math.Int) govtypes.Content {
+func NewUpdateParamsProposal(title, description string, minCreditAmount *math.Int, prizeDelta *time.Duration, minDepDrawDelta *time.Duration, minDrawDelta *time.Duration, maxDrawDelta *time.Duration, maxBatchQuantity *math.Int, maxStrategyBatches *math.Int) govtypes.Content {
 	return &ProposalUpdateParams{
 		Title:                   title,
 		Description:             description,
-		MinDepositAmount:        minDepositAmount,
+		MinCreditAmount:        minCreditAmount,
 		PrizeExpirationDelta:    prizeDelta,
 		MinDrawScheduleDelta:    minDrawDelta,
 		MaxDrawScheduleDelta:    maxDrawDelta,
 		MaxPrizeBatchQuantity:   maxBatchQuantity,
 		MaxPrizeStrategyBatches: maxStrategyBatches,
-		MinDepositDrawDelta:     minDepDrawDelta,
+		MinCreditDrawDelta:     minDepDrawDelta,
 	}
 }
 
@@ -49,8 +49,8 @@ func (p *ProposalUpdateParams) ValidateBasic() error {
 
 	// Validate payload
 	params := DefaultParams()
-	if p.MinDepositAmount != nil {
-		params.MinDepositAmount = *p.MinDepositAmount
+	if p.MinCreditAmount != nil {
+		params.MinCreditAmount = *p.MinCreditAmount
 	}
 	if p.MaxPrizeStrategyBatches != nil {
 		params.MaxPrizeStrategyBatches = p.MaxPrizeStrategyBatches.Uint64()
@@ -67,8 +67,8 @@ func (p *ProposalUpdateParams) ValidateBasic() error {
 	if p.PrizeExpirationDelta != nil {
 		params.PrizeExpirationDelta = *p.PrizeExpirationDelta
 	}
-	if p.MinDepositDrawDelta != nil {
-		params.MinDepositDrawDelta = *p.MinDepositDrawDelta
+	if p.MinCreditDrawDelta != nil {
+		params.MinCreditDrawDelta = *p.MinCreditDrawDelta
 	}
 	return params.ValidateBasics()
 }
@@ -77,20 +77,20 @@ func (p ProposalUpdateParams) String() string {
 	return fmt.Sprintf(`Update Params Proposal:
 	Title:            			%s
 	Description:      			%s
-	Min Deposit Amount:			%d
+	Min Credit Amount:			%d
 	Max Prize Strategy Batches	%d
 	Max Prize Batch Quantity	%d
 	Min Draw Schedule Delta		%s
 	Max Draw Schedule Delta		%s
 	Prize Expiration Delta		%s
-	Min Deposit Draw Delta		%s
+	Min Credit Draw Delta		%s
   `,
 		p.Title, p.Description,
-		p.MinDepositAmount.Int64(),
+		p.MinCreditAmount.Int64(),
 		p.MaxPrizeStrategyBatches.Int64(),
 		p.MaxPrizeBatchQuantity.Int64(),
 		p.MinDrawScheduleDelta.String(),
 		p.MaxDrawScheduleDelta.String(),
 		p.PrizeExpirationDelta.String(),
-		p.MinDepositDrawDelta.String())
+		p.MinCreditDrawDelta.String())
 }

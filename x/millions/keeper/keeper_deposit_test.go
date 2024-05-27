@@ -10,38 +10,38 @@ import (
 	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
-// TestDeposit_IDsGeneration tests that the depositID is properly incremented for each new deposit
-func (suite *KeeperTestSuite) TestDeposit_IDsGeneration() {
+// TestCredit_IDsGeneration tests that the creditID is properly incremented for each new credit
+func (suite *KeeperTestSuite) TestCredit_IDsGeneration() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
 
 	// Set the denom
 	denom := app.StakingKeeper.BondDenom(ctx)
-	// Add 10 deposits
+	// Add 10 credits
 	for i := 0; i < 10; i++ {
 		poolID := app.MillionsKeeper.GetNextPoolIDAndIncrement(ctx)
-		depositID := app.MillionsKeeper.GetNextDepositIdAndIncrement(ctx)
+		creditID := app.MillionsKeeper.GetNextCreditIdAndIncrement(ctx)
 		app.MillionsKeeper.AddPool(ctx, newValidPool(suite, millionstypes.Pool{PoolId: poolID}))
 
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 			PoolId:           poolID,
-			DepositId:        depositID,
-			DepositorAddress: suite.addrs[0].String(),
+			CreditId:        creditID,
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
-		// Test that depositID is incremented
-		suite.Require().Equal(uint64(i+1), depositID)
+		// Test that creditID is incremented
+		suite.Require().Equal(uint64(i+1), creditID)
 		// Test that we never override an existing entity
 		panicF := func() {
-			app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+			app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 				PoolId:           poolID,
-				DepositId:        depositID,
-				DepositorAddress: suite.addrs[0].String(),
+				CreditId:        creditID,
+				CreditorAddress: suite.addrs[0].String(),
 				WinnerAddress:    suite.addrs[0].String(),
-				State:            millionstypes.DepositState_IbcTransfer,
+				State:            millionstypes.CreditState_IbcTransfer,
 				Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 			})
 		}
@@ -49,8 +49,8 @@ func (suite *KeeperTestSuite) TestDeposit_IDsGeneration() {
 	}
 }
 
-// TestDeposit_AddDeposit tests the logic of adding a deposit to the store
-func (suite *KeeperTestSuite) TestDeposit_AddDeposit() {
+// TestCredit_AddCredit tests the logic of adding a credit to the store
+func (suite *KeeperTestSuite) TestCredit_AddCredit() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
@@ -58,16 +58,16 @@ func (suite *KeeperTestSuite) TestDeposit_AddDeposit() {
 	// Set the denom
 	denom := app.StakingKeeper.BondDenom(ctx)
 
-	depositsBefore := app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Len(depositsBefore, 0)
-	deposits := app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Len(deposits, 0)
+	creditsBefore := app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Len(creditsBefore, 0)
+	credits := app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Len(credits, 0)
 
 	// Track poolTVLBefore
 	var poolTvlBefore math.Int
-	// Track poolDepositorsCount
-	var poolDepositorCountBefore uint64
-	// Add 5 deposits
+	// Track poolCreditorsCount
+	var poolCreditorCountBefore uint64
+	// Add 5 credits
 	for i := 0; i < 5; i++ {
 		poolID := app.MillionsKeeper.GetNextPoolIDAndIncrement(ctx)
 		drawDelta1 := 1 * time.Hour
@@ -92,159 +92,159 @@ func (suite *KeeperTestSuite) TestDeposit_AddDeposit() {
 		poolTvlBefore = pool.TvlAmount
 		suite.Require().Equal(int64(0), poolTvlBefore.Int64())
 
-		// Test poolDepositorCount
-		poolDepositorCountBefore = pool.DepositorsCount
-		suite.Require().Equal(uint64(0), poolDepositorCountBefore)
+		// Test poolCreditorCount
+		poolCreditorCountBefore = pool.CreditorsCount
+		suite.Require().Equal(uint64(0), poolCreditorCountBefore)
 
-		// Create a new deposit and add it to the state
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		// Create a new credit and add it to the state
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 			PoolId:           pool.PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 
-	// - Test that deposits with unknown IDs have a new depositIDs reassigned
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	for i, deposit := range deposits {
-		suite.Require().NotEqual(uint64(0), deposit.DepositId)
-		suite.Require().Equal(uint64(i+1), deposit.DepositId)
+	// - Test that credits with unknown IDs have a new creditIDs reassigned
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	for i, credit := range credits {
+		suite.Require().NotEqual(uint64(0), credit.CreditId)
+		suite.Require().Equal(uint64(i+1), credit.CreditId)
 	}
 
 	// - Test the validate basics
-	// -- Test one successful deposit with all correct validate basics
+	// -- Test one successful credit with all correct validate basics
 	panicF := func() {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositorAddress: suite.addrs[1].String(),
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditorAddress: suite.addrs[1].String(),
 			WinnerAddress:    suite.addrs[1].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().NotPanics(panicF)
-	// -- Test that the deposit validation panics with an invalid pool ID
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid pool ID
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 			PoolId:           uint64(0),
-			DepositorAddress: suite.addrs[0].String(),
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
-	// -- Test that the deposit validation panics with an invalid depositID
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid creditID
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		deposits[7].DepositId = 0
+		credits[7].CreditId = 0
 	}
 	suite.Require().Panics(panicF)
-	// -- Test that the deposit validation panics with an invalid state
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid state
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_Unspecified,
+			State:            millionstypes.CreditState_Unspecified,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
-	// -- Test that the deposit validation panics with an invalid DepositorAddress
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid CreditorAddress
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositorAddress: "",
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditorAddress: "",
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
-	// -- Test that the deposit validation panics with an invalid WinnerAddress
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid WinnerAddress
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    "",
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
 
-	// - Test that we never override an existing entity (double deposit)
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// - Test that we never override an existing entity (double credit)
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositId:        deposits[len(deposits)-1].DepositId,
-			DepositorAddress: suite.addrs[0].String(),
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditId:        credits[len(credits)-1].CreditId,
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
 
-	// - Test that the pool deposits and account deposits are correctly updated
-	depositsAccount := app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Equal(len(depositsBefore)+5, len(depositsAccount))
-	depositsAccount = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[1])
-	suite.Require().Equal(len(depositsBefore)+1, len(depositsAccount))
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
-	suite.Require().Equal(len(depositsBefore)+6, len(deposits))
+	// - Test that the pool credits and account credits are correctly updated
+	creditsAccount := app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Equal(len(creditsBefore)+5, len(creditsAccount))
+	creditsAccount = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[1])
+	suite.Require().Equal(len(creditsBefore)+1, len(creditsAccount))
+	credits = app.MillionsKeeper.ListCredits(ctx)
+	suite.Require().Equal(len(creditsBefore)+6, len(credits))
 
 	pools := app.MillionsKeeper.ListPools(ctx)
 
 	for i, pool := range pools {
 		// Test that the first 4 pools are updated
 		if i <= 3 {
-			depositsAccountPool := app.MillionsKeeper.ListAccountPoolDeposits(ctx, suite.addrs[0], pool.PoolId)
-			suite.Require().Equal(len(depositsBefore)+1, len(depositsAccountPool))
+			creditsAccountPool := app.MillionsKeeper.ListAccountPoolCredits(ctx, suite.addrs[0], pool.PoolId)
+			suite.Require().Equal(len(creditsBefore)+1, len(creditsAccountPool))
 
-			depositsPool := app.MillionsKeeper.ListPoolDeposits(ctx, pool.PoolId)
-			suite.Require().Equal(len(depositsBefore)+1, len(depositsPool))
-			// - Test that the TVL is added to the pool by the amount of the deposit
+			creditsPool := app.MillionsKeeper.ListPoolCredits(ctx, pool.PoolId)
+			suite.Require().Equal(len(creditsBefore)+1, len(creditsPool))
+			// - Test that the TVL is added to the pool by the amount of the credit
 			suite.Require().Equal(poolTvlBefore.Int64()+1_000_000, pool.TvlAmount.Int64())
-			// - Test that the deposit count is correctly incremented if it's a new depositor
-			suite.Require().Equal(poolDepositorCountBefore+1, pool.DepositorsCount)
+			// - Test that the credit count is correctly incremented if it's a new creditor
+			suite.Require().Equal(poolCreditorCountBefore+1, pool.CreditorsCount)
 
-			// Test GetPoolDeposit
-			poolDeposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, pool.PoolId, deposits[i].DepositId)
+			// Test GetPoolCredit
+			poolCredit, err := app.MillionsKeeper.GetPoolCredit(ctx, pool.PoolId, credits[i].CreditId)
 			suite.Require().NoError(err)
-			suite.Require().Equal(deposits[i].Amount.Amount.Int64(), poolDeposit.Amount.Amount.Int64())
-			suite.Require().Equal(deposits[i].PoolId, poolDeposit.PoolId)
+			suite.Require().Equal(credits[i].Amount.Amount.Int64(), poolCredit.Amount.Amount.Int64())
+			suite.Require().Equal(credits[i].PoolId, poolCredit.PoolId)
 
 			// Test that the last pool is updated accordingly
 		} else if i == len(pools)-1 {
-			depositsPool := app.MillionsKeeper.ListPoolDeposits(ctx, pool.PoolId)
-			suite.Require().Equal(len(depositsBefore)+2, len(depositsPool))
-			depositsAccountPool := app.MillionsKeeper.ListAccountPoolDeposits(ctx, suite.addrs[1], pool.PoolId)
-			suite.Require().Equal(len(depositsBefore)+1, len(depositsAccountPool))
-			// - Test that the TVL is added to the pool by the amount of the deposit for the last pool
+			creditsPool := app.MillionsKeeper.ListPoolCredits(ctx, pool.PoolId)
+			suite.Require().Equal(len(creditsBefore)+2, len(creditsPool))
+			creditsAccountPool := app.MillionsKeeper.ListAccountPoolCredits(ctx, suite.addrs[1], pool.PoolId)
+			suite.Require().Equal(len(creditsBefore)+1, len(creditsAccountPool))
+			// - Test that the TVL is added to the pool by the amount of the credit for the last pool
 			suite.Require().Equal(poolTvlBefore.Int64()+2_000_000, pool.TvlAmount.Int64())
-			// - Test that the deposit count is correctly incremented if it's a new depositor for the last pool
-			suite.Require().Equal(poolDepositorCountBefore+2, pool.DepositorsCount)
+			// - Test that the credit count is correctly incremented if it's a new creditor for the last pool
+			suite.Require().Equal(poolCreditorCountBefore+2, pool.CreditorsCount)
 
-			// Test GetPoolDeposit
-			poolDeposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, pool.PoolId, deposits[i].DepositId)
+			// Test GetPoolCredit
+			poolCredit, err := app.MillionsKeeper.GetPoolCredit(ctx, pool.PoolId, credits[i].CreditId)
 			suite.Require().NoError(err)
-			suite.Require().Equal(deposits[i].Amount.Amount.Int64(), poolDeposit.Amount.Amount.Int64())
-			suite.Require().Equal(deposits[i].PoolId, poolDeposit.PoolId)
+			suite.Require().Equal(credits[i].Amount.Amount.Int64(), poolCredit.Amount.Amount.Int64())
+			suite.Require().Equal(credits[i].PoolId, poolCredit.PoolId)
 		}
 	}
 }
 
-// TestDeposit_RemoveDeposit tests the logic of removing a deposit from the store
-func (suite *KeeperTestSuite) TestDeposit_RemoveDeposit() {
+// TestCredit_RemoveCredit tests the logic of removing a credit from the store
+func (suite *KeeperTestSuite) TestCredit_RemoveCredit() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
@@ -252,17 +252,17 @@ func (suite *KeeperTestSuite) TestDeposit_RemoveDeposit() {
 	// Set the denom
 	denom := app.StakingKeeper.BondDenom(ctx)
 
-	depositsBefore := app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Len(depositsBefore, 0)
-	deposits := app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Len(deposits, 0)
+	creditsBefore := app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Len(creditsBefore, 0)
+	credits := app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Len(credits, 0)
 
 	// Track poolTVLBefore
 	var poolTvlBefore math.Int
-	// Track poolDepositorsCount
-	var poolDepositorCountBefore uint64
+	// Track poolCreditorsCount
+	var poolCreditorCountBefore uint64
 
-	// Add 5 deposits
+	// Add 5 credits
 	for i := 0; i < 5; i++ {
 		poolID := app.MillionsKeeper.GetNextPoolIDAndIncrement(ctx)
 		drawDelta1 := 1 * time.Hour
@@ -287,166 +287,166 @@ func (suite *KeeperTestSuite) TestDeposit_RemoveDeposit() {
 		poolTvlBefore = pool.TvlAmount
 		suite.Require().Equal(int64(0), poolTvlBefore.Int64())
 
-		// Test poolDepositorCountBefore
-		poolDepositorCountBefore = pool.DepositorsCount
-		suite.Require().Equal(uint64(0), poolDepositorCountBefore)
+		// Test poolCreditorCountBefore
+		poolCreditorCountBefore = pool.CreditorsCount
+		suite.Require().Equal(uint64(0), poolCreditorCountBefore)
 
-		// Create a new deposit and add it to the state
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		// Create a new credit and add it to the state
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 			PoolId:           pool.PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
+	credits = app.MillionsKeeper.ListCredits(ctx)
 	// - Test the validate basics
-	// -- Test one successful deposit with all correct validate basics
+	// -- Test one successful credit with all correct validate basics
 	panicF := func() {
-		app.MillionsKeeper.RemoveDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositId:        deposits[len(deposits)-1].PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+		app.MillionsKeeper.RemoveCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditId:        credits[len(credits)-1].PoolId,
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().NotPanics(panicF)
-	// -- Test that the deposit validation panics with an invalid pool ID
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid pool ID
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.RemoveDeposit(ctx, &millionstypes.Deposit{
+		app.MillionsKeeper.RemoveCredit(ctx, &millionstypes.Credit{
 			PoolId:           uint64(0),
-			DepositorAddress: suite.addrs[0].String(),
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
-	// -- Test that the deposit validation panics with an invalid depositID
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid creditID
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		deposits[7].DepositId = 0
+		credits[7].CreditId = 0
 	}
 	suite.Require().Panics(panicF)
-	// -- Test that the deposit validation panics with an invalid state
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid state
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.RemoveDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+		app.MillionsKeeper.RemoveCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_Unspecified,
+			State:            millionstypes.CreditState_Unspecified,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
-	// -- Test that the deposit validation panics with an invalid DepositorAddress
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid CreditorAddress
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.RemoveDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositorAddress: "",
+		app.MillionsKeeper.RemoveCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditorAddress: "",
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
-	// -- Test that the deposit validation panics with an invalid WinnerAddress
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
+	// -- Test that the credit validation panics with an invalid WinnerAddress
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
 	panicF = func() {
-		app.MillionsKeeper.RemoveDeposit(ctx, &millionstypes.Deposit{
-			PoolId:           deposits[len(deposits)-1].PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+		app.MillionsKeeper.RemoveCredit(ctx, &millionstypes.Credit{
+			PoolId:           credits[len(credits)-1].PoolId,
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    "",
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 	suite.Require().Panics(panicF)
 
-	// - Test that the store is delete for pool deposits and account deposits
+	// - Test that the store is delete for pool credits and account credits
 	// List all pools
 	pools := app.MillionsKeeper.ListPools(ctx)
 
 	for i, pool := range pools {
 		if i <= 3 {
-			depositsAccountPool := app.MillionsKeeper.ListAccountPoolDeposits(ctx, suite.addrs[0], pool.PoolId)
-			suite.Require().Equal(len(depositsBefore)+1, len(depositsAccountPool))
+			creditsAccountPool := app.MillionsKeeper.ListAccountPoolCredits(ctx, suite.addrs[0], pool.PoolId)
+			suite.Require().Equal(len(creditsBefore)+1, len(creditsAccountPool))
 
-			depositsPool := app.MillionsKeeper.ListPoolDeposits(ctx, pool.PoolId)
-			suite.Require().Equal(len(depositsBefore)+1, len(depositsPool))
-			// - Test that the TVL is added to the pool by the amount of the deposit
+			creditsPool := app.MillionsKeeper.ListPoolCredits(ctx, pool.PoolId)
+			suite.Require().Equal(len(creditsBefore)+1, len(creditsPool))
+			// - Test that the TVL is added to the pool by the amount of the credit
 			suite.Require().Equal(poolTvlBefore.Int64()+1_000_000, pool.TvlAmount.Int64())
-			// - Test that the deposit count is correctly incremented if it's a new depositor
-			suite.Require().Equal(poolDepositorCountBefore+1, pool.DepositorsCount)
-			// Check that deposit was removed from last pool
+			// - Test that the credit count is correctly incremented if it's a new creditor
+			suite.Require().Equal(poolCreditorCountBefore+1, pool.CreditorsCount)
+			// Check that credit was removed from last pool
 		} else if i == len(pools)-1 {
-			depositsPool := app.MillionsKeeper.ListPoolDeposits(ctx, pool.PoolId)
-			suite.Require().Equal(len(depositsBefore), len(depositsPool))
-			depositsAccountPool := app.MillionsKeeper.ListAccountPoolDeposits(ctx, suite.addrs[0], pool.PoolId)
-			suite.Require().Equal(len(depositsBefore), len(depositsAccountPool))
-			// - Test that the TVL is added to the pool by the amount of the deposit for the last pool
+			creditsPool := app.MillionsKeeper.ListPoolCredits(ctx, pool.PoolId)
+			suite.Require().Equal(len(creditsBefore), len(creditsPool))
+			creditsAccountPool := app.MillionsKeeper.ListAccountPoolCredits(ctx, suite.addrs[0], pool.PoolId)
+			suite.Require().Equal(len(creditsBefore), len(creditsAccountPool))
+			// - Test that the TVL is added to the pool by the amount of the credit for the last pool
 			suite.Require().Equal(poolTvlBefore.Int64(), pool.TvlAmount.Int64())
-			// - Test that the deposit count is correctly incremented if it's a new depositor for the last pool
-			suite.Require().Equal(poolDepositorCountBefore, pool.DepositorsCount)
+			// - Test that the credit count is correctly incremented if it's a new creditor for the last pool
+			suite.Require().Equal(poolCreditorCountBefore, pool.CreditorsCount)
 
 		}
 	}
 
-	for _, deposit := range deposits {
-		// Get the pool before remove deposit
-		poolBefore, err := app.MillionsKeeper.GetPool(ctx, deposit.PoolId)
+	for _, credit := range credits {
+		// Get the pool before remove credit
+		poolBefore, err := app.MillionsKeeper.GetPool(ctx, credit.PoolId)
 		suite.Require().NoError(err)
-		// Get the Account deposit before remove deposit
-		addr := sdk.MustAccAddressFromBech32(deposit.DepositorAddress)
-		deposits = app.MillionsKeeper.ListAccountDeposits(ctx, addr)
-		// Get the Account pool deposit before remove deposit
-		depositsAccountPoolBefore := app.MillionsKeeper.ListAccountPoolDeposits(ctx, addr, poolBefore.PoolId)
-		// Get the pool deposit before remove deposit
-		depositsPoolBefore := app.MillionsKeeper.ListPoolDeposits(ctx, poolBefore.PoolId)
+		// Get the Account credit before remove credit
+		addr := sdk.MustAccAddressFromBech32(credit.CreditorAddress)
+		credits = app.MillionsKeeper.ListAccountCredits(ctx, addr)
+		// Get the Account pool credit before remove credit
+		creditsAccountPoolBefore := app.MillionsKeeper.ListAccountPoolCredits(ctx, addr, poolBefore.PoolId)
+		// Get the pool credit before remove credit
+		creditsPoolBefore := app.MillionsKeeper.ListPoolCredits(ctx, poolBefore.PoolId)
 
-		// Test GetPoolDeposit
-		poolDeposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, deposit.PoolId, deposit.DepositId)
+		// Test GetPoolCredit
+		poolCredit, err := app.MillionsKeeper.GetPoolCredit(ctx, credit.PoolId, credit.CreditId)
 		suite.Require().NoError(err)
-		suite.Require().Equal(deposit.Amount.Amount.Int64(), poolDeposit.Amount.Amount.Int64())
-		suite.Require().Equal(deposit.PoolId, poolDeposit.PoolId)
+		suite.Require().Equal(credit.Amount.Amount.Int64(), poolCredit.Amount.Amount.Int64())
+		suite.Require().Equal(credit.PoolId, poolCredit.PoolId)
 
-		// Remove the deposit
-		app.MillionsKeeper.RemoveDeposit(ctx, &deposit)
-
-		// Decrement by 1 for each loop
-		depositsAccount := app.MillionsKeeper.ListAccountDeposits(ctx, addr)
-		suite.Require().Equal(len(deposits)-1, len(depositsAccount))
+		// Remove the credit
+		app.MillionsKeeper.RemoveCredit(ctx, &credit)
 
 		// Decrement by 1 for each loop
-		depositsAccountPool := app.MillionsKeeper.ListAccountPoolDeposits(ctx, addr, deposit.PoolId)
-		suite.Require().Equal(len(depositsAccountPoolBefore)-1, len(depositsAccountPool))
+		creditsAccount := app.MillionsKeeper.ListAccountCredits(ctx, addr)
+		suite.Require().Equal(len(credits)-1, len(creditsAccount))
 
 		// Decrement by 1 for each loop
-		depositsPool := app.MillionsKeeper.ListPoolDeposits(ctx, deposit.PoolId)
-		suite.Require().Equal(len(depositsPoolBefore)-1, len(depositsPool))
+		creditsAccountPool := app.MillionsKeeper.ListAccountPoolCredits(ctx, addr, credit.PoolId)
+		suite.Require().Equal(len(creditsAccountPoolBefore)-1, len(creditsAccountPool))
+
+		// Decrement by 1 for each loop
+		creditsPool := app.MillionsKeeper.ListPoolCredits(ctx, credit.PoolId)
+		suite.Require().Equal(len(creditsPoolBefore)-1, len(creditsPool))
 		// Get the pool
-		pool, err := app.MillionsKeeper.GetPool(ctx, deposit.PoolId)
+		pool, err := app.MillionsKeeper.GetPool(ctx, credit.PoolId)
 		suite.Require().NoError(err)
-		// Test that the pool tvl is deducted by the deposit amount
-		suite.Require().Equal(poolBefore.TvlAmount.Int64()-deposit.Amount.Amount.Int64(), pool.TvlAmount.Int64())
-		// - Test that the pool count is correctly decremented for each removed deposit
-		poolBefore.DepositorsCount--
-		suite.Require().Equal(poolBefore.DepositorsCount, pool.DepositorsCount)
+		// Test that the pool tvl is deducted by the credit amount
+		suite.Require().Equal(poolBefore.TvlAmount.Int64()-credit.Amount.Amount.Int64(), pool.TvlAmount.Int64())
+		// - Test that the pool count is correctly decremented for each removed credit
+		poolBefore.CreditorsCount--
+		suite.Require().Equal(poolBefore.CreditorsCount, pool.CreditorsCount)
 	}
 
-	depositsAll := app.MillionsKeeper.ListDeposits(ctx)
-	suite.Require().Equal(len(depositsBefore), len(depositsAll))
+	creditsAll := app.MillionsKeeper.ListCredits(ctx)
+	suite.Require().Equal(len(creditsBefore), len(creditsAll))
 }
 
-// TestDeposit_UpdateDepositStatus tests the logic of updating a deposit from the store
-func (suite *KeeperTestSuite) TestDeposit_UpdateDepositStatus() {
+// TestCredit_UpdateCreditStatus tests the logic of updating a credit from the store
+func (suite *KeeperTestSuite) TestCredit_UpdateCreditStatus() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
@@ -454,7 +454,7 @@ func (suite *KeeperTestSuite) TestDeposit_UpdateDepositStatus() {
 	// Set the denom
 	denom := app.StakingKeeper.BondDenom(ctx)
 
-	// Add 5 deposits
+	// Add 5 credits
 	for i := 0; i < 5; i++ {
 		poolID := app.MillionsKeeper.GetNextPoolIDAndIncrement(ctx)
 		drawDelta1 := 1 * time.Hour
@@ -475,76 +475,76 @@ func (suite *KeeperTestSuite) TestDeposit_UpdateDepositStatus() {
 		pool, err := app.MillionsKeeper.GetPool(ctx, poolID)
 		suite.Require().NoError(err)
 
-		// Create a new deposit and add it to the state
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		// Create a new credit and add it to the state
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 			PoolId:           pool.PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 
-	// - Test if the deposit exist
-	// Retrived deposits
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
+	// - Test if the credit exist
+	// Retrived credits
+	credits := app.MillionsKeeper.ListCredits(ctx)
 	// Retrieve the pool from the state
 	pools := app.MillionsKeeper.ListPools(ctx)
 	for i, pool := range pools {
-		app.MillionsKeeper.UpdateDepositStatus(ctx, pool.PoolId, deposits[i].DepositId, millionstypes.DepositState_IcaDelegate, false)
-		deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, pool.PoolId, deposits[i].DepositId)
+		app.MillionsKeeper.UpdateCreditStatus(ctx, pool.PoolId, credits[i].CreditId, millionstypes.CreditState_IcaDelegate, false)
+		credit, err := app.MillionsKeeper.GetPoolCredit(ctx, pool.PoolId, credits[i].CreditId)
 		suite.Require().NoError(err)
-		suite.Require().NotNil(deposit, "Not nil")
-		suite.Require().Equal(millionstypes.DepositState_IcaDelegate, deposit.State)
-		suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+		suite.Require().NotNil(credit, "Not nil")
+		suite.Require().Equal(millionstypes.CreditState_IcaDelegate, credit.State)
+		suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 	}
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
+	credits = app.MillionsKeeper.ListCredits(ctx)
 	// Trigger panic on wrong poolID
 	panicF := func() {
-		_, err := app.MillionsKeeper.GetPoolDeposit(ctx, deposits[10].PoolId, uint64(5))
+		_, err := app.MillionsKeeper.GetPoolCredit(ctx, credits[10].PoolId, uint64(5))
 		suite.Require().NoError(err)
 	}
 	suite.Require().Panics(panicF)
-	// Trigger panic on wrong depositID
+	// Trigger panic on wrong creditID
 	panicF = func() {
-		_, err := app.MillionsKeeper.GetPoolDeposit(ctx, uint64(5), deposits[10].PoolId)
+		_, err := app.MillionsKeeper.GetPoolCredit(ctx, uint64(5), credits[10].PoolId)
 		suite.Require().NoError(err)
 	}
 	suite.Require().Panics(panicF)
 
 	// - Test Error Management
-	deposits = app.MillionsKeeper.ListDeposits(ctx)
+	credits = app.MillionsKeeper.ListCredits(ctx)
 	// Retrieve the pool from the state
 	pools = app.MillionsKeeper.ListPools(ctx)
 	for i, pool := range pools {
-		app.MillionsKeeper.UpdateDepositStatus(ctx, pool.PoolId, deposits[i].DepositId, millionstypes.DepositState_IcaDelegate, true)
-		deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, pool.PoolId, deposits[i].DepositId)
+		app.MillionsKeeper.UpdateCreditStatus(ctx, pool.PoolId, credits[i].CreditId, millionstypes.CreditState_IcaDelegate, true)
+		credit, err := app.MillionsKeeper.GetPoolCredit(ctx, pool.PoolId, credits[i].CreditId)
 		suite.Require().NoError(err)
-		suite.Require().NotNil(deposit, "Not nil")
-		suite.Require().Equal(millionstypes.DepositState_Failure, deposit.State)
-		suite.Require().Equal(millionstypes.DepositState_IcaDelegate, deposit.ErrorState)
+		suite.Require().NotNil(credit, "Not nil")
+		suite.Require().Equal(millionstypes.CreditState_Failure, credit.State)
+		suite.Require().Equal(millionstypes.CreditState_IcaDelegate, credit.ErrorState)
 	}
 
-	// - Test that the account deposit was updated
-	// - Test that the pool deposit was updated
+	// - Test that the account credit was updated
+	// - Test that the pool credit was updated
 	pools = app.MillionsKeeper.ListPools(ctx)
 	for i, pool := range pools {
-		depositsAccounts := app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-		suite.Require().Equal(ctx.BlockTime(), depositsAccounts[i].UpdatedAt)
-		suite.Require().Equal(ctx.BlockHeight(), depositsAccounts[i].UpdatedAtHeight)
+		creditsAccounts := app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+		suite.Require().Equal(ctx.BlockTime(), creditsAccounts[i].UpdatedAt)
+		suite.Require().Equal(ctx.BlockHeight(), creditsAccounts[i].UpdatedAtHeight)
 
-		depositsPoolAccount := app.MillionsKeeper.ListAccountPoolDeposits(ctx, suite.addrs[0], pool.PoolId)
-		suite.Require().Equal(ctx.BlockTime(), depositsPoolAccount[0].UpdatedAt)
-		suite.Require().Equal(ctx.BlockHeight(), depositsPoolAccount[0].UpdatedAtHeight)
+		creditsPoolAccount := app.MillionsKeeper.ListAccountPoolCredits(ctx, suite.addrs[0], pool.PoolId)
+		suite.Require().Equal(ctx.BlockTime(), creditsPoolAccount[0].UpdatedAt)
+		suite.Require().Equal(ctx.BlockHeight(), creditsPoolAccount[0].UpdatedAtHeight)
 
-		depositsPool := app.MillionsKeeper.ListPoolDeposits(ctx, pool.PoolId)
-		suite.Require().Equal(ctx.BlockTime(), depositsPool[0].UpdatedAt)
-		suite.Require().Equal(ctx.BlockHeight(), depositsPool[0].UpdatedAtHeight)
+		creditsPool := app.MillionsKeeper.ListPoolCredits(ctx, pool.PoolId)
+		suite.Require().Equal(ctx.BlockTime(), creditsPool[0].UpdatedAt)
+		suite.Require().Equal(ctx.BlockHeight(), creditsPool[0].UpdatedAtHeight)
 	}
 }
 
-// TestDeposit_EditDeposit tests the logic of editing a deposit's winnerAddr and sponsor
-func (suite *KeeperTestSuite) TestDeposit_EditDeposit() {
+// TestCredit_EditCredit tests the logic of editing a credit's winnerAddr and sponsor
+func (suite *KeeperTestSuite) TestCredit_EditCredit() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
@@ -552,7 +552,7 @@ func (suite *KeeperTestSuite) TestDeposit_EditDeposit() {
 	// Set the denom
 	denom := app.StakingKeeper.BondDenom(ctx)
 
-	// Add 5 deposits
+	// Add 5 credits
 	for i := 0; i < 5; i++ {
 		poolID := app.MillionsKeeper.GetNextPoolIDAndIncrement(ctx)
 		drawDelta1 := 1 * time.Hour
@@ -573,52 +573,52 @@ func (suite *KeeperTestSuite) TestDeposit_EditDeposit() {
 		pool, err := app.MillionsKeeper.GetPool(ctx, poolID)
 		suite.Require().NoError(err)
 
-		// Create a new deposit and add it to the state
-		app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+		// Create a new credit and add it to the state
+		app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 			PoolId:           pool.PoolId,
-			DepositorAddress: suite.addrs[0].String(),
+			CreditorAddress: suite.addrs[0].String(),
 			WinnerAddress:    suite.addrs[0].String(),
-			State:            millionstypes.DepositState_IbcTransfer,
+			State:            millionstypes.CreditState_IbcTransfer,
 			Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 		})
 	}
 
 	// Test Error Management
 	// - Trigger err on wrong poolID
-	_, err := app.MillionsKeeper.GetPoolDeposit(ctx, uint64(10), uint64(5))
+	_, err := app.MillionsKeeper.GetPoolCredit(ctx, uint64(10), uint64(5))
 	suite.Require().Error(err)
-	// - Trigger err on wrong depositID
-	_, err = app.MillionsKeeper.GetPoolDeposit(ctx, uint64(5), uint64(10))
+	// - Trigger err on wrong creditID
+	_, err = app.MillionsKeeper.GetPoolCredit(ctx, uint64(5), uint64(10))
 	suite.Require().Error(err)
 
-	deposits := app.MillionsKeeper.ListDeposits(ctx)
+	credits := app.MillionsKeeper.ListCredits(ctx)
 	// Retrieve the pool from the state
 	pools := app.MillionsKeeper.ListPools(ctx)
 	for i, pool := range pools {
-		err = app.MillionsKeeper.EditDeposit(ctx, pool.PoolId, deposits[i].DepositId, suite.addrs[1], true)
+		err = app.MillionsKeeper.EditCredit(ctx, pool.PoolId, credits[i].CreditId, suite.addrs[1], true)
 		suite.Require().NoError(err)
-		deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, pool.PoolId, deposits[i].DepositId)
+		credit, err := app.MillionsKeeper.GetPoolCredit(ctx, pool.PoolId, credits[i].CreditId)
 		suite.Require().NoError(err)
-		pool, err := app.MillionsKeeper.GetPool(ctx, deposit.PoolId)
+		pool, err := app.MillionsKeeper.GetPool(ctx, credit.PoolId)
 		suite.Require().NoError(err)
-		suite.Require().NotNil(deposit, "Not nil")
-		suite.Require().Equal(suite.addrs[1].String(), deposit.WinnerAddress)
-		suite.Require().Equal(true, deposit.IsSponsor)
+		suite.Require().NotNil(credit, "Not nil")
+		suite.Require().Equal(suite.addrs[1].String(), credit.WinnerAddress)
+		suite.Require().Equal(true, credit.IsSponsor)
 		suite.Require().Equal(int64(1_000_000), pool.SponsorshipAmount.Int64())
 	}
 
 	// pool SponsorshipAmount should be sub in case user does not want to sponsor anymore
-	pool, err := app.MillionsKeeper.GetPool(ctx, deposits[0].PoolId)
+	pool, err := app.MillionsKeeper.GetPool(ctx, credits[0].PoolId)
 	suite.Require().NoError(err)
-	err = app.MillionsKeeper.EditDeposit(ctx, pool.PoolId, deposits[0].DepositId, suite.addrs[1], false)
+	err = app.MillionsKeeper.EditCredit(ctx, pool.PoolId, credits[0].CreditId, suite.addrs[1], false)
 	suite.Require().NoError(err)
-	pool, err = app.MillionsKeeper.GetPool(ctx, deposits[0].PoolId)
+	pool, err = app.MillionsKeeper.GetPool(ctx, credits[0].PoolId)
 	suite.Require().NoError(err)
 	suite.Require().Equal(int64(0), pool.SponsorshipAmount.Int64())
 }
 
-// TestDeposit_TransferDeposit tests the full flow from the transfer till the delegation point
-func (suite *KeeperTestSuite) TestDeposit_TransferDeposit() {
+// TestCredit_TransferCredit tests the full flow from the transfer till the delegation point
+func (suite *KeeperTestSuite) TestCredit_TransferCredit() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
@@ -640,7 +640,7 @@ func (suite *KeeperTestSuite) TestDeposit_TransferDeposit() {
 			BondedAmount:    sdk.NewInt(1_000_000),
 			IsEnabled:       true,
 		}},
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaCreditAddress:   cosmosIcaCreditAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		PrizeStrategy: millionstypes.PrizeStrategy{
 			PrizeBatches: []millionstypes.PrizeBatch{
@@ -657,58 +657,58 @@ func (suite *KeeperTestSuite) TestDeposit_TransferDeposit() {
 	pools := app.MillionsKeeper.ListPools(ctx)
 	suite.Require().Len(pools, 1)
 
-	// - Test the full deposit process from the transfer till the delegation point
+	// - Test the full credit process from the transfer till the delegation point
 	// - Test if the validator is enabled and bonded amount
 	suite.Require().Equal(true, pools[0].Validators[0].IsEnabled)
 	suite.Require().Equal(sdk.NewInt(1_000_000), pools[0].Validators[0].BondedAmount)
 
-	// Create a new deposit and add it to the state
-	app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+	// Create a new credit and add it to the state
+	app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 		PoolId:           pools[0].PoolId,
-		DepositorAddress: uatomAddresses[0].String(),
+		CreditorAddress: uatomAddresses[0].String(),
 		WinnerAddress:    uatomAddresses[0].String(),
-		State:            millionstypes.DepositState_IbcTransfer,
+		State:            millionstypes.CreditState_IbcTransfer,
 		Amount:           sdk.NewCoin("uatom", sdk.NewInt(1_000_000)),
 	})
 	err := app.BankKeeper.SendCoins(ctx, uatomAddresses[0], sdk.MustAccAddressFromBech32(pools[0].LocalAddress), sdk.Coins{sdk.NewCoin(pools[0].Denom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
-	deposits := app.MillionsKeeper.ListAccountDeposits(ctx, uatomAddresses[0])
+	credits := app.MillionsKeeper.ListAccountCredits(ctx, uatomAddresses[0])
 
 	// Test that the pool is not local
 	suite.Require().Equal(false, pools[0].IsLocalZone(ctx))
-	deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err := app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().NotNil(deposit, "Not nil")
-	suite.Require().Equal(millionstypes.DepositState_IbcTransfer, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().NotNil(credit, "Not nil")
+	suite.Require().Equal(millionstypes.CreditState_IbcTransfer, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, uatomAddresses[0])
-	suite.Require().Len(deposits, 1)
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, uatomAddresses[0])
+	suite.Require().Len(credits, 1)
 
 	// Simulate failed ackResponse AckResponseStatus_FAILURE
-	err = app.MillionsKeeper.OnTransferDepositToRemoteZoneCompleted(ctx, deposits[0].GetPoolId(), deposits[0].GetDepositId(), true)
+	err = app.MillionsKeeper.OnTransferCreditToRemoteZoneCompleted(ctx, credits[0].GetPoolId(), credits[0].GetCreditId(), true)
 	suite.Require().NoError(err)
 
-	// List deposits to get latest status
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, uatomAddresses[0])
-	suite.Require().Len(deposits, 1)
-	// Failed Transfer should set the errorState to DepositState_IbcTransfer and state to DepositState_Failure
-	suite.Require().Equal(millionstypes.DepositState_Failure, deposits[0].State)
-	suite.Require().Equal(millionstypes.DepositState_IbcTransfer, deposits[0].ErrorState)
+	// List credits to get latest status
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, uatomAddresses[0])
+	suite.Require().Len(credits, 1)
+	// Failed Transfer should set the errorState to CreditState_IbcTransfer and state to CreditState_Failure
+	suite.Require().Equal(millionstypes.CreditState_Failure, credits[0].State)
+	suite.Require().Equal(millionstypes.CreditState_IbcTransfer, credits[0].ErrorState)
 
-	// Update status to simulate that the state is initially on DepositState_IbcTransfer
-	app.MillionsKeeper.UpdateDepositStatus(ctx, deposits[0].PoolId, deposits[0].DepositId, millionstypes.DepositState_IbcTransfer, false)
+	// Update status to simulate that the state is initially on CreditState_IbcTransfer
+	app.MillionsKeeper.UpdateCreditStatus(ctx, credits[0].PoolId, credits[0].CreditId, millionstypes.CreditState_IbcTransfer, false)
 
 	// Simulate succesful ackResponse AckResponseStatus_SUCCESS
-	err = app.MillionsKeeper.OnTransferDepositToRemoteZoneCompleted(ctx, deposits[0].GetPoolId(), deposits[0].GetDepositId(), false)
+	err = app.MillionsKeeper.OnTransferCreditToRemoteZoneCompleted(ctx, credits[0].GetPoolId(), credits[0].GetCreditId(), false)
 	suite.Require().NoError(err)
 
-	// List deposits to get latest state
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, uatomAddresses[0])
-	suite.Require().Len(deposits, 1)
-	// The deposit will reached the sequence, err := k.BroadcastICAMessages an fail on OnDelegateDepositOnRemoteZoneCompleted as we don't BroadcastICAMessages in our test
-	suite.Require().Equal(millionstypes.DepositState_Failure, deposits[0].State)
-	suite.Require().Equal(millionstypes.DepositState_IcaDelegate, deposits[0].ErrorState)
+	// List credits to get latest state
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, uatomAddresses[0])
+	suite.Require().Len(credits, 1)
+	// The credit will reached the sequence, err := k.BroadcastICAMessages an fail on OnDelegateCreditOnRemoteZoneCompleted as we don't BroadcastICAMessages in our test
+	suite.Require().Equal(millionstypes.CreditState_Failure, credits[0].State)
+	suite.Require().Equal(millionstypes.CreditState_IcaDelegate, credits[0].ErrorState)
 
 	// Test local pool
 	// Set the denom
@@ -741,38 +741,38 @@ func (suite *KeeperTestSuite) TestDeposit_TransferDeposit() {
 	suite.Require().Equal(true, pools[1].Validators[0].IsEnabled)
 	suite.Require().Equal(sdk.NewInt(1_000_000), pools[1].Validators[0].BondedAmount)
 
-	// Create a new deposit and add it to the state
-	app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+	// Create a new credit and add it to the state
+	app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 		PoolId:           pools[1].PoolId,
-		DepositorAddress: suite.addrs[0].String(),
+		CreditorAddress: suite.addrs[0].String(),
 		WinnerAddress:    suite.addrs[0].String(),
-		State:            millionstypes.DepositState_IbcTransfer,
+		State:            millionstypes.CreditState_IbcTransfer,
 		Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 	})
-	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), sdk.Coins{sdk.NewCoin(pools[1].Denom, sdk.NewInt(1_000_000))})
+	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), sdk.Coins{sdk.NewCoin(pools[1].Denom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Len(deposits, 1)
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Len(credits, 1)
 
 	// Test that the pool is local
 	suite.Require().Equal(true, pools[1].IsLocalZone(ctx))
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().NotNil(deposit, "Not nil")
-	suite.Require().Equal(millionstypes.DepositState_IbcTransfer, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().NotNil(credit, "Not nil")
+	suite.Require().Equal(millionstypes.CreditState_IbcTransfer, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
-	// Trigger the Transfer deposit to native chain
-	err = app.MillionsKeeper.TransferDepositToRemoteZone(ctx, deposit.PoolId, deposit.DepositId)
+	// Trigger the Transfer credit to native chain
+	err = app.MillionsKeeper.TransferCreditToRemoteZone(ctx, credit.PoolId, credit.CreditId)
 	suite.Require().NoError(err)
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(millionstypes.DepositState_Success, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().Equal(millionstypes.CreditState_Success, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 }
 
-// TestDeposit_DelegateDeposit tests the delegate deposit from the transfer point till the final delegation
-func (suite *KeeperTestSuite) TestDeposit_DelegateDeposit() {
+// TestCredit_DelegateCredit tests the delegate credit from the transfer point till the final delegation
+func (suite *KeeperTestSuite) TestCredit_DelegateCredit() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
@@ -794,7 +794,7 @@ func (suite *KeeperTestSuite) TestDeposit_DelegateDeposit() {
 			BondedAmount:    sdk.NewInt(1_000_000),
 			IsEnabled:       true,
 		}},
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaCreditAddress:   cosmosIcaCreditAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		PrizeStrategy: millionstypes.PrizeStrategy{
 			PrizeBatches: []millionstypes.PrizeBatch{
@@ -815,49 +815,49 @@ func (suite *KeeperTestSuite) TestDeposit_DelegateDeposit() {
 	suite.Require().Equal(true, pools[0].Validators[0].IsEnabled)
 	suite.Require().Equal(sdk.NewInt(1_000_000), pools[0].Validators[0].BondedAmount)
 
-	// Create a new deposit and add it to the state
-	app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+	// Create a new credit and add it to the state
+	app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 		PoolId:           pools[0].PoolId,
-		DepositorAddress: uatomAddresses[0].String(),
+		CreditorAddress: uatomAddresses[0].String(),
 		WinnerAddress:    uatomAddresses[0].String(),
-		State:            millionstypes.DepositState_IcaDelegate,
+		State:            millionstypes.CreditState_IcaDelegate,
 		Amount:           sdk.NewCoin("uatom", sdk.NewInt(1_000_000)),
 	})
 	err := app.BankKeeper.SendCoins(ctx, uatomAddresses[0], sdk.MustAccAddressFromBech32(pools[0].LocalAddress), sdk.Coins{sdk.NewCoin(pools[0].Denom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
-	deposits := app.MillionsKeeper.ListAccountDeposits(ctx, uatomAddresses[0])
-	suite.Require().Len(deposits, 1)
+	credits := app.MillionsKeeper.ListAccountCredits(ctx, uatomAddresses[0])
+	suite.Require().Len(credits, 1)
 
 	// Test that the pool is not local
 	suite.Require().Equal(false, pools[0].IsLocalZone(ctx))
-	deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err := app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().NotNil(deposit, "Not nil")
-	suite.Require().Equal(millionstypes.DepositState_IcaDelegate, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().NotNil(credit, "Not nil")
+	suite.Require().Equal(millionstypes.CreditState_IcaDelegate, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
-	// Simulate a failed DelegateDepositOnRemoteZone
-	err = app.MillionsKeeper.DelegateDepositOnRemoteZone(ctx, deposit.PoolId, deposit.DepositId)
+	// Simulate a failed DelegateCreditOnRemoteZone
+	err = app.MillionsKeeper.DelegateCreditOnRemoteZone(ctx, credit.PoolId, credit.CreditId)
 	suite.Require().NoError(err)
 
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	// The deposit will reached the sequence, err := k.BroadcastICAMessages and fail on OnDelegateDepositOnRemoteZoneCompleted as we don't BroadcastICAMessages in our test
-	suite.Require().Equal(millionstypes.DepositState_Failure, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_IcaDelegate, deposit.ErrorState)
+	// The credit will reached the sequence, err := k.BroadcastICAMessages and fail on OnDelegateCreditOnRemoteZoneCompleted as we don't BroadcastICAMessages in our test
+	suite.Require().Equal(millionstypes.CreditState_Failure, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_IcaDelegate, credit.ErrorState)
 
-	// Update status to simulate that the state is initially on DepositState_IcaDelegate
-	app.MillionsKeeper.UpdateDepositStatus(ctx, deposit.PoolId, deposit.DepositId, millionstypes.DepositState_IcaDelegate, false)
+	// Update status to simulate that the state is initially on CreditState_IcaDelegate
+	app.MillionsKeeper.UpdateCreditStatus(ctx, credit.PoolId, credit.CreditId, millionstypes.CreditState_IcaDelegate, false)
 
 	splits := []*millionstypes.SplitDelegation{{ValidatorAddress: cosmosPoolValidator, Amount: sdk.NewInt(int64(1_000_000))}}
 
 	// Now trigger a successfull Delegation to simulate icacallbackstypes.AckResponseStatus_SUCCESS
-	err = app.MillionsKeeper.OnDelegateDepositOnRemoteZoneCompleted(ctx, deposit.PoolId, deposit.DepositId, splits, false)
+	err = app.MillionsKeeper.OnDelegateCreditOnRemoteZoneCompleted(ctx, credit.PoolId, credit.CreditId, splits, false)
 	suite.Require().NoError(err)
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposit.PoolId, deposit.DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credit.PoolId, credit.CreditId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(millionstypes.DepositState_Success, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().Equal(millionstypes.CreditState_Success, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
 	// Test local pool
 	// Set the denom
@@ -890,42 +890,42 @@ func (suite *KeeperTestSuite) TestDeposit_DelegateDeposit() {
 	suite.Require().Equal(true, pools[1].Validators[0].IsEnabled)
 	suite.Require().Equal(sdk.NewInt(1_000_000), pools[1].Validators[0].BondedAmount)
 
-	// Create a new deposit and add it to the state
-	app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+	// Create a new credit and add it to the state
+	app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 		PoolId:           pools[1].PoolId,
-		DepositorAddress: suite.addrs[0].String(),
+		CreditorAddress: suite.addrs[0].String(),
 		WinnerAddress:    suite.addrs[0].String(),
-		State:            millionstypes.DepositState_IcaDelegate,
+		State:            millionstypes.CreditState_IcaDelegate,
 		Amount:           sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), sdk.NewInt(1_000_000)),
 	})
-	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), sdk.Coins{sdk.NewCoin(pools[1].Denom, sdk.NewInt(1_000_000))})
+	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), sdk.Coins{sdk.NewCoin(pools[1].Denom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Len(deposits, 1)
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Len(credits, 1)
 
 	pools = app.MillionsKeeper.ListPools(ctx)
 	suite.Require().Len(pools, 2)
 
 	// Test that the pool is local
 	suite.Require().Equal(true, pools[1].IsLocalZone(ctx))
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().NotNil(deposit, "Not nil")
-	suite.Require().Equal(millionstypes.DepositState_IcaDelegate, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().NotNil(credit, "Not nil")
+	suite.Require().Equal(millionstypes.CreditState_IcaDelegate, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
-	// As it's local pool trigger a DelegateDepositOnRemoteZone for the new deposit
-	err = app.MillionsKeeper.DelegateDepositOnRemoteZone(ctx, deposit.PoolId, deposit.DepositId)
+	// As it's local pool trigger a DelegateCreditOnRemoteZone for the new credit
+	err = app.MillionsKeeper.DelegateCreditOnRemoteZone(ctx, credit.PoolId, credit.CreditId)
 	suite.Require().NoError(err)
 
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(millionstypes.DepositState_Success, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().Equal(millionstypes.CreditState_Success, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 }
 
-// TestDeposit_BalanceDeposit tests the balance in case of success or failed deposit
-func (suite *KeeperTestSuite) TestDeposit_BalanceDeposit() {
+// TestCredit_BalanceCredit tests the balance in case of success or failed credit
+func (suite *KeeperTestSuite) TestCredit_BalanceCredit() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
@@ -947,7 +947,7 @@ func (suite *KeeperTestSuite) TestDeposit_BalanceDeposit() {
 			BondedAmount:    sdk.NewInt(1_000_000),
 			IsEnabled:       true,
 		}},
-		IcaDepositAddress:   cosmosIcaDepositAddress,
+		IcaCreditAddress:   cosmosIcaCreditAddress,
 		IcaPrizepoolAddress: cosmosIcaPrizePoolAddress,
 		PrizeStrategy: millionstypes.PrizeStrategy{
 			PrizeBatches: []millionstypes.PrizeBatch{
@@ -975,48 +975,48 @@ func (suite *KeeperTestSuite) TestDeposit_BalanceDeposit() {
 	suite.Require().Equal(true, pools[0].Validators[0].IsEnabled)
 	suite.Require().Equal(sdk.NewInt(1_000_000), pools[0].Validators[0].BondedAmount)
 
-	// Create a new deposit and add it to the state
-	app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+	// Create a new credit and add it to the state
+	app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 		PoolId:           pools[0].PoolId,
-		DepositorAddress: uatomAddresses[0].String(),
+		CreditorAddress: uatomAddresses[0].String(),
 		WinnerAddress:    uatomAddresses[0].String(),
-		State:            millionstypes.DepositState_IbcTransfer,
+		State:            millionstypes.CreditState_IbcTransfer,
 		Amount:           sdk.NewCoin("uatom", sdk.NewInt(1_000_000)),
 	})
 
 	err := app.BankKeeper.SendCoins(ctx, uatomAddresses[0], sdk.MustAccAddressFromBech32(pools[0].LocalAddress), sdk.Coins{sdk.NewCoin(pools[0].Denom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
-	// Balance should have decreased by one deposit
+	// Balance should have decreased by one credit
 	balance := app.BankKeeper.GetBalance(ctx, uatomAddresses[0], "uatom")
 	suite.Require().Equal(balanceBefore.Amount.Int64()-1_000_000, balance.Amount.Int64())
-	// Module Acc should have increased by one deposit
+	// Module Acc should have increased by one credit
 	balanceModuleAcc := app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[0].LocalAddress), "uatom")
 	suite.Require().Equal(balanceModuleAccBefore.Amount.Int64()+1_000_000, balanceModuleAcc.Amount.Int64())
 
-	deposits := app.MillionsKeeper.ListAccountDeposits(ctx, uatomAddresses[0])
-	suite.Require().Len(deposits, 1)
+	credits := app.MillionsKeeper.ListAccountCredits(ctx, uatomAddresses[0])
+	suite.Require().Len(credits, 1)
 
-	app.MillionsKeeper.UpdateDepositStatus(ctx, deposits[0].PoolId, deposits[0].DepositId, millionstypes.DepositState_IcaDelegate, false)
+	app.MillionsKeeper.UpdateCreditStatus(ctx, credits[0].PoolId, credits[0].CreditId, millionstypes.CreditState_IcaDelegate, false)
 
 	suite.Require().Equal(false, pools[0].IsLocalZone(ctx))
-	deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err := app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().NotNil(deposit, "Not nil")
-	suite.Require().Equal(millionstypes.DepositState_IcaDelegate, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().NotNil(credit, "Not nil")
+	suite.Require().Equal(millionstypes.CreditState_IcaDelegate, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
 	splits := []*millionstypes.SplitDelegation{{ValidatorAddress: cosmosPoolValidator, Amount: sdk.NewInt(int64(1_000_000))}}
 
 	// Now trigger a successfull Delegation to simulate icacallbackstypes.AckResponseStatus_SUCCESS
-	err = app.MillionsKeeper.OnDelegateDepositOnRemoteZoneCompleted(ctx, deposit.PoolId, deposit.DepositId, splits, false)
+	err = app.MillionsKeeper.OnDelegateCreditOnRemoteZoneCompleted(ctx, credit.PoolId, credit.CreditId, splits, false)
 	suite.Require().NoError(err)
 
-	// For remote pools we don't reach the success as k.BroadcastICAMessages fails on OnDelegateDepositOnRemoteZoneCompleted
+	// For remote pools we don't reach the success as k.BroadcastICAMessages fails on OnDelegateCreditOnRemoteZoneCompleted
 
 	// Balance should remain unchanged
 	balance = app.BankKeeper.GetBalance(ctx, uatomAddresses[0], "uatom")
 	suite.Require().Equal(balanceBefore.Amount.Int64()-1_000_000, balance.Amount.Int64())
-	// Module Account should have the deposit amount
+	// Module Account should have the credit amount
 	balanceModuleAcc = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[0].LocalAddress), "uatom")
 	suite.Require().Equal(balanceModuleAccBefore.Amount.Int64()+1_000_000, balanceModuleAcc.Amount.Int64())
 
@@ -1055,31 +1055,31 @@ func (suite *KeeperTestSuite) TestDeposit_BalanceDeposit() {
 	balanceBefore = app.BankKeeper.GetBalance(ctx, suite.addrs[0], "ufury")
 	suite.Require().Equal(int64(1_000_000_000_0), balanceBefore.Amount.Int64())
 	// Initialize balance module account
-	balanceModuleAccBefore = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), "ufury")
+	balanceModuleAccBefore = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), "ufury")
 	suite.Require().Equal(int64(0), balanceModuleAccBefore.Amount.Int64())
 
 	// - Test if the validator is enabled and bonded amount
 	suite.Require().Equal(true, pools[1].Validators[0].IsEnabled)
 	suite.Require().Equal(sdk.NewInt(1_000_000), pools[1].Validators[0].BondedAmount)
 
-	// Create a new deposit and add it to the state
-	app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+	// Create a new credit and add it to the state
+	app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 		PoolId:           pools[1].PoolId,
-		DepositorAddress: suite.addrs[0].String(),
+		CreditorAddress: suite.addrs[0].String(),
 		WinnerAddress:    suite.addrs[0].String(),
-		State:            millionstypes.DepositState_IbcTransfer,
+		State:            millionstypes.CreditState_IbcTransfer,
 		Amount:           sdk.NewCoin(denom, sdk.NewInt(2_000_000)),
 	})
-	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), sdk.Coins{sdk.NewCoin(pools[1].Denom, sdk.NewInt(2_000_000))})
+	err = app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), sdk.Coins{sdk.NewCoin(pools[1].Denom, sdk.NewInt(2_000_000))})
 	suite.Require().NoError(err)
-	deposits = app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Len(deposits, 1)
+	credits = app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Len(credits, 1)
 
-	// Balance should have decreased by two deposits
+	// Balance should have decreased by two credits
 	balance = app.BankKeeper.GetBalance(ctx, suite.addrs[0], "ufury")
 	suite.Require().Equal(balanceBefore.Amount.Int64()-2_000_000, balance.Amount.Int64())
-	// Module Acc should have increased by two deposits
-	balanceModuleAcc = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), "ufury")
+	// Module Acc should have increased by two credits
+	balanceModuleAcc = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), "ufury")
 	suite.Require().Equal(balanceModuleAccBefore.Amount.Int64()+2_000_000, balanceModuleAcc.Amount.Int64())
 
 	// There should be no delegation shares yet
@@ -1087,64 +1087,64 @@ func (suite *KeeperTestSuite) TestDeposit_BalanceDeposit() {
 	suite.Require().Len(delegationAmount, 0)
 
 	suite.Require().Equal(true, pools[1].IsLocalZone(ctx))
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().NotNil(deposit, "Not nil")
-	suite.Require().Equal(millionstypes.DepositState_IbcTransfer, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().NotNil(credit, "Not nil")
+	suite.Require().Equal(millionstypes.CreditState_IbcTransfer, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
-	err = app.MillionsKeeper.OnTransferDepositToRemoteZoneCompleted(ctx, deposit.PoolId, deposit.DepositId, true)
+	err = app.MillionsKeeper.OnTransferCreditToRemoteZoneCompleted(ctx, credit.PoolId, credit.CreditId, true)
 	suite.Require().NoError(err)
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(millionstypes.DepositState_Failure, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_IbcTransfer, deposit.ErrorState)
+	suite.Require().Equal(millionstypes.CreditState_Failure, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_IbcTransfer, credit.ErrorState)
 
 	// Balance should be unchanged
 	balance = app.BankKeeper.GetBalance(ctx, suite.addrs[0], "ufury")
 	suite.Require().Equal(balanceBefore.Amount.Int64()-2_000_000, balance.Amount.Int64())
-	// Module Acc should have still the deposited amount
-	balanceModuleAcc = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), "ufury")
+	// Module Acc should have still the credited amount
+	balanceModuleAcc = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), "ufury")
 	suite.Require().Equal(balanceModuleAccBefore.Amount.Int64()+2_000_000, balanceModuleAcc.Amount.Int64())
 
 	// There should be no delegation shares yet
-	delegationAmount = app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), 10)
+	delegationAmount = app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), 10)
 	suite.Require().Len(delegationAmount, 0)
 
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	// Update the status to trigger successful DepositToNativeChain
-	app.MillionsKeeper.UpdateDepositStatus(ctx, deposit.PoolId, deposit.DepositId, millionstypes.DepositState_IbcTransfer, false)
+	// Update the status to trigger successful CreditToNativeChain
+	app.MillionsKeeper.UpdateCreditStatus(ctx, credit.PoolId, credit.CreditId, millionstypes.CreditState_IbcTransfer, false)
 
-	err = app.MillionsKeeper.TransferDepositToRemoteZone(ctx, deposit.PoolId, deposit.DepositId)
+	err = app.MillionsKeeper.TransferCreditToRemoteZone(ctx, credit.PoolId, credit.CreditId)
 	suite.Require().NoError(err)
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(millionstypes.DepositState_Success, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().Equal(millionstypes.CreditState_Success, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
 	// Balance should be unchanged
 	balance = app.BankKeeper.GetBalance(ctx, suite.addrs[0], "ufury")
 	suite.Require().Equal(balanceBefore.Amount.Int64()-2_000_000, balance.Amount.Int64())
-	// Module Acc should have delegated the deposit
-	balanceModuleAcc = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), "ufury")
+	// Module Acc should have delegated the credit
+	balanceModuleAcc = app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), "ufury")
 	suite.Require().Equal(balanceModuleAccBefore.Amount.Int64(), balanceModuleAcc.Amount.Int64())
 
 	// The delegation amount should reflect the shares delegated - client precision
-	delegationAmount = app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaDepositAddress), 10)
-	depositToShare := sdk.NewDecFromInt(sdk.NewInt(deposit.Amount.Amount.Int64() / 1_000_000))
-	suite.Require().Equal(depositToShare, delegationAmount[0].Shares)
+	delegationAmount = app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pools[1].IcaCreditAddress), 10)
+	creditToShare := sdk.NewDecFromInt(sdk.NewInt(credit.Amount.Amount.Int64() / 1_000_000))
+	suite.Require().Equal(creditToShare, delegationAmount[0].Shares)
 }
 
-// TestDeposit_FullDepositProcess tests the complete logic for deposits for a local pool
-func (suite *KeeperTestSuite) TestDeposit_FullDepositProcess() {
+// TestCredit_FullCreditProcess tests the complete logic for credits for a local pool
+func (suite *KeeperTestSuite) TestCredit_FullCreditProcess() {
 	// Set the app context
 	app := suite.app
 	ctx := suite.ctx
 	drawDelta1 := 1 * time.Hour
 	poolID := app.MillionsKeeper.GetNextPoolIDAndIncrement(ctx)
 
-	// - Test the full deposit process for a local pool
+	// - Test the full credit process for a local pool
 	denom := app.StakingKeeper.BondDenom(ctx)
 	// local pool
 	app.MillionsKeeper.AddPool(ctx, newValidPool(suite, millionstypes.Pool{
@@ -1175,61 +1175,61 @@ func (suite *KeeperTestSuite) TestDeposit_FullDepositProcess() {
 	balanceBefore := app.BankKeeper.GetBalance(ctx, suite.addrs[0], "ufury")
 	suite.Require().Equal(int64(1_000_000_000_0), balanceBefore.Amount.Int64())
 	// Initialize balance module account
-	balanceModuleAccBefore := app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), "ufury")
+	balanceModuleAccBefore := app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[0].IcaCreditAddress), "ufury")
 	suite.Require().Equal(int64(0), balanceModuleAccBefore.Amount.Int64())
 
 	// - Test if the validator is enabled and bonded amount
 	suite.Require().Equal(true, pools[0].Validators[0].IsEnabled)
 	suite.Require().Equal(sdk.NewInt(1_000_000), pools[0].Validators[0].BondedAmount)
 
-	// Create a new deposit and add it to the state
-	app.MillionsKeeper.AddDeposit(ctx, &millionstypes.Deposit{
+	// Create a new credit and add it to the state
+	app.MillionsKeeper.AddCredit(ctx, &millionstypes.Credit{
 		PoolId:           pools[0].PoolId,
-		DepositorAddress: suite.addrs[0].String(),
+		CreditorAddress: suite.addrs[0].String(),
 		WinnerAddress:    suite.addrs[0].String(),
-		State:            millionstypes.DepositState_IbcTransfer,
+		State:            millionstypes.CreditState_IbcTransfer,
 		Amount:           sdk.NewCoin(denom, sdk.NewInt(1_000_000)),
 	})
-	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), sdk.Coins{sdk.NewCoin(pools[0].Denom, sdk.NewInt(1_000_000))})
+	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(pools[0].IcaCreditAddress), sdk.Coins{sdk.NewCoin(pools[0].Denom, sdk.NewInt(1_000_000))})
 	suite.Require().NoError(err)
-	deposits := app.MillionsKeeper.ListAccountDeposits(ctx, suite.addrs[0])
-	suite.Require().Len(deposits, 1)
+	credits := app.MillionsKeeper.ListAccountCredits(ctx, suite.addrs[0])
+	suite.Require().Len(credits, 1)
 
-	// Balance should have decreased by one deposit
+	// Balance should have decreased by one credit
 	balance := app.BankKeeper.GetBalance(ctx, suite.addrs[0], "ufury")
 	suite.Require().Equal(balanceBefore.Amount.Int64()-1_000_000, balance.Amount.Int64())
-	// Module Acc should have increased by one deposit
-	balanceModuleAcc := app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), "ufury")
+	// Module Acc should have increased by one credit
+	balanceModuleAcc := app.BankKeeper.GetBalance(ctx, sdk.MustAccAddressFromBech32(pools[0].IcaCreditAddress), "ufury")
 	suite.Require().Equal(balanceModuleAccBefore.Amount.Int64()+1_000_000, balanceModuleAcc.Amount.Int64())
 
 	// There should no delegation shares
-	delegationAmount := app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), 10)
+	delegationAmount := app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pools[0].IcaCreditAddress), 10)
 	suite.Require().Len(delegationAmount, 0)
 
 	// Test if it's a local pool
 	suite.Require().Equal(true, pools[0].IsLocalZone(ctx))
-	deposit, err := app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err := app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().NotNil(deposit, "Not nil")
-	suite.Require().Equal(millionstypes.DepositState_IbcTransfer, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().NotNil(credit, "Not nil")
+	suite.Require().Equal(millionstypes.CreditState_IbcTransfer, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
-	err = app.MillionsKeeper.TransferDepositToRemoteZone(ctx, deposit.PoolId, deposit.DepositId)
+	err = app.MillionsKeeper.TransferCreditToRemoteZone(ctx, credit.PoolId, credit.CreditId)
 	suite.Require().NoError(err)
-	deposit, err = app.MillionsKeeper.GetPoolDeposit(ctx, deposits[0].PoolId, deposits[0].DepositId)
+	credit, err = app.MillionsKeeper.GetPoolCredit(ctx, credits[0].PoolId, credits[0].CreditId)
 	suite.Require().NoError(err)
-	suite.Require().Equal(millionstypes.DepositState_Success, deposit.State)
-	suite.Require().Equal(millionstypes.DepositState_Unspecified, deposit.ErrorState)
+	suite.Require().Equal(millionstypes.CreditState_Success, credit.State)
+	suite.Require().Equal(millionstypes.CreditState_Unspecified, credit.ErrorState)
 
 	// Balance should be unchanged
 	balance = app.BankKeeper.GetBalance(ctx, suite.addrs[0], "ufury")
 	suite.Require().Equal(balanceBefore.Amount.Int64()-1_000_000, balance.Amount.Int64())
-	// Module Acc should have delegated the deposit
+	// Module Acc should have delegated the credit
 	balanceModuleAcc = app.BankKeeper.GetBalance(ctx, suite.moduleAddrs[0], "ufury")
 	suite.Require().Equal(balanceModuleAccBefore.Amount.Int64(), balanceModuleAcc.Amount.Int64())
 
 	// The delegation amount should reflect the shares delegated - client precision
-	delegationAmount = app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pools[0].IcaDepositAddress), 10)
-	depositToShare := sdk.NewDecFromInt(sdk.NewInt(deposit.Amount.Amount.Int64() / 1_000_000))
-	suite.Require().Equal(depositToShare, delegationAmount[0].Shares)
+	delegationAmount = app.StakingKeeper.GetDelegatorDelegations(ctx, sdk.MustAccAddressFromBech32(pools[0].IcaCreditAddress), 10)
+	creditToShare := sdk.NewDecFromInt(sdk.NewInt(credit.Amount.Amount.Int64() / 1_000_000))
+	suite.Require().Equal(creditToShare, delegationAmount[0].Shares)
 }

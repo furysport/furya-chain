@@ -4,38 +4,38 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-var _ sdk.Msg = &MsgWithdrawDepositRetry{}
+var _ sdk.Msg = &MsgWithdrawCreditRetry{}
 
-func NewMsgWithdrawDepositRetry(depositorAddr string, poolID uint64, withdrawalID uint64) *MsgWithdrawDepositRetry {
-	return &MsgWithdrawDepositRetry{
+func NewMsgWithdrawCreditRetry(creditorAddr string, poolID uint64, withdrawalID uint64) *MsgWithdrawCreditRetry {
+	return &MsgWithdrawCreditRetry{
 		PoolId:           poolID,
 		WithdrawalId:     withdrawalID,
-		DepositorAddress: depositorAddr,
+		CreditorAddress: creditorAddr,
 	}
 }
 
-func (msg MsgWithdrawDepositRetry) Route() string {
+func (msg MsgWithdrawCreditRetry) Route() string {
 	return RouterKey
 }
 
-func (msg MsgWithdrawDepositRetry) Type() string {
-	return "WithdrawDepositRetry"
+func (msg MsgWithdrawCreditRetry) Type() string {
+	return "WithdrawCreditRetry"
 }
 
-func (msg *MsgWithdrawDepositRetry) GetSigners() []sdk.AccAddress {
-	depositor := sdk.MustAccAddressFromBech32(msg.GetDepositorAddress())
-	return []sdk.AccAddress{depositor}
+func (msg *MsgWithdrawCreditRetry) GetSigners() []sdk.AccAddress {
+	creditor := sdk.MustAccAddressFromBech32(msg.GetCreditorAddress())
+	return []sdk.AccAddress{creditor}
 }
 
-func (msg *MsgWithdrawDepositRetry) GetSignBytes() []byte {
+func (msg *MsgWithdrawCreditRetry) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgWithdrawDepositRetry) ValidateBasic() error {
+func (msg *MsgWithdrawCreditRetry) ValidateBasic() error {
 	// Ensure the address is correct and that we are able to acquire it
-	if _, err := sdk.AccAddressFromBech32(msg.GetDepositorAddress()); err != nil {
-		return ErrInvalidDepositorAddress
+	if _, err := sdk.AccAddressFromBech32(msg.GetCreditorAddress()); err != nil {
+		return ErrInvalidCreditorAddress
 	}
 
 	if msg.GetPoolId() == UnknownID || msg.GetWithdrawalId() == UnknownID {

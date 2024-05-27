@@ -43,8 +43,8 @@ func (pool *Pool) ValidateBasic(params Params) error {
 	if strings.TrimSpace(pool.Bech32PrefixValAddr) == "" {
 		return errorsmod.Wrapf(ErrInvalidPoolParams, "empty bech32 prefix validator address")
 	}
-	if pool.MinDepositAmount.IsNil() || pool.MinDepositAmount.LT(params.MinDepositAmount) {
-		return errorsmod.Wrapf(ErrInvalidPoolParams, "min deposit denom must be gte %d", params.MinDepositAmount.Int64())
+	if pool.MinCreditAmount.IsNil() || pool.MinCreditAmount.LT(params.MinCreditAmount) {
+		return errorsmod.Wrapf(ErrInvalidPoolParams, "min credit denom must be gte %d", params.MinCreditAmount.Int64())
 	}
 	if pool.UnbondingDuration < MinUnbondingDuration {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "unbonding duration cannot be lower than %s (is %s)", MinUnbondingDuration, pool.UnbondingDuration.String())
@@ -312,8 +312,8 @@ func (p *Pool) AccAddressFromBech32(address string) (isLocalAddress bool, addr s
 	return hrp == configBech32Prefix, sdk.AccAddress(bz), nil
 }
 
-func (p *Pool) GetIcaDepositPortIdWithPrefix() string {
-	portID, _ := icatypes.NewControllerPortID(p.GetIcaDepositPortId())
+func (p *Pool) GetIcaCreditPortIdWithPrefix() string {
+	portID, _ := icatypes.NewControllerPortID(p.GetIcaCreditPortId())
 	return portID
 }
 

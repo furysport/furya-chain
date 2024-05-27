@@ -19,7 +19,7 @@ func NewMillionsProposalHandler(k keeper.Keeper) govtypes.Handler {
 			}
 		case *types.ProposalUpdatePool:
 			{
-				return k.UpdatePool(ctx, c.PoolId, c.Validators, c.MinDepositAmount, c.UnbondingDuration, c.MaxUnbondingEntries, c.DrawSchedule, c.PrizeStrategy, c.State, c.FeeTakers)
+				return k.UpdatePool(ctx, c.PoolId, c.Validators, c.MinCreditAmount, c.UnbondingDuration, c.MaxUnbondingEntries, c.DrawSchedule, c.PrizeStrategy, c.State, c.FeeTakers)
 			}
 		case *types.ProposalRegisterPool:
 			{
@@ -34,7 +34,7 @@ func NewMillionsProposalHandler(k keeper.Keeper) govtypes.Handler {
 					c.GetValidators(),
 					c.GetBech32PrefixAccAddr(),
 					c.GetBech32PrefixValAddr(),
-					c.MinDepositAmount,
+					c.MinCreditAmount,
 					c.UnbondingDuration,
 					c.MaxUnbondingEntries,
 					c.GetDrawSchedule(),
@@ -46,8 +46,8 @@ func NewMillionsProposalHandler(k keeper.Keeper) govtypes.Handler {
 		case *types.ProposalUpdateParams:
 			{
 				params := k.GetParams(ctx)
-				if c.MinDepositAmount != nil {
-					params.MinDepositAmount = *c.MinDepositAmount
+				if c.MinCreditAmount != nil {
+					params.MinCreditAmount = *c.MinCreditAmount
 				}
 				if c.MaxPrizeStrategyBatches != nil {
 					params.MaxPrizeStrategyBatches = c.MaxPrizeStrategyBatches.Uint64()
@@ -64,8 +64,8 @@ func NewMillionsProposalHandler(k keeper.Keeper) govtypes.Handler {
 				if c.PrizeExpirationDelta != nil {
 					params.PrizeExpirationDelta = *c.PrizeExpirationDelta
 				}
-				if c.MinDepositDrawDelta != nil {
-					params.MinDepositDrawDelta = *c.MinDepositDrawDelta
+				if c.MinCreditDrawDelta != nil {
+					params.MinCreditDrawDelta = *c.MinCreditDrawDelta
 				}
 				if err := params.ValidateBasics(); err != nil {
 					// Prevent panic in case of invalid params

@@ -16,11 +16,11 @@ func (withdrawal *Withdrawal) ValidateBasic() error {
 	if withdrawal.State == WithdrawalState_Unspecified {
 		return errorsmod.Wrapf(ErrInvalidWithdrawalState, "no state specified")
 	}
-	if _, err := sdk.AccAddressFromBech32(withdrawal.DepositorAddress); err != nil {
-		return errorsmod.Wrapf(ErrInvalidWithdrawalDepositorAddress, err.Error())
+	if _, err := sdk.AccAddressFromBech32(withdrawal.CreditorAddress); err != nil {
+		return errorsmod.Wrapf(ErrInvalidWithdrawalCreditorAddress, err.Error())
 	}
 	if withdrawal.Amount.Amount.LTE(sdk.ZeroInt()) {
-		return ErrDepositAlreadyWithdrawn
+		return ErrCreditAlreadyWithdrawn
 	}
 
 	return nil

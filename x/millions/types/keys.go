@@ -33,16 +33,16 @@ const (
 )
 
 const (
-	ICATypeDeposit   = "deposit"
+	ICATypeCredit   = "credit"
 	ICATypePrizePool = "prizepool"
 )
 
 var (
 	NextPoolIdPrefix               = []byte{0x01}
 	PoolPrefix                     = []byte{0x02}
-	NextDepositPrefix              = []byte{0x03}
-	PoolDepositPrefix              = []byte{0x04}
-	AccountPoolDepositPrefix       = []byte{0x05}
+	NextCreditPrefix              = []byte{0x03}
+	PoolCreditPrefix              = []byte{0x04}
+	AccountPoolCreditPrefix       = []byte{0x05}
 	DrawPrefix                     = []byte{0x06}
 	PoolPrizePrefix                = []byte{0x07}
 	AccountPoolPrizePrefix         = []byte{0x08}
@@ -91,30 +91,30 @@ func NewPoolAddress(poolID uint64, addressType string) sdk.AccAddress {
 	return address.Module(ModuleName, NewPoolName(poolID, addressType))
 }
 
-// Deposits
+// Credits
 
-func GetDepositsKey() []byte {
-	return PoolDepositPrefix
+func GetCreditsKey() []byte {
+	return PoolCreditPrefix
 }
 
-func GetPoolDepositKey(poolID uint64, depositID uint64) []byte {
-	return CombineKeys(PoolDepositPrefix, strconv.AppendUint([]byte{}, poolID, 10), strconv.AppendUint([]byte{}, depositID, 10))
+func GetPoolCreditKey(poolID uint64, creditID uint64) []byte {
+	return CombineKeys(PoolCreditPrefix, strconv.AppendUint([]byte{}, poolID, 10), strconv.AppendUint([]byte{}, creditID, 10))
 }
 
-func GetPoolDepositsKey(poolID uint64) []byte {
-	return CombineKeys(PoolDepositPrefix, strconv.AppendUint([]byte{}, poolID, 10))
+func GetPoolCreditsKey(poolID uint64) []byte {
+	return CombineKeys(PoolCreditPrefix, strconv.AppendUint([]byte{}, poolID, 10))
 }
 
-func GetAccountPoolDepositKey(addr sdk.Address, poolID uint64, depositID uint64) []byte {
-	return CombineKeys(AccountPoolDepositPrefix, addr.Bytes(), strconv.AppendUint([]byte{}, poolID, 10), strconv.AppendUint([]byte{}, depositID, 10))
+func GetAccountPoolCreditKey(addr sdk.Address, poolID uint64, creditID uint64) []byte {
+	return CombineKeys(AccountPoolCreditPrefix, addr.Bytes(), strconv.AppendUint([]byte{}, poolID, 10), strconv.AppendUint([]byte{}, creditID, 10))
 }
 
-func GetAccountPoolDepositsKey(addr sdk.Address, poolID uint64) []byte {
-	return CombineKeys(AccountPoolDepositPrefix, addr.Bytes(), strconv.AppendUint([]byte{}, poolID, 10))
+func GetAccountPoolCreditsKey(addr sdk.Address, poolID uint64) []byte {
+	return CombineKeys(AccountPoolCreditPrefix, addr.Bytes(), strconv.AppendUint([]byte{}, poolID, 10))
 }
 
-func GetAccountDepositsKey(addr sdk.Address) []byte {
-	return CombineKeys(AccountPoolDepositPrefix, addr.Bytes())
+func GetAccountCreditsKey(addr sdk.Address) []byte {
+	return CombineKeys(AccountPoolCreditPrefix, addr.Bytes())
 }
 
 // Prizes

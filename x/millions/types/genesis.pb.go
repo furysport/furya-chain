@@ -27,11 +27,11 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type GenesisState struct {
 	Params           Params           `protobuf:"bytes,1,opt,name=params,proto3" json:"params" yaml:"params"`
 	NextPoolId       uint64           `protobuf:"varint,2,opt,name=next_pool_id,json=nextPoolId,proto3" json:"next_pool_id,omitempty"`
-	NextDepositId    uint64           `protobuf:"varint,3,opt,name=next_deposit_id,json=nextDepositId,proto3" json:"next_deposit_id,omitempty"`
+	NextCreditId    uint64           `protobuf:"varint,3,opt,name=next_credit_id,json=nextCreditId,proto3" json:"next_credit_id,omitempty"`
 	NextPrizeId      uint64           `protobuf:"varint,4,opt,name=next_prize_id,json=nextPrizeId,proto3" json:"next_prize_id,omitempty"`
 	NextWithdrawalId uint64           `protobuf:"varint,5,opt,name=next_withdrawal_id,json=nextWithdrawalId,proto3" json:"next_withdrawal_id,omitempty"`
 	Pools            []Pool           `protobuf:"bytes,6,rep,name=pools,proto3" json:"pools"`
-	Deposits         []Deposit        `protobuf:"bytes,7,rep,name=deposits,proto3" json:"deposits"`
+	Credits         []Credit        `protobuf:"bytes,7,rep,name=credits,proto3" json:"credits"`
 	Draws            []Draw           `protobuf:"bytes,8,rep,name=draws,proto3" json:"draws"`
 	Prizes           []Prize          `protobuf:"bytes,9,rep,name=prizes,proto3" json:"prizes"`
 	Withdrawals      []Withdrawal     `protobuf:"bytes,10,rep,name=withdrawals,proto3" json:"withdrawals"`
@@ -86,9 +86,9 @@ func (m *GenesisState) GetNextPoolId() uint64 {
 	return 0
 }
 
-func (m *GenesisState) GetNextDepositId() uint64 {
+func (m *GenesisState) GetNextCreditId() uint64 {
 	if m != nil {
-		return m.NextDepositId
+		return m.NextCreditId
 	}
 	return 0
 }
@@ -114,9 +114,9 @@ func (m *GenesisState) GetPools() []Pool {
 	return nil
 }
 
-func (m *GenesisState) GetDeposits() []Deposit {
+func (m *GenesisState) GetCredits() []Credit {
 	if m != nil {
-		return m.Deposits
+		return m.Credits
 	}
 	return nil
 }
@@ -291,10 +291,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x42
 		}
 	}
-	if len(m.Deposits) > 0 {
-		for iNdEx := len(m.Deposits) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.Credits) > 0 {
+		for iNdEx := len(m.Credits) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.Deposits[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.Credits[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -329,8 +329,8 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x20
 	}
-	if m.NextDepositId != 0 {
-		i = encodeVarintGenesis(dAtA, i, uint64(m.NextDepositId))
+	if m.NextCreditId != 0 {
+		i = encodeVarintGenesis(dAtA, i, uint64(m.NextCreditId))
 		i--
 		dAtA[i] = 0x18
 	}
@@ -374,8 +374,8 @@ func (m *GenesisState) Size() (n int) {
 	if m.NextPoolId != 0 {
 		n += 1 + sovGenesis(uint64(m.NextPoolId))
 	}
-	if m.NextDepositId != 0 {
-		n += 1 + sovGenesis(uint64(m.NextDepositId))
+	if m.NextCreditId != 0 {
+		n += 1 + sovGenesis(uint64(m.NextCreditId))
 	}
 	if m.NextPrizeId != 0 {
 		n += 1 + sovGenesis(uint64(m.NextPrizeId))
@@ -389,8 +389,8 @@ func (m *GenesisState) Size() (n int) {
 			n += 1 + l + sovGenesis(uint64(l))
 		}
 	}
-	if len(m.Deposits) > 0 {
-		for _, e := range m.Deposits {
+	if len(m.Credits) > 0 {
+		for _, e := range m.Credits {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
@@ -517,9 +517,9 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			}
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NextDepositId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field NextCreditId", wireType)
 			}
-			m.NextDepositId = 0
+			m.NextCreditId = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGenesis
@@ -529,7 +529,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.NextDepositId |= uint64(b&0x7F) << shift
+				m.NextCreditId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -608,7 +608,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 7:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Deposits", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Credits", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -635,8 +635,8 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Deposits = append(m.Deposits, Deposit{})
-			if err := m.Deposits[len(m.Deposits)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Credits = append(m.Credits, Credit{})
+			if err := m.Credits[len(m.Credits)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

@@ -24,7 +24,7 @@ func init() {
 	govtypes.RegisterProposalType(ProposalTypeRegisterPool)
 }
 
-func NewRegisterPoolProposal(title string, description string, poolType PoolType, chainID string, denom string, nativeDenom string, connectionId string, bech32PrefixAccAddr string, bech32PrefixValAddr string, validators []string, minDepositAmount math.Int, prizeStrategy PrizeStrategy, drawSchedule DrawSchedule, UnbondingDuration time.Duration, maxUnbondingEntries math.Int, fees []FeeTaker) govtypes.Content {
+func NewRegisterPoolProposal(title string, description string, poolType PoolType, chainID string, denom string, nativeDenom string, connectionId string, bech32PrefixAccAddr string, bech32PrefixValAddr string, validators []string, minCreditAmount math.Int, prizeStrategy PrizeStrategy, drawSchedule DrawSchedule, UnbondingDuration time.Duration, maxUnbondingEntries math.Int, fees []FeeTaker) govtypes.Content {
 	return &ProposalRegisterPool{
 		Title:               title,
 		Description:         description,
@@ -34,7 +34,7 @@ func NewRegisterPoolProposal(title string, description string, poolType PoolType
 		NativeDenom:         nativeDenom,
 		ConnectionId:        connectionId,
 		Validators:          validators,
-		MinDepositAmount:    minDepositAmount,
+		MinCreditAmount:    minCreditAmount,
 		Bech32PrefixAccAddr: bech32PrefixAccAddr,
 		Bech32PrefixValAddr: bech32PrefixValAddr,
 		PrizeStrategy:       prizeStrategy,
@@ -74,8 +74,8 @@ func (p *ProposalRegisterPool) ValidateBasic() error {
 	if len(p.Validators) <= 0 {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "at least one validator is required")
 	}
-	if p.MinDepositAmount.IsNil() || p.MinDepositAmount.LT(sdk.NewInt(MinAcceptableDepositAmount)) {
-		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "min deposit denom must be gte %d", MinAcceptableDepositAmount)
+	if p.MinCreditAmount.IsNil() || p.MinCreditAmount.LT(sdk.NewInt(MinAcceptableCreditAmount)) {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "min credit denom must be gte %d", MinAcceptableCreditAmount)
 	}
 	if p.UnbondingDuration < MinUnbondingDuration {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "unbonding duration cannot be lower than %s", MinUnbondingDuration)
@@ -115,7 +115,7 @@ func (p ProposalRegisterPool) String() string {
 	Native Denom:     			%s
 	Connection ID	  			%s
 	Validators:       			%+v
-	Min Deposit Amount: 		%d
+	Min Credit Amount: 		%d
 	Zone Unbonding Duration:	%s
 	Max Unbonding Entries:		%d
 	Bech32 Acc Prefix: 			%s
@@ -132,7 +132,7 @@ func (p ProposalRegisterPool) String() string {
 		p.ChainId, p.Denom, p.NativeDenom,
 		p.ConnectionId,
 		p.Validators,
-		p.MinDepositAmount.Int64(),
+		p.MinCreditAmount.Int64(),
 		p.UnbondingDuration.String(),
 		p.MaxUnbondingEntries.Int64(),
 		p.Bech32PrefixAccAddr, p.Bech32PrefixValAddr,

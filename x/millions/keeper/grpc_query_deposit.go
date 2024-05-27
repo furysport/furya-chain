@@ -13,7 +13,7 @@ import (
 	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
-func (k queryServer) Deposits(goCtx context.Context, req *types.QueryDepositsRequest) (*types.QueryDepositsResponse, error) {
+func (k queryServer) Credits(goCtx context.Context, req *types.QueryCreditsRequest) (*types.QueryCreditsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Make sure context request is valid
@@ -22,17 +22,17 @@ func (k queryServer) Deposits(goCtx context.Context, req *types.QueryDepositsReq
 	}
 
 	store := ctx.KVStore(k.storeKey)
-	depositStore := prefix.NewStore(store, types.GetDepositsKey())
+	creditStore := prefix.NewStore(store, types.GetCreditsKey())
 
 	// Make the paginated query
-	var deposits []types.Deposit
-	pageRes, err := query.Paginate(depositStore, req.Pagination, func(key []byte, value []byte) error {
-		var deposit types.Deposit
-		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
+	var credits []types.Credit
+	pageRes, err := query.Paginate(creditStore, req.Pagination, func(key []byte, value []byte) error {
+		var credit types.Credit
+		if err := k.cdc.Unmarshal(value, &credit); err != nil {
 			return err
 		}
 
-		deposits = append(deposits, deposit)
+		credits = append(credits, credit)
 		return nil
 	})
 
@@ -40,10 +40,10 @@ func (k queryServer) Deposits(goCtx context.Context, req *types.QueryDepositsReq
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryDepositsResponse{Deposits: deposits, Pagination: pageRes}, nil
+	return &types.QueryCreditsResponse{Credits: credits, Pagination: pageRes}, nil
 }
 
-func (k queryServer) PoolDeposits(goCtx context.Context, req *types.QueryPoolDepositsRequest) (*types.QueryDepositsResponse, error) {
+func (k queryServer) PoolCredits(goCtx context.Context, req *types.QueryPoolCreditsRequest) (*types.QueryCreditsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Make sure context request is valid
@@ -52,21 +52,21 @@ func (k queryServer) PoolDeposits(goCtx context.Context, req *types.QueryPoolDep
 	}
 
 	store := ctx.KVStore(k.storeKey)
-	depositStore := prefix.NewStore(store, types.GetPoolDepositsKey(req.GetPoolId()))
+	creditStore := prefix.NewStore(store, types.GetPoolCreditsKey(req.GetPoolId()))
 
 	if !k.HasPool(ctx, req.PoolId) {
 		return nil, status.Error(codes.NotFound, types.ErrPoolNotFound.Error())
 	}
 
 	// Make the paginated query
-	var deposits []types.Deposit
-	pageRes, err := query.Paginate(depositStore, req.Pagination, func(key []byte, value []byte) error {
-		var deposit types.Deposit
-		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
+	var credits []types.Credit
+	pageRes, err := query.Paginate(creditStore, req.Pagination, func(key []byte, value []byte) error {
+		var credit types.Credit
+		if err := k.cdc.Unmarshal(value, &credit); err != nil {
 			return err
 		}
 
-		deposits = append(deposits, deposit)
+		credits = append(credits, credit)
 		return nil
 	})
 
@@ -75,10 +75,10 @@ func (k queryServer) PoolDeposits(goCtx context.Context, req *types.QueryPoolDep
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryDepositsResponse{Deposits: deposits, Pagination: pageRes}, nil
+	return &types.QueryCreditsResponse{Credits: credits, Pagination: pageRes}, nil
 }
 
-func (k queryServer) PoolDeposit(goCtx context.Context, req *types.QueryPoolDepositRequest) (*types.QueryDepositResponse, error) {
+func (k queryServer) PoolCredit(goCtx context.Context, req *types.QueryPoolCreditRequest) (*types.QueryCreditResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Make sure context request is valid
@@ -86,15 +86,15 @@ func (k queryServer) PoolDeposit(goCtx context.Context, req *types.QueryPoolDepo
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	deposit, err := k.GetPoolDeposit(ctx, req.GetPoolId(), req.GetDepositId())
+	credit, err := k.GetPoolCredit(ctx, req.GetPoolId(), req.GetCreditId())
 	if err != nil {
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	return &types.QueryDepositResponse{Deposit: deposit}, nil
+	return &types.QueryCreditResponse{Credit: credit}, nil
 }
 
-func (k queryServer) AccountDeposits(goCtx context.Context, req *types.QueryAccountDepositsRequest) (*types.QueryDepositsResponse, error) {
+func (k queryServer) AccountCredits(goCtx context.Context, req *types.QueryAccountCreditsRequest) (*types.QueryCreditsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Make sure context request is valid
@@ -102,23 +102,23 @@ func (k queryServer) AccountDeposits(goCtx context.Context, req *types.QueryAcco
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	addr, err := sdk.AccAddressFromBech32(req.GetDepositorAddress())
+	addr, err := sdk.AccAddressFromBech32(req.GetCreditorAddress())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	store := ctx.KVStore(k.storeKey)
-	depositStore := prefix.NewStore(store, types.GetAccountDepositsKey(addr))
+	creditStore := prefix.NewStore(store, types.GetAccountCreditsKey(addr))
 
 	// Make the paginated query
-	var deposits []types.Deposit
-	pageRes, err := query.Paginate(depositStore, req.Pagination, func(key []byte, value []byte) error {
-		var deposit types.Deposit
-		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
+	var credits []types.Credit
+	pageRes, err := query.Paginate(creditStore, req.Pagination, func(key []byte, value []byte) error {
+		var credit types.Credit
+		if err := k.cdc.Unmarshal(value, &credit); err != nil {
 			return err
 		}
 
-		deposits = append(deposits, deposit)
+		credits = append(credits, credit)
 		return nil
 	})
 
@@ -127,10 +127,10 @@ func (k queryServer) AccountDeposits(goCtx context.Context, req *types.QueryAcco
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryDepositsResponse{Deposits: deposits, Pagination: pageRes}, nil
+	return &types.QueryCreditsResponse{Credits: credits, Pagination: pageRes}, nil
 }
 
-func (k queryServer) AccountPoolDeposits(goCtx context.Context, req *types.QueryAccountPoolDepositsRequest) (*types.QueryDepositsResponse, error) {
+func (k queryServer) AccountPoolCredits(goCtx context.Context, req *types.QueryAccountPoolCreditsRequest) (*types.QueryCreditsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Make sure context request is valid
@@ -138,7 +138,7 @@ func (k queryServer) AccountPoolDeposits(goCtx context.Context, req *types.Query
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	addr, err := sdk.AccAddressFromBech32(req.GetDepositorAddress())
+	addr, err := sdk.AccAddressFromBech32(req.GetCreditorAddress())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -148,17 +148,17 @@ func (k queryServer) AccountPoolDeposits(goCtx context.Context, req *types.Query
 	}
 
 	store := ctx.KVStore(k.storeKey)
-	depositStore := prefix.NewStore(store, types.GetAccountPoolDepositsKey(addr, req.PoolId))
+	creditStore := prefix.NewStore(store, types.GetAccountPoolCreditsKey(addr, req.PoolId))
 
 	// Make the paginated query
-	var deposits []types.Deposit
-	pageRes, err := query.Paginate(depositStore, req.Pagination, func(key []byte, value []byte) error {
-		var deposit types.Deposit
-		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
+	var credits []types.Credit
+	pageRes, err := query.Paginate(creditStore, req.Pagination, func(key []byte, value []byte) error {
+		var credit types.Credit
+		if err := k.cdc.Unmarshal(value, &credit); err != nil {
 			return err
 		}
 
-		deposits = append(deposits, deposit)
+		credits = append(credits, credit)
 		return nil
 	})
 
@@ -167,5 +167,5 @@ func (k queryServer) AccountPoolDeposits(goCtx context.Context, req *types.Query
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryDepositsResponse{Deposits: deposits, Pagination: pageRes}, nil
+	return &types.QueryCreditsResponse{Credits: credits, Pagination: pageRes}, nil
 }

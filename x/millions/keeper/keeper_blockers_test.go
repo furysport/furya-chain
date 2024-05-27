@@ -275,7 +275,7 @@ func (suite *KeeperTestSuite) TestBlockers_WithdrawalUpdates() {
 	// Add pool with ID 2 to make withdrawal work on pool level but fail at transfer level
 	p2 := newValidPool(suite, millionstypes.Pool{
 		PoolId:            app.MillionsKeeper.GetNextPoolIDAndIncrement(ctx),
-		IcaDepositAddress: suite.moduleAddrs[4].String(),
+		IcaCreditAddress: suite.moduleAddrs[4].String(),
 	})
 	app.MillionsKeeper.AddPool(ctx, p2)
 
@@ -285,17 +285,17 @@ func (suite *KeeperTestSuite) TestBlockers_WithdrawalUpdates() {
 			t := ctx.BlockTime().Add(time.Duration(i) * time.Hour)
 			app.MillionsKeeper.AddWithdrawal(ctx, millionstypes.Withdrawal{
 				PoolId:           uint64(i + 1),
-				DepositId:        millionstypes.UnknownID + 1,
+				CreditId:        millionstypes.UnknownID + 1,
 				WithdrawalId:     app.MillionsKeeper.GetNextWithdrawalIdAndIncrement(ctx),
 				State:            millionstypes.WithdrawalState_IcaUnbonding,
-				DepositorAddress: suite.addrs[0].String(),
+				CreditorAddress: suite.addrs[0].String(),
 				ToAddress:        suite.addrs[0].String(),
 				Amount:           sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), math.NewInt(1)),
 				UnbondingEndsAt:  &t,
 			})
 		}
 	}
-	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(p1.IcaDepositAddress), sdk.NewCoins(sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), math.NewInt(1_000))))
+	err := app.BankKeeper.SendCoins(ctx, suite.addrs[0], sdk.MustAccAddressFromBech32(p1.IcaCreditAddress), sdk.NewCoins(sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), math.NewInt(1_000))))
 	suite.Require().NoError(err)
 
 	// Should complete the first 10 withdrawals with success (poolID1 has been created and funded)

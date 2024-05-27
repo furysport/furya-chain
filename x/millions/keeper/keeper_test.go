@@ -21,7 +21,7 @@ const testChainID = "furya-devnet-1"
 
 var (
 	cosmosPoolValidator       = "cosmosvaloper1clpqr4nrk4khgkxj78fcwwh6dl3uw4epsluffn"
-	cosmosIcaDepositAddress   = "cosmos1clpqr4nrk4khgkxj78fcwwh6dl3uw4ep4tgu9q"
+	cosmosIcaCreditAddress   = "cosmos1clpqr4nrk4khgkxj78fcwwh6dl3uw4ep4tgu9q"
 	cosmosIcaPrizePoolAddress = "cosmos196ax4vc0lwpxndu9dyhvca7jhxp70rmcfhxsrt"
 	cosmosAccAddress          = "cosmos1qggwr7vze9x7ustru9dctf6krhk2285lkf89g7"
 	localPoolDenom            = "ufury"
@@ -74,13 +74,13 @@ func (suite *KeeperTestSuite) SetupTest() {
 
 	// Setup test params
 	suite.app.MillionsKeeper.SetParams(ctx, millionstypes.Params{
-		MinDepositAmount:        sdk.NewInt(millionstypes.MinAcceptableDepositAmount),
+		MinCreditAmount:        sdk.NewInt(millionstypes.MinAcceptableCreditAmount),
 		MaxPrizeStrategyBatches: 1_000,
 		MaxPrizeBatchQuantity:   1_000_000,
 		MinDrawScheduleDelta:    1 * time.Hour,
 		MaxDrawScheduleDelta:    366 * 24 * time.Hour,
 		PrizeExpirationDelta:    30 * 24 * time.Hour,
-		MinDepositDrawDelta:     millionstypes.MinAcceptableDepositDrawDelta,
+		MinCreditDrawDelta:     millionstypes.MinAcceptableCreditDrawDelta,
 	})
 }
 
@@ -148,8 +148,8 @@ func newValidPool(suite *KeeperTestSuite, pool millionstypes.Pool) *millionstype
 	if pool.Bech32PrefixValAddr == "" {
 		pool.Bech32PrefixValAddr = sdk.GetConfig().GetBech32ValidatorAddrPrefix()
 	}
-	if pool.MinDepositAmount.IsNil() {
-		pool.MinDepositAmount = params.MinDepositAmount
+	if pool.MinCreditAmount.IsNil() {
+		pool.MinCreditAmount = params.MinCreditAmount
 	}
 	if pool.UnbondingDuration == 0 {
 		pool.UnbondingDuration = millionstypes.DefaultUnbondingDuration
@@ -166,8 +166,8 @@ func newValidPool(suite *KeeperTestSuite, pool millionstypes.Pool) *millionstype
 	if pool.LocalAddress == "" {
 		pool.LocalAddress = suite.moduleAddrs[0].String()
 	}
-	if pool.IcaDepositAddress == "" {
-		pool.IcaDepositAddress = suite.moduleAddrs[1].String()
+	if pool.IcaCreditAddress == "" {
+		pool.IcaCreditAddress = suite.moduleAddrs[1].String()
 	}
 	if pool.IcaPrizepoolAddress == "" {
 		pool.IcaPrizepoolAddress = suite.moduleAddrs[2].String()
