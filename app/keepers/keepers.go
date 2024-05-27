@@ -28,6 +28,11 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
+	
+	icacallbackskeeper "github.com/furysport/furya-chain/v2/x/icacallbacks/keeper"
+	icquerieskeeper "github.com/furysport/furya-chain/v2/x/icqueries/keeper"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	epochskeeper "github.com/furysport/furya-chain/v2/x/epochs/keeper"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -61,6 +66,12 @@ type AppKeepers struct {
 	InterTxKeeper         					intertxkeeper.Keeper
 	TokenFactoryKeeper 					tokenfactorykeeper.Keeper
 	AllianceKeeper 							alliancemodulekeeper.Keeper
+	
+	// Custom Keepers
+	ICACallbacksKeeper 					*icacallbackskeeper.Keeper
+	ICQueriesKeeper    					*icquerieskeeper.Keeper
+	MillionsKeeper     						*millionskeeper.Keeper
+	EpochsKeeper       						*epochskeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           			capabilitykeeper.ScopedKeeper

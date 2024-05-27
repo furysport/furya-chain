@@ -1,0 +1,15 @@
+syntax = "proto3";
+package furya.icacallbacks;
+
+option go_package = "github.com/furysport/furya-chain/v2/x/icacallbacks/types";
+
+message IcacallbacksPacketData {
+  oneof packet {
+    NoData no_data = 1;
+    // this line is used by starport scaffolding # ibc/packet/proto/field
+  }
+}
+
+message NoData {}
+
+// this line is used by starport scaffolding # ibc/packet/proto/message
