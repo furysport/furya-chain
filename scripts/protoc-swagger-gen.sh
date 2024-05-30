@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 set -eo pipefail
 
 mkdir -p ./tmp-swagger-gen
@@ -22,6 +18,7 @@ COSMOS_SDK_DIR="./cosmos-sdk"
 
 go mod download github.com/terra-money/alliance
 go mod download github.com/cosmos/ibc-go/v7
+
 # Clone the specific version of cosmos-sdk
 if [ ! -d "$COSMOS_SDK_DIR" ]; then
   git clone --branch $COSMOS_SDK_VERSION --depth 1 https://github.com/cosmos/cosmos-sdk.git $COSMOS_SDK_DIR
@@ -29,44 +26,21 @@ else
   echo "Cosmos SDK directory already exists, skipping clone"
 fi
 
-<<<<<<< HEAD
-proto_dirs=$(find $cosmos_sdk_dir/proto $alliance_dir/proto $ibc_dir/proto $ibc_pfm/proto $wasm_dir/proto $cosmos_proto_dir/proto ./proto -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
-=======
 
 
 alliance_dir=$(go list -f '{{ .Dir }}' -m github.com/terra-money/alliance)
 ibc_dir=$(go list -f '{{ .Dir }}' -m github.com/cosmos/ibc-go/v7)
 
 cd proto
-proto_dirs=$(find ../$COSMOS_SDK_DIR/proto/cosmos $alliance_dir/proto $ibc_dir/proto ./furya ./osmosis -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
+proto_dirs=$(find ../$COSMOS_SDK_DIR/proto/cosmos $alliance_dir/proto $ibc_dir/proto ./furya -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
 
->>>>>>> develop
 for dir in $proto_dirs; do
   # generate swagger files (filter query files)
   query_file=$(find "${dir}" -maxdepth 1 \( -name 'query.proto' -o -name 'service.proto' \))
 
   if [[ ! -z "$query_file" ]]; then
-<<<<<<< HEAD
-    /opt/homebrew/bin/protoc  \
-    -I "$gogo_proto_dir" \
-    -I "$gogo_proto_dir/protobuf" \
-    -I "$cosmos_sdk_dir/proto" \
-    -I "$alliance_dir/proto" \
-    -I "$ibc_dir/proto" \
-    -I "$ibc_pfm/proto" \
-    -I "$wasm_dir/proto" \
-    -I "$google_api_dir" \
-    -I "$cosmos_proto_dir/proto" \
-    -I "proto" \
-      "$query_file" \
-    --swagger_out ./tmp-swagger-gen \
-    --swagger_opt logtostderr=true \
-    --swagger_opt fqn_for_swagger_name=true \
-    --swagger_opt simple_operation_ids=true
-=======
     echo "generated swagger file for $query_file"
     buf generate --template buf.gen.swagger.yaml $query_file
->>>>>>> develop
   fi
 done
 
@@ -78,4 +52,3 @@ cat ./client/docs/swagger-ui/swagger.yaml
 
 # clean swagger files
 rm -rf ./tmp-swagger-gen
-rm -rf ./cosmos-sdk
