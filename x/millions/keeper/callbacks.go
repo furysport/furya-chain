@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 
-	icacallbackstypes "github.com/furysport/furya-chain/x/icacallbacks/types"
+	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 )
 
 const (

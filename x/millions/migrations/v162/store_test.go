@@ -6,17 +6,17 @@ import (
 
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 
-	apptesting "github.com/furysport/furya-chain/app/testing"
+	apptesting "github.com/furysport/furya-chain/v2/app/testing"
 
 	"github.com/stretchr/testify/suite"
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	apptypes "github.com/furysport/furya-chain/app"
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
-	v162 "github.com/furysport/furya-chain/x/millions/migrations/v162"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	apptypes "github.com/furysport/furya-chain/v2/app"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	v162 "github.com/furysport/furya-chain/v2/x/millions/migrations/v162"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 type StoreMigrationTestSuite struct {

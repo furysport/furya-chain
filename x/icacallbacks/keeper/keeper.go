@@ -14,7 +14,7 @@ import (
 
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 
-	"github.com/furysport/furya-chain/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/keeper"

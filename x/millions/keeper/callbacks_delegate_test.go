@@ -3,9 +3,9 @@ package keeper_test
 import (
 	"cosmossdk.io/math"
 
-	icacallbackstypes "github.com/furysport/furya-chain/x/icacallbacks/types"
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func (suite *KeeperTestSuite) TestCallbacks_Delegates() {

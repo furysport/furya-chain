@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/furysport/furya-chain/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 )
 
 func TestGenesisState_Validate(t *testing.T) {

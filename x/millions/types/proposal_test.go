@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 type ProposalTestSuite struct {

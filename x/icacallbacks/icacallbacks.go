@@ -11,7 +11,7 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 
-	"github.com/furysport/furya-chain/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 )
 
 // Parses ICA tx responses and returns a list of each serialized response

@@ -3,7 +3,7 @@ package keeper
 import (
 	"fmt"
 
-	icquerieskeeper "github.com/furysport/furya-chain/x/icqueries/keeper"
+	icquerieskeeper "github.com/furysport/furya-chain/v2/x/icqueries/keeper"
 
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -19,8 +19,8 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 
-	icacallbackskeeper "github.com/furysport/furya-chain/x/icacallbacks/keeper"
-	"github.com/furysport/furya-chain/x/millions/types"
+	icacallbackskeeper "github.com/furysport/furya-chain/v2/x/icacallbacks/keeper"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 type Keeper struct {

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/furysport/furya-chain/x/millions/migrations"
+	"github.com/furysport/furya-chain/v2/x/millions/migrations"
 
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -19,10 +19,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 
-	"github.com/furysport/furya-chain/x/millions/client/cli"
-	"github.com/furysport/furya-chain/x/millions/client/rest"
-	"github.com/furysport/furya-chain/x/millions/keeper"
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/client/cli"
+	"github.com/furysport/furya-chain/v2/x/millions/client/rest"
+	"github.com/furysport/furya-chain/v2/x/millions/keeper"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 var (

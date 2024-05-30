@@ -9,7 +9,7 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // UndelegateWithdrawalsOnRemoteZone Undelegates an epoch unbonding containing withdrawalIDs from the native chain validators

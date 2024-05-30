@@ -8,9 +8,9 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	apptesting "github.com/furysport/furya-chain/app/testing"
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	apptesting "github.com/furysport/furya-chain/v2/app/testing"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // TestWithdrawal_IDsGeneration tests the withdrawal ID generation

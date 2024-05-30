@@ -12,10 +12,10 @@ import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	apptypes "github.com/furysport/furya-chain/app"
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
-	"github.com/furysport/furya-chain/x/millions"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	apptypes "github.com/furysport/furya-chain/v2/app"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	"github.com/furysport/furya-chain/v2/x/millions"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 var (

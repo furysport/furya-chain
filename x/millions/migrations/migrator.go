@@ -3,13 +3,13 @@ package migrations
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	v164 "github.com/furysport/furya-chain/x/millions/migrations/v164"
+	v164 "github.com/furysport/furya-chain/v2/x/millions/migrations/v164"
 
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	v150 "github.com/furysport/furya-chain/x/millions/migrations/v150"
-	v152 "github.com/furysport/furya-chain/x/millions/migrations/v152"
-	v161 "github.com/furysport/furya-chain/x/millions/migrations/v161"
-	v162 "github.com/furysport/furya-chain/x/millions/migrations/v162"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	v150 "github.com/furysport/furya-chain/v2/x/millions/migrations/v150"
+	v152 "github.com/furysport/furya-chain/v2/x/millions/migrations/v152"
+	v161 "github.com/furysport/furya-chain/v2/x/millions/migrations/v161"
+	v162 "github.com/furysport/furya-chain/v2/x/millions/migrations/v162"
 )
 
 type Migrator struct {

@@ -6,7 +6,7 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // TestPrize_IDsGeneration runs test related to prizeID generation

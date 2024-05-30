@@ -12,7 +12,7 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // PoolRunner interface to implement for all Pool Runners

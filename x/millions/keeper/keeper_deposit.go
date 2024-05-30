@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gogotypes "github.com/cosmos/gogoproto/types"
 
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // TransferDepositToRemoteZone Transfer a deposit to a remote zone

@@ -22,7 +22,7 @@ import (
 	ics23 "github.com/cosmos/ics23/go"
 	"github.com/spf13/cast"
 
-	"github.com/furysport/furya-chain/x/icqueries/types"
+	"github.com/furysport/furya-chain/v2/x/icqueries/types"
 )
 
 type Keeper struct {

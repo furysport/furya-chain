@@ -3,7 +3,7 @@ package keeper_test
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func (suite *KeeperTestSuite) TestParams_Validation() {

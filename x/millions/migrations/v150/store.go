@@ -7,8 +7,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func MigratePoolPortIdsToPortOwnerName(ctx sdk.Context, k millionskeeper.Keeper) error {

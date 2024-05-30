@@ -8,8 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cast"
 
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
-	"github.com/furysport/furya-chain/x/millions/types"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // AddEpochUnbonding adds an epoch unbonding record that serves to undelegate withdrawals via batches

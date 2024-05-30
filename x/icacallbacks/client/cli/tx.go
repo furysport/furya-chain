@@ -7,7 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/furysport/furya-chain/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 )
 
 // GetTxCmd returns the transaction commands for this module

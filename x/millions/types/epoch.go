@@ -6,7 +6,7 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
 )
 
 const (

@@ -15,7 +15,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/furysport/furya-chain/x/icqueries/types"
+	"github.com/furysport/furya-chain/v2/x/icqueries/types"
 )
 
 // GenerateQueryHash Serialize the query parameters into a hash to give to the relayer

@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
-	"github.com/furysport/furya-chain/x/epochs/types"
+	"github.com/furysport/furya-chain/v2/x/epochs/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module

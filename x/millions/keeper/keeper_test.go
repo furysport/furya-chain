@@ -11,10 +11,10 @@ import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/app"
-	apptesting "github.com/furysport/furya-chain/app/testing"
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/app"
+	apptesting "github.com/furysport/furya-chain/v2/app/testing"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 const testChainID = "furya-devnet-1"

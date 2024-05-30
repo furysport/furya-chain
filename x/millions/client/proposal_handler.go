@@ -3,7 +3,7 @@ package client
 import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 
-	"github.com/furysport/furya-chain/x/millions/client/cli"
+	"github.com/furysport/furya-chain/v2/x/millions/client/cli"
 )
 
 var (

@@ -3,7 +3,7 @@ package v162
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
 )
 
 func MigratePendingWithdrawalsToNewEpochUnbonding(ctx sdk.Context, k millionskeeper.Keeper) error {

@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/furysport/furya-chain/x/epochs/types"
+	"github.com/furysport/furya-chain/v2/x/epochs/types"
 )
 
 var _ types.QueryServer = Keeper{}

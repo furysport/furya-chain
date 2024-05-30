@@ -3,7 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {

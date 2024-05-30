@@ -7,9 +7,9 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	icquerieskeeper "github.com/furysport/furya-chain/x/icqueries/keeper"
-	icqueriestypes "github.com/furysport/furya-chain/x/icqueries/types"
-	"github.com/furysport/furya-chain/x/millions/types"
+	icquerieskeeper "github.com/furysport/furya-chain/v2/x/icqueries/keeper"
+	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func BalanceCallback(k Keeper, ctx sdk.Context, args []byte, query icqueriestypes.Query, status icqueriestypes.QueryResponseStatus) error {

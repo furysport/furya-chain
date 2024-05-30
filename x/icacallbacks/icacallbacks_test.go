@@ -17,8 +17,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/furysport/furya-chain/x/icacallbacks"
-	icacallbacktypes "github.com/furysport/furya-chain/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks"
+	icacallbacktypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 )
 
 // Constructs an ICA Packet Acknowledgement compatible with ibc-go v5+

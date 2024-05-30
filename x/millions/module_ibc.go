@@ -11,10 +11,10 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 
-	"github.com/furysport/furya-chain/x/icacallbacks"
-	icacallbacktypes "github.com/furysport/furya-chain/x/icacallbacks/types"
-	"github.com/furysport/furya-chain/x/millions/keeper"
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks"
+	icacallbacktypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/millions/keeper"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // Map the interface

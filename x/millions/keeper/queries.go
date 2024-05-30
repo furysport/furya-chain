@@ -3,7 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	icqueriestypes "github.com/furysport/furya-chain/x/icqueries/types"
+	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
 )
 
 const (

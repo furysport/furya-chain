@@ -6,8 +6,8 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // TestEpoch_BeforeEpochStartHook tests the full epoch unbonding flow for withdrawals

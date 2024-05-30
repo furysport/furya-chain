@@ -12,8 +12,8 @@ import (
 	distributiontypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	icqueriestypes "github.com/furysport/furya-chain/x/icqueries/types"
-	"github.com/furysport/furya-chain/x/millions/types"
+	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 type PoolRunnerStaking struct {

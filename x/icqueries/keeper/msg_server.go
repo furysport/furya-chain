@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/furysport/furya-chain/x/icqueries/types"
+	"github.com/furysport/furya-chain/v2/x/icqueries/types"
 )
 
 type msgServer struct {

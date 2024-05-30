@@ -6,8 +6,8 @@ import (
 	"github.com/cometbft/cometbft/libs/log"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
-	"github.com/furysport/furya-chain/x/millions/types"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // BeforeEpochStart is a hook triggered every defined epoch

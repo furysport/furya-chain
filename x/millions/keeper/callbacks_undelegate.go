@@ -9,8 +9,8 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 
-	icacallbackstypes "github.com/furysport/furya-chain/x/icacallbacks/types"
-	"github.com/furysport/furya-chain/x/millions/types"
+	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // MarshalUndelegateCallbackArgs Marshal delegate UndelegateCallback arguments

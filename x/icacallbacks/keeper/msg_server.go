@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/furysport/furya-chain/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 )
 
 type msgServer struct {

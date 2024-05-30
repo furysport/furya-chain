@@ -7,8 +7,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/furysport/furya-chain/x/millions/keeper"
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/keeper"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func NewHandler(k keeper.Keeper) sdk.Handler {

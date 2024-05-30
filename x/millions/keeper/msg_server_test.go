@@ -9,11 +9,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gogotypes "github.com/cosmos/gogoproto/types"
 
-	apptesting "github.com/furysport/furya-chain/app/testing"
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
+	apptesting "github.com/furysport/furya-chain/v2/app/testing"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
 
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // TestMsgServer_GenerateSeed run seed generation related tests

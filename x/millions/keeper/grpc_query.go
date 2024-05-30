@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 type queryServer struct {

@@ -14,7 +14,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/spf13/cobra"
 
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func parseClosePoolProposalFile(cdc codec.JSONCodec, proposalFile string) (proposal types.ProposalClosePool, err error) {

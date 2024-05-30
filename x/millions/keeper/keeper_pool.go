@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	icqueriestypes "github.com/furysport/furya-chain/x/icqueries/types"
+	icqueriestypes "github.com/furysport/furya-chain/v2/x/icqueries/types"
 
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/keeper"
 	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
@@ -22,8 +22,8 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 
-	icacallbackstypes "github.com/furysport/furya-chain/x/icacallbacks/types"
-	"github.com/furysport/furya-chain/x/millions/types"
+	icacallbackstypes "github.com/furysport/furya-chain/v2/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // SetupPoolICA registers the ICA account on the native chain

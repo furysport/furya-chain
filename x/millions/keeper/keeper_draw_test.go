@@ -10,9 +10,9 @@ import (
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 
-	apptesting "github.com/furysport/furya-chain/app/testing"
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	apptesting "github.com/furysport/furya-chain/v2/app/testing"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // TestDraw_NoPrizeToWin tests cases where no prize can be computed and therefore no winner

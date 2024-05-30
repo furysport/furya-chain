@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/x/millions/keeper"
-	"github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/x/millions/keeper"
+	"github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func BeginBlocker(ctx sdk.Context, keeper keeper.Keeper) {

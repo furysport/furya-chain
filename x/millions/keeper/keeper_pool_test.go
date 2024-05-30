@@ -12,9 +12,9 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	epochstypes "github.com/furysport/furya-chain/x/epochs/types"
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	epochstypes "github.com/furysport/furya-chain/v2/x/epochs/types"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func splitDelegationSliceToMap(vals []*millionstypes.SplitDelegation) map[string]*millionstypes.SplitDelegation {

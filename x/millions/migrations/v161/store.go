@@ -3,8 +3,8 @@ package v161
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 func MigratePoolTypeAndUnbondingFrequency(ctx sdk.Context, k millionskeeper.Keeper) error {

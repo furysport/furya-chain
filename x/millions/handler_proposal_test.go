@@ -17,11 +17,11 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/furysport/furya-chain/app"
-	apptesting "github.com/furysport/furya-chain/app/testing"
-	"github.com/furysport/furya-chain/x/millions"
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	"github.com/furysport/furya-chain/v2/app"
+	apptesting "github.com/furysport/furya-chain/v2/app/testing"
+	"github.com/furysport/furya-chain/v2/x/millions"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 type HandlerTestSuite struct {

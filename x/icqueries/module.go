@@ -16,9 +16,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 
-	"github.com/furysport/furya-chain/x/icqueries/client/cli"
-	"github.com/furysport/furya-chain/x/icqueries/keeper"
-	"github.com/furysport/furya-chain/x/icqueries/types"
+	"github.com/furysport/furya-chain/v2/x/icqueries/client/cli"
+	"github.com/furysport/furya-chain/v2/x/icqueries/keeper"
+	"github.com/furysport/furya-chain/v2/x/icqueries/types"
 )
 
 var (

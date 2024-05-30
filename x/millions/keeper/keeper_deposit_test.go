@@ -6,8 +6,8 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	apptesting "github.com/furysport/furya-chain/app/testing"
-	millionstypes "github.com/furysport/furya-chain/x/millions/types"
+	apptesting "github.com/furysport/furya-chain/v2/app/testing"
+	millionstypes "github.com/furysport/furya-chain/v2/x/millions/types"
 )
 
 // TestDeposit_IDsGeneration tests that the depositID is properly incremented for each new deposit

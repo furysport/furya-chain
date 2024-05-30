@@ -5,12 +5,12 @@ import (
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 
-	apptypes "github.com/furysport/furya-chain/app"
+	apptypes "github.com/furysport/furya-chain/v2/app"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/furysport/furya-chain/x/icacallbacks"
-	"github.com/furysport/furya-chain/x/icacallbacks/types"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks"
+	"github.com/furysport/furya-chain/v2/x/icacallbacks/types"
 )
 
 func TestGenesis(t *testing.T) {

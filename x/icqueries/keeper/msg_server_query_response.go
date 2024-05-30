@@ -6,14 +6,14 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/furysport/furya-chain/x/icqueries/types"
+	"github.com/furysport/furya-chain/v2/x/icqueries/types"
 )
 
 // SubmitQueryResponse Handle ICQ query responses by validating the proof, and calling the query's corresponding callback
 func (k msgServer) SubmitQueryResponse(goCtx context.Context, msg *types.MsgSubmitQueryResponse) (*types.MsgSubmitQueryResponseResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// check if the response has an associated query stored on Lum
+	// check if the response has an associated query stored on Furya
 	query, found := k.GetQuery(ctx, msg.QueryId)
 	if !found {
 		k.Logger(ctx).Info("ICQ RESPONSE  | Ignoring non-existent query response (note: duplicate responses are nonexistent)")

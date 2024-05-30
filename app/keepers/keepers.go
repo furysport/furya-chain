@@ -28,10 +28,10 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	tokenfactorykeeper "github.com/furysport/furya-chain/v2/x/tokenfactory/keeper"
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
-	icacallbackskeeper "github.com/furysport/furya-chain/x/icacallbacks/keeper"
-	icquerieskeeper "github.com/furysport/furya-chain/x/icqueries/keeper"
-	millionskeeper "github.com/furysport/furya-chain/x/millions/keeper"
-	epochskeeper "github.com/furysport/furya-chain/x/epochs/keeper"
+	icacallbackskeeper "github.com/furysport/furya-chain/v2/x/icacallbacks/keeper"
+	icquerieskeeper "github.com/furysport/furya-chain/v2/x/icqueries/keeper"
+	millionskeeper "github.com/furysport/furya-chain/v2/x/millions/keeper"
+	epochskeeper "github.com/furysport/furya-chain/v2/x/epochs/keeper"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
